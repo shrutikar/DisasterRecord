@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet"> 
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'
+    />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/animate.min.css" />
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7YOOWjDL1lO3n96oXc4_KPPrJL79ZCpY&libraries=drawing"></script>
+</head>
+
+<body>
+    <section class="container">
+
+        <div class="one">
+            <div id='rib'>
+                <img height="55px" src="/static/drecord-logo.png" style="margin-top: -10%;"><div id="drec">Disaster <br> Record</div>
+            </div>
+            <div id="date-picker">
+                <h3 style="text-align: center;">Pick a Time Range</h3>
+                <div class="timepicker" style="margin-bottom: 3%;">
+                    <input type="text" name="daterange" value="08-16-2018 1:30 PM - 08-21-2018 2:00 PM" />
+                </div>
+            </div>
+            <div id="user_select">
+                <label class="radio inline">
+                    <input type="radio" name="user_lvl" value="individual">
+                    <span> Individual </span>
+                </label>
+                <label class="radio inline">
+                    <input type="radio" name="user_lvl" value="community" checked>
+                    <span>Community </span>
+                </label>
+            </div>
+            <br>
+            <div id='agg_content'>
+                <br>
+                <div id="date_holder"></div>
+                <div class="list_head">Text Features aggregation:</div>
+                <ul class="text_agg_list">
+                </ul>
+                <div class="list_head">Image Features aggregation:</div>
+                <ul class="img_agg_list">
+                </ul>
+                <div class="list_head">Flood: 30%</div>
+                <div class="list_head">OSM Features aggregation:</div>
+                <ul class="osm_agg_list">
+                </ul>
+
+            </div>
+            <a href="https://icons8.com" id="icon_p">Icon pack by Icons8</a>
+            <div id='hazard'>
+                <img height="55px" src="/static/hazard.png"> HazardSEES
+                <span id="kno">Kno.e.sis</span>
+            </div>
+        </div>
+        <div class="zero">
+            <div id="zero_top">
+                <div id='close_zero'>x</div>
+                <div id="zero_topic"></div>
+            </div>
+            <div id='zero_container'>
+                <!-- <div id='twt_content' class="animated bounceIn">this is the container for zero contents. sound weird right ???</div>
+                <div id='twt_content' class="animated bounceIn">this is the container for zero contents. sound weird right ???</div> -->
+            </div>
+        </div>
+        <div class="two">
+
+            <div id='map'></div>
+            <nav id="menu"></nav>
+        </div>
+        <img id="loadingGif" src="/static/Spin.gif" style="position:absolute; margin:auto; top:0; left:0; right:0; bottom:0;" width="100"
+            alt="Loading">
+    </section>
+    <!-- <div id="loader"></div> -->
+    <div id='instructions'></div>
+    <script type="text/javascript">
+        var centroid = [80.21378369330633, 13.018400446841508],
+            OSM_features_icons_dict = {{ OSM_features_icons_dict| tojson | safe }},
+        sd = {{ shelter_data | tojson | safe }},
+        rd = {{ rescue_data | tojson | safe }},
+        ps = {{ photon_shelter | tojson | safe }},
+        pr = {{ photon_rescue | tojson | safe }},
+        os = {{ other_sh | tojson | safe }},
+        or = {{ other_res | tojson | safe }};
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="/static/js/main.js"></script>
+    <script type="text/javascript" src="/static/js/map.js"></script>
+</body>
+
+</html>

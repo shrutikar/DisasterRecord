@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/main.css" />
+</head>
+<body>
+    <section class="container">
+        <div class="one">
+            <div id="thumbnailwrapper">
+                <div id="artiststhumbnail">
+                    <a href="#">
+                        <!--image here-->
+                        <img src="http://knoesis.org/resources/images/hazardssees_logo_final.png" width="41%" alt="artist" border="1" />
+                    </a>
+                </div>
+            </div>
+            <div id="thumbnailwrapper">
+                <h3 style="text-align: center;">Pick a Time Range</h3>
+                <div class="timepicker" style="margin-bottom: 5%;">
+                    <input type="text" name="daterange" value="08-16-2018 1:30 PM - 08-21-2018 2:00 PM" />
+                </div>
+            </div>
+    <div>
+        <input type="text" name="query_loc" value="Kerala" />
+    </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/flooded_areas_(1).png" height="100%" alt="artist" border="1" /> &nbsp; Flooded Areas
+            </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/medical_help.png" height="100%" alt="artist" border="1" /> &nbsp; Medical/Rescue Help
+                Available
+            </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/medical_need_crowed_sourced.png" height="100%" alt="artist" border="1" /> &nbsp;
+                Medical/Rescue Help Available (CS)
+            </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/medical_need.png" height="100%" alt="artist" border="1" /> &nbsp; Medical/Rescue Help
+                Needed
+            </div>
+            
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/shelter_available.png" height="100%" alt="artist" border="1" /> &nbsp; Shelter/Food/Supplies
+                Available
+            </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/shelter_excel_crowed_sourced.png" height="100%" alt="artist" border="1" /> &nbsp;
+                Shelter/Food/Supplies Available (CS)
+            </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/shelter.png" height="100%" alt="artist" border="1" /> &nbsp; Shelter/Food/Supplies
+                Needed
+            </div>
+            <!-- <div id="thumbnailwrapper">
+                <img height="20px" src="https://cdn2.iconfinder.com/data/icons/flat-style-svg-icons-part-1/512/motor_mechanic_tools-512.png" height="100%" alt="artist" border="1" /> &nbsp; Utility/Infrastructure Help Available
+            </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/utility_infrastructure_cs.png" height="100%" alt="artist" border="1" /> &nbsp; Utility/Infrastructure Help Available (CS)
+            </div>
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/utility_infrastructure.png" height="100%" alt="artist" border="1" /> &nbsp; Utility/Infrastructure Problem
+            </div> -->
+            
+            <div id="thumbnailwrapper">
+                <img height="20px" src="/static/siren_emergency.png" height="100%" alt="artist" border="1" /> &nbsp; Unapproachable
+                Location
+            </div>
+        </div>
+        <div class="two">
+            <div id='map'></div>
+            <nav id="menu"></nav>
+        </div>
+    </section>
+    <!-- <div id="loader"></div> -->
+    <img id="loadingGif" src="/static/Preloader_3.gif" style="position:absolute; margin:auto; top:0; left:0; right:0; bottom:0;" width="100" alt="Loading">
+    <div id='instructions'></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
+</body>
+</html>
