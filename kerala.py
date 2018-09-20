@@ -543,7 +543,6 @@ def bb_query_count():
 
 @application.route('/chennai/data', methods=['GET','POST'])
 def bb_query():
-    dataset='chennai'
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
     max_lat = request.args.get('max_lat')
@@ -551,113 +550,8 @@ def bb_query():
     start_t = request.args.get('start_date')
     end_t = request.args.get('end_date')
     q_str = str(request.args.get('q_str'))
-    es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
 
-    if (q_str=="rescue_need" or q_str=="shelter_need"):
-        print ("entered")
-        if (q_str=="rescue_need"):
-            classname = "rescue_match"
-        elif (q_str == "shelter_need"):
-            classname = "shelter_matching"
-        print (classname)
-        need = es.search(index=dataset + '-tweetneeds',body={"size": ES_SIZE, "query": {
-        "bool" : {
-            "must" : [{
-                "match": {"properties.needClass": classname}
-            },{"range" : {
-            "properties.createdAt" : {
-                "gte": start_t,
-                "lte": end_t,
-                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-            }
-        }}],
-            "filter" : {
-                "geo_bounding_box" : {
-                    "geometry.coordinates" : {
-                        "top_left" : {
-                            "lat" : min_lat,
-                            "lon" : min_lng
-                        },
-                        "bottom_right" : {
-                            "lat" : max_lat,
-                            "lon" : max_lng
-                        }
-                    }
-                }
-            }
-        }
-    }})['hits']['hits']
-
-    elif(q_str=="people" or q_str=="vehicles" or q_str=="animals"):
-        if (q_str=="people"):
-            field = "properties.image.objects.person"
-        elif (q_str=="vehicles"):
-            field = "properties.image.objects.vehicles"
-        elif (q_str == "animals"):
-            field = "properties.image.objects.animal"
-        print (field)
-        need = es.search(index=dataset + '-tweetneeds', body={"size": ES_SIZE, "query": {
-        "bool" : {
-            "must" : [{
-                    "exists": {
-                      "field": field
-                    }
-                  },{"range" : {
-            "properties.createdAt" : {
-                "gte": start_t,
-                "lte": end_t,
-                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-            }
-        }}],
-            "filter" : {
-                "geo_bounding_box" : {
-                    "geometry.coordinates" : {
-                        "top_left" : {
-                            "lat" : min_lat,
-                            "lon" : min_lng
-                        },
-                        "bottom_right" : {
-                            "lat" : max_lat,
-                            "lon" : max_lng
-                        }
-                    }
-                }
-            }
-        }
-    }})['hits']['hits']
-
-    elif (q_str=="osm_shelter" or q_str=="osm_rescue"):
-        if (q_str=="osm_shelter"):
-            classname="shelter_matching"
-        elif (q_str=="osm_rescue") :
-            classname = "rescue_match"
-        need = es.search(index=dataset + '-osm', body={"size": ES_SIZE, "query": {
-            "bool": {
-                "must": [
-                    {
-                        "match": {
-                            "properties.needClass": classname
-                        }
-                    }, {"match": {"properties.Flood": "false"}}
-                ],
-                "filter": {
-                    "geo_bounding_box": {
-                        "geometry.coordinates": {
-                            "top_left": {
-                                "lat": min_lat,
-                                "lon": min_lng
-                            },
-                            "bottom_right": {
-                                "lat": max_lat,
-                                "lon": max_lng
-                            }
-                        }
-                    }
-                }
-
-            }
-        }})['hits']['hits']
-
+    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str)
     need_req = [s['_source'] for s in need]
     n = str(json.dumps({"type": "FeatureCollection", "features": need_req}))
 
@@ -665,96 +559,87 @@ def bb_query():
     return n
 
 
-@application.route('/chennai/loc', methods=['GET','POST'])
-def loc_query():
-    dataset='chennai'
-    min_lat = request.args.get('min_lat')
-    min_lng = request.args.get('min_lng')
-    max_lat = request.args.get('max_lat')
-    max_lng = request.args.get('max_lng')
-    start_t = request.args.get('start_date')
-    end_t = request.args.get('end_date')
-    q_str = str(request.args.get('q_str'))
-    loc_str = str(request.args.get('loc_str'))
+def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str):
+    dataset = 'chennai'
     es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
 
-    if (q_str=="rescue_need" or q_str=="shelter_need"):
+    if (q_str == "rescue_need" or q_str == "shelter_need"):
         print ("entered")
-        if (q_str=="rescue_need"):
+        if (q_str == "rescue_need"):
             classname = "rescue_match"
         elif (q_str == "shelter_need"):
             classname = "shelter_matching"
         print (classname)
-        need = es.search(index=dataset + '-tweetneeds',body={"size": ES_SIZE, "query": {
-        "bool" : {
-            "must" : [{
-                "match": {"properties.needClass": classname}
-            },{"range" : {
-            "properties.createdAt" : {
-                "gte": start_t,
-                "lte": end_t,
-                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-            }
-        }}],
-            "filter" : {
-                "geo_bounding_box" : {
-                    "geometry.coordinates" : {
-                        "top_left" : {
-                            "lat" : min_lat,
-                            "lon" : min_lng
-                        },
-                        "bottom_right" : {
-                            "lat" : max_lat,
-                            "lon" : max_lng
+        need = es.search(index=dataset + '-tweetneeds', body={"size": ES_SIZE, "query": {
+            "bool": {
+                "must": [{
+                    "match": {"properties.needClass": classname}
+                }, {"range": {
+                    "properties.createdAt": {
+                        "gte": start_t,
+                        "lte": end_t,
+                        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+                    }
+                }}],
+                "filter": {
+                    "geo_bounding_box": {
+                        "geometry.coordinates": {
+                            "top_left": {
+                                "lat": min_lat,
+                                "lon": min_lng
+                            },
+                            "bottom_right": {
+                                "lat": max_lat,
+                                "lon": max_lng
+                            }
                         }
                     }
                 }
             }
-        }
-    }})['hits']['hits']
+        }})['hits']['hits']
 
-    elif(q_str=="people" or q_str=="vehicles" or q_str=="animals"):
-        if (q_str=="people"):
+    elif (q_str == "people" or q_str == "vehicles" or q_str == "animals"):
+        if (q_str == "people"):
             field = "properties.image.objects.person"
-        elif (q_str=="vehicles"):
+        elif (q_str == "vehicles"):
             field = "properties.image.objects.vehicles"
         elif (q_str == "animals"):
             field = "properties.image.objects.animal"
         print (field)
         need = es.search(index=dataset + '-tweetneeds', body={"size": ES_SIZE, "query": {
-        "bool" : {
-            "must" : [{
+            "bool": {
+                "must": [{
                     "exists": {
-                      "field": field
+                        "field": field
                     }
-                  },{"range" : {
-            "properties.createdAt" : {
-                "gte": start_t,
-                "lte": end_t,
-                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-            }
-        }}],
-            "filter" : {
-                "geo_bounding_box" : {
-                    "geometry.coordinates" : {
-                        "top_left" : {
-                            "lat" : min_lat,
-                            "lon" : min_lng
-                        },
-                        "bottom_right" : {
-                            "lat" : max_lat,
-                            "lon" : max_lng
+                }, {"range": {
+                    "properties.createdAt": {
+                        "gte": start_t,
+                        "lte": end_t,
+                        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+                    }
+                }}],
+                "filter": {
+                    "geo_bounding_box": {
+                        "geometry.coordinates": {
+                            "top_left": {
+                                "lat": min_lat,
+                                "lon": min_lng
+                            },
+                            "bottom_right": {
+                                "lat": max_lat,
+                                "lon": max_lng
+                            }
                         }
                     }
                 }
             }
-        }
-    }})['hits']['hits']
+        }})['hits']['hits']
 
-    elif (q_str=="osm_shelter" or q_str=="osm_rescue"):
-        if (q_str=="osm_shelter"):
-            classname="shelter_matching"
-        elif (q_str=="osm_rescue") :
+    elif (q_str == "osm_shelter" or q_str == "osm_rescue"):
+        if (q_str == "osm_shelter"):
+            classname = "shelter_matching"
+        elif (q_str == "osm_rescue"):
             classname = "rescue_match"
         need = es.search(index=dataset + '-osm', body={"size": ES_SIZE, "query": {
             "bool": {
@@ -783,14 +668,29 @@ def loc_query():
             }
         }})['hits']['hits']
 
-    need_req = [s['_source'] for s in need]
-    loc_names = defaultdict(list)
-    for e in need_req:
-        if e['properties']['locationMention']['text'].lower() == loc_str:
-            loc_names[loc_str].append(e)
+    return need
 
-    n = str(json.dumps({"type": "FeatureCollection", "features": loc_names[loc_str]}))
+
+@application.route('/chennai/loc_name', methods=['GET','POST'])
+def loc_name():
+    min_lat = request.args.get('min_lat')
+    min_lng = request.args.get('min_lng')
+    max_lat = request.args.get('max_lat')
+    max_lng = request.args.get('max_lng')
+    start_t = request.args.get('start_date')
+    end_t = request.args.get('end_date')
+    q_str = str(request.args.get('q_str'))
+
+    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str)
+    need_req = [s['_source'] for s in need]
+    names = defaultdict(list)
+    for e in need_req:
+        loc=e['properties']['locationMention']['text'].lower()
+        names[loc].append(e)
+
+    n = str(json.dumps({"type": "FeatureCollection", "features": names}))
     return n
+
 
 
 @application.route("/")
