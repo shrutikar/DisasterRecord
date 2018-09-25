@@ -1,8 +1,9 @@
 import flask
 from datetime import datetime
 from elasticsearch import Elasticsearch
-from flask import Flask, request, send_from_directory, render_template_string, render_template, jsonify, Response, redirect, url_for
+from flask import Flask, request, send_from_directory, render_template_string, render_template, jsonify, Response, redirect, url_for, send_file
 import requests
+from skimage.io import imsave
 import json, os
 import Geohash, json, os
 import collections,operator
@@ -10,6 +11,39 @@ from collections import defaultdict
 import math, decimal
 from geopy.distance import great_circle
 import numpy as np
+from ibm_botocore.client import Config
+from ibm_botocore.client import ClientError
+import ibm_boto3
+from os import path
+from PIL import Image
+import base64
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+import unicodedata
+import string, re, nltk
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
+import string
+from nltk import word_tokenize, pos_tag
+from nltk.stem.porter import PorterStemmer
+words = set(nltk.corpus.words.words())
+stop = set(stopwords.words('english'))
+exclude = set(string.punctuation)
+lemma = WordNetLemmatizer()
+import cStringIO as StringIO
+
+token_dict = {}
+stemmer = PorterStemmer()
+
+printable = set(string.printable)
+from elasticsearch import Elasticsearch
+from wordcloud import WordCloud, STOPWORDS
+
+printable = set(string.printable)
+stop.update(('HASH','NUM','USER'))
+
+
 application = Flask(__name__)
 
 """
@@ -23,6 +57,75 @@ Matching
 Disaster Response
 Social Media
 """
+
+def strip_non_ascii(s):
+
+    if isinstance(s, unicode):
+        nfkd = unicodedata.normalize('NFKD', s)
+        return str(nfkd.encode('ASCII', 'ignore').decode('ASCII'))
+    else:
+        return s
+
+
+def preprocess_tweet(tweet):
+    '''Preprocesses the tweet text and break the hashtags'''
+
+    tweet = strip_non_ascii(tweet)
+
+    #     print tweet
+    tweet = str(tweet.lower())
+
+    if tweet[:1] == "\n":
+        tweet = tweet[1:len(tweet)]
+
+    # remove retweet handler
+    if tweet[:2] == "rt":
+        try:
+            colon_idx = tweet.index(": ")
+            tweet = tweet[colon_idx + 2:]
+        except BaseException:
+            pass
+
+    # remove url from tweet
+    tweet = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', 'URL', tweet)
+
+    # remove non-ascii characters
+    tweet = "".join([x for x in tweet if x in printable])
+
+    # additional preprocessing
+    tweet = tweet.replace("\n", " ").replace(" https", "").replace("http", "")
+
+    # remove all mentions
+    tweet = re.sub(r"@\w+", "@USER", tweet)
+
+    # remove all mentions
+    tweet = re.sub(r"#\w+", "#HASH", tweet)
+
+    # padding punctuations
+    tweet = re.sub('([,!?():])', r' \1 ', tweet)
+
+    tweet = tweet.replace(". ", " . ").replace("-", " ")
+
+    # shrink blank spaces in preprocessed tweet text to only one space
+    tweet = re.sub('\s{2,}', ' ', tweet)
+
+    tweet = " ".join(w for w in nltk.wordpunct_tokenize(tweet) if w.lower() in words or not w.isalpha())
+
+    tweet = re.sub("^\d+\s|\s\d+\s|\s\d+$", " NUM ", tweet)
+
+    # # remove consecutive duplicate tokens which causes an explosion in tree
+    # while re.search(r'\b(.+)(\s+\1\b)+', tweet):
+    #     tweet = re.sub(r'\b(.+)(\s+\1\b)+', r'\1', tweet)
+
+    #     tweet = clean(tweet)
+
+    tweet = tweet.replace('\n', '. ').replace('\t', ' ').replace(',', ' ').replace('"', ' ').replace("'", " ").replace(
+        ";", " ").replace("\n", " ").replace("\r", " ")
+
+    # remove trailing spaces
+    tweet = tweet.strip()
+
+    return tweet
 
 
 def make_map(params):
@@ -313,6 +416,65 @@ def get_data():
     with open("OSM_features_icons_dict.json") as f:
         OSM_features_icons_dict = json.dumps(json.load(f))
     return OSM_features_icons_dict
+
+
+def download_file_cos(cos_credentials,key):
+    auth_endpoint = 'https://iam.bluemix.net/oidc/token'
+    _cos = ibm_boto3.client('s3',
+                            ibm_api_key_id=cos_credentials['apikey'],
+                            ibm_service_instance_id=cos_credentials['resource_instance_id'],
+                            ibm_auth_endpoint=auth_endpoint,
+                            config=Config(signature_version='oauth'),
+                            endpoint_url=cos_credentials['service_endpoint'])
+    f = get_item(bucket_name=cos_credentials['BUCKET'], item_name=key, cos=_cos)
+    print f
+    print ("=====================*********************")
+
+    tweets = f['Body'].read()
+    tweetsList = tweets.split("\n")
+    return tweets
+
+
+def get_item(bucket_name, item_name, cos):
+    print("Retrieving item from bucket: {0}, key: {1}".format(bucket_name, item_name))
+    try:
+        tweets = cos.get_object(Bucket=bucket_name, Key=item_name)
+        return tweets
+        # print("File Contents: {0}".format(file["Body"].read()))
+    except ClientError as be:
+        print("CLIENT ERROR: {0}\n".format(be))
+    except Exception as e:
+        print("Unable to retrieve file contents: {0}".format(e))
+
+
+
+@application.route('/test', methods=['GET','POST'])
+def check_selected():
+    cos_cred = {
+        "apikey": "C-BGVS6j-VncIFkpj6hIVVQCD96__x9cxSJHxFaAymwB",
+        "endpoints": "https://cos-service.bluemix.net/endpoints",
+        "iam_apikey_description": "Auto generated apikey during resource-key operation for Instance - crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
+        "iam_apikey_name": "auto-generated-apikey-7e34a98b-6014-4c1e-bbf3-3e99b48020aa",
+        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/022374f4b8504a0eaa1ce419e7b5e793::serviceid:ServiceId-d14c9908-da0d-43d5-ab25-30a814045c46",
+        "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
+        "BUCKET": "8prec",
+        "FILE": "chennai.geojson",
+        "service_endpoint": "https://s3-api.us-geo.objectstorage.softlayer.net"
+    }
+
+    f2 = download_file_cos(cos_cred, 'chennai.geojson')
+    tweetsList = f2.split("\n")
+    for t in tweetsList:
+        data = json.loads(t)
+    data["features"] = data["features"][0::3]
+
+
+    # with open("chennai.geojson") as f:
+    #     data = json.load(f)
+    # data["features"] = data["features"][0::3]
+
+    return json.dumps(data)
 
 def read_data(lat, lon, radius, start_date, end_date):   
     es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
@@ -750,6 +912,67 @@ def loc_name():
     return n
 
 
+
+@application.route('/wc', methods=['GET','POST'])
+def wc():
+    q_str = str(request.args.get('q_str'))
+    if q_str=="shelter_need":
+        q_str="shelter_matching"
+    elif q_str == "rescue_need":
+        q_str="rescue_match"
+
+    es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
+    ES_SIZE = 1000
+    need = es.search(index='chennai' + '-tweetneeds', body={"size": ES_SIZE, "query": {
+        "bool": {
+            "must": [{
+                "match": {"properties.needClass": q_str}
+            }, {"range": {
+                "properties.createdAt": {
+                    "gte": 1449025320000,
+                    "lte": 1471677320000,
+                    "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+                }
+            }}],
+            "filter": {
+                "geo_bounding_box": {
+                    "geometry.coordinates": {
+                        "top_left": {
+                            "lat": 13.201747645288123,
+                            "lon": 80.07011480398211
+                        },
+                        "bottom_right": {
+                            "lat": 12.91175498502946,
+                            "lon": 80.43474007410384
+                        }
+                    }
+                }
+            }
+        }
+    }})['hits']['hits']
+
+    need_req = [preprocess_tweet(s['_source']['properties']['text']) for s in need]
+    myString = ",".join(need_req)
+    d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
+    alice_mask = np.array(Image.open(path.join(d, "oval.png")))
+    stopwords = set(STOPWORDS)
+    stopwords.update("said", "NUM", "USER", "HASH")
+    wc = WordCloud(background_color="white", max_words=2000, mask=alice_mask,
+                   stopwords=stop, contour_width=3, contour_color='steelblue')
+    wordcloud1 = wc.generate(myString)
+
+    fig = plt.imshow(wordcloud1, interpolation="bilinear")
+    plt.axis("off")
+    # plt.show()
+    strIO = StringIO.StringIO()
+    plt.savefig(strIO, format='png')
+    strIO.seek(0)
+    figdata_png = base64.b64encode(strIO.getvalue())
+
+    return figdata_png.decode('utf8')
+
+
+
 @application.route("/")
 def index():
 
@@ -791,9 +1014,6 @@ def count():
     return data
 
 
-
-
-
 @application.route("/needs")
 def needs():
     data = "{}"
@@ -809,13 +1029,6 @@ def needs():
         pass
 
     return "data"
-
-@application.route('/test', methods=['GET','POST'])
-def check_selected():
-    with open("_Data/chennai.geojson") as f:
-        data = json.load(f)
-    data["features"] = data["features"][0::3]
-    return json.dumps(data)
 
 
 if __name__ == "__main__":
