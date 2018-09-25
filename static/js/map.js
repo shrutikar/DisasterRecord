@@ -861,9 +861,7 @@ map.on("load", function () {
         q_str: this.id
       },
       success: function (res) {
-      var ext = res.split(';')[0].match(/jpeg|jpg|png|gif/)[0];
-    var data_img = cmt_img.replace(/^data:image\/\w+;base64,/, "");
-    console.log(data_img);
+        console.log(res);
 
       var layers = document.getElementById('picture')
       var icon = document.createElement('img');
