@@ -1,3 +1,4 @@
+
 $('input[name="daterange"]').daterangepicker(
   {
     minYear: 2000,
@@ -31,16 +32,46 @@ $('input[name="daterange"]').daterangepicker(
     var start_filter = [">=", "uxtm", st];
     var end_filter = ["<", "uxtm", ed];
     console.log(st + " " + ed);
-    // map.setFilter('Shelter/Food/Supplies Need',['all',start_filter,end_filter]);
-    // map.setFilter('Medical/Rescue Help Need',['all',start_filter,end_filter]);
+    // $('.three').css('display','block');
+    
+     map.setFilter('Shelter/Food/Supplies Need',['all',start_filter,end_filter]);
+     map.setFilter('Medical/Rescue Help Need',['all',start_filter,end_filter]);
     //map.setFilter('Utility/Infrastructure Problem',['all',start_filter,end_filter]);
   }
 );
+
+
+// $('#daterange').daterangepicker();
+$('.daterangepicker').append("<div class='three'><div id='heatmapPlaceholder'><div id='cal-heatmap' style=''></div></div></div>");
+
+
+$('#daterange').on('show.daterangepicker', function(ev, picker) {
+  //do something, like clearing an input
+  $('.three').css('display','block');
+  console.log("opened");
+});
+$('#daterange').on('hide.daterangepicker', function(ev, picker) {
+  //do something, like clearing an input
+  $('.three').css('display','none');
+  console.log("closed");
+});
 
 // $(".agg_list li").on( "click", function(evt) {
 //     console.log('Clicked list. '+this.id);
 //     });
 
+
+// $(document).on("click", 'input[name="daterange"]', function() {
+  
+
+//   var display=$('.three').css("display");
+//   if (display=='none'){
+//     $('.three').css('display','block');
+//   }
+//   else{
+//     $('.three').css('display','none');
+//   }
+// });
 
 
 $(document).on("click", "#close_zero", function() {
@@ -50,6 +81,7 @@ $(document).on("click", "#close_zero", function() {
   setTimeout(function() {
     $("#map").css("z-index", "0");
   }, 700);
+  // $('#close_zero').css('display','none');
 });
 
 $('.two').click(function() {
@@ -63,3 +95,29 @@ $('.two').click(function() {
 $('.zero').scroll(function() {
     $('#zero_top').css('top', $(this).scrollTop() + "px");
 });
+
+
+$(document).on("click", ".plus", function(e) {
+ 
+ id='#'+e.target.id.split("-")[1];
+ console.log(id);
+ var display=$(id).css("display");
+ console.log(display);
+
+ if (display=='none'){
+  $(id).removeClass("animated fadeOutUp");
+ $(id).css("display", "block");
+ 
+ $(this).attr('src', '/static/minus.png');
+}
+else{
+  $(id).addClass("animated fadeOutUp");
+
+  
+  setTimeout(function() {
+    $(id).css("display", "none");
+  }, 600)
+  $(this).attr('src', '/static/plus.png');
+}
+});
+
