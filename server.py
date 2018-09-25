@@ -969,8 +969,8 @@ def wc():
     strIO.seek(0)
     figdata_png = base64.b64encode(strIO.getvalue())
 
-    return figdata_png.decode('utf8')
-
+    # return figdata_png.decode('utf8')
+    return send_file(strIO, mimetype='image/png')
 
 
 @application.route("/")
