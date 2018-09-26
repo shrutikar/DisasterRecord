@@ -582,15 +582,12 @@ h4, .h4, h5, .h5, h6, .h6 {
 }
 
 #picture {
-  background: #fff;
   position: absolute;
   z-index: 1;
-  top: 774px;
-  right: 19px;
+  bottom: 10%;
   border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
   font-family: "Open Sans", sans-serif;
-  left: 19px;
+  left: 16%;
 }
 
 #menu {

@@ -7,6 +7,10 @@ from skimage.io import imsave
 import json, os
 import Geohash, json, os
 import collections,operator
+
+import nltk
+nltk.download('words')
+nltk.download('stopwords')
 from collections import defaultdict
 import math, decimal
 from geopy.distance import great_circle
@@ -915,6 +919,7 @@ def loc_name():
 
 @application.route('/wc', methods=['GET','POST'])
 def wc():
+    # wc=''
     q_str = str(request.args.get('q_str'))
     if q_str=="shelter_need":
         q_str="shelter_matching"
@@ -954,21 +959,20 @@ def wc():
     need_req = [preprocess_tweet(s['_source']['properties']['text']) for s in need]
     myString = ",".join(need_req)
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
-    alice_mask = np.array(Image.open(path.join(d, "oval.png")))
+    # alice_mask = np.array(Image.open(path.join(d, "oval.png")))
     stopwords = set(STOPWORDS)
     stopwords.update("said", "NUM", "USER", "HASH")
-    wc = WordCloud(background_color="white", max_words=2000, mask=alice_mask,
-                   stopwords=stop, contour_width=3, contour_color='steelblue')
+    wc = WordCloud( max_words=2000,
+                   stopwords=stop,background_color="white",mode='RGBA')
     wordcloud1 = wc.generate(myString)
 
-    fig = plt.imshow(wordcloud1, interpolation="bilinear")
+    plt.imshow(wordcloud1, interpolation="bilinear")
     plt.axis("off")
     # plt.show()
     strIO = StringIO.StringIO()
     plt.savefig(strIO, format='png')
     strIO.seek(0)
     figdata_png = base64.b64encode(strIO.getvalue())
-
     # return figdata_png.decode('utf8')
     return send_file(strIO, mimetype='image/png')
 

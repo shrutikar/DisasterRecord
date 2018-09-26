@@ -24,6 +24,8 @@ var months = [
 ];
 var layers = [[150, "#f28cb1"], [20, "#f1f075"], [0, "#51bbd6"]];
 // Disable default box zooming.
+
+var txt_name = '';
 map.boxZoom.disable();
 var layers_name = ['Flooded Area', 'Shelter/Food/Supplies Need', 'Medical/Rescue Help Need', 'Shelter/Food/Supplies Available', 'Medical/Rescue Help Available'];
 
@@ -863,11 +865,14 @@ map.on("load", function () {
       success: function (res) {
         console.log(res);
 
-      var layers = document.getElementById('picture')
-      var icon = document.createElement('img');
-        icon.height = 80;
-        icon.src = 'data:image/png;base64,' + res;
-       layers.appendChild(icon);
+      // var layers = document.getElementById('picture')
+      $('#picture').empty();
+
+      $('#picture').append("<img src='http://127.0.0.1:8989/wc?q_str="+txt_name+"' height='190px'>");
+      // var icon = document.createElement('img');
+      //   icon.height = 80;
+      //   icon.src = 'data:image/png;base64,' + res;
+      //  layers.appendChild(icon);
 
 //        $(".wc_agg_list").src = 'data:image/png,' + res;
           // "<li id=osm_shelter> osm_shelter => " + res.osm_shelter + "</li>"
