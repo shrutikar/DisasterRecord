@@ -68,7 +68,7 @@ td {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 7%;
+  height: 10%;
   box-shadow: 1px -3px 4px #232222;
 }
 
@@ -171,7 +171,7 @@ mark{
   display: inline-block;
   margin-left: 17%;
   position: absolute;
-  bottom: 15%;
+  bottom: 35%;
   right: 11%;
 }
 .one {
@@ -224,7 +224,7 @@ mark{
   position: relative;
   /* background-color: #2e3268; */
   /* background-color: #357a38; */
-  background-color: #8d8d8d;
+  background-color: white;
   margin: 0px 0px 7px -20px;
   padding: 6px 0px 6px 6px;
   box-shadow: 2px 1px 4px #000;
@@ -591,26 +591,19 @@ h4, .h4, h5, .h5, h6, .h6 {
 }
 
 #menu {
-  background: #fff;
-  position: absolute;
-  z-index: 1;
-  top: 220px;
-  right: 19px;
-  border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  font-family: "Open Sans", sans-serif;
-  left: 19px;
+position: absolute;
+z-index: 1;
+top: 231px;
+right: 30px;
+left: 36px;
 }
 #menu a {
-  font-size: 13px;
-  color: #404040;
-  display: block;
-  margin: 0;
-  padding: 0;
-  padding: 10px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-  text-align: center;
+display: block;
+text-align: center;
+height: 34px;
+margin-bottom: 2px;
+border-radius: 3px;
+color: #969696;
 }
 #menu a:last-child {
   border: none;
@@ -620,8 +613,8 @@ h4, .h4, h5, .h5, h6, .h6 {
   color: #404040;
 }
 #menu a.active {
-  background-color: #8d8d8d;
-  color: #ffffff;
+background-color: #c8c8c8;
+color: #063b6b;
 }
 #menu a.active:hover {
   background: #3074a4;

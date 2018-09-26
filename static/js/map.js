@@ -91,7 +91,9 @@ map.on("load", function () {
   $("input[type=radio][name=user_lvl]").change(function () {
     radio = this.value;
     if (radio == "individual") {
-    $('#loadingGif').show();
+    // $('#loadingGif').show();
+    $("#menu").empty();
+    $("#menu").css("display", "block");
       $(".marker").remove();
       $(".r_marker").remove();
       $("#steps").css("display", "none");
@@ -333,7 +335,7 @@ map.on("load", function () {
         }
       });
 
-      $('#loadingGif').show();
+      // $('#loadingGif').show();
 
       var pop = new mapboxgl.Popup({
         closeButton: false,
@@ -570,7 +572,7 @@ map.on("load", function () {
         });
 
       }
-      $('#loadingGif').show();
+      // $('#loadingGif').show();
 
       var toggleableLayerIds = ['Shelter/Food/Supplies Need', 'Medical/Rescue Help Need', 'Shelter/Food/Supplies Available', 'Medical/Rescue Help Available',
         'Flooded Area'];
@@ -586,9 +588,10 @@ map.on("load", function () {
       for (var i = 0; i < toggleableLayerIds.length; i++) {
         var id = toggleableLayerIds[i];
         var icon = document.createElement('img');
-        icon.height = 40;
+        icon.height = 34;
         id_obj = document.createElement('h5');
         id_obj.textContent = id;
+        id_obj.style='display: inline-block;';
         id_obj.id = 'nav_id';
         icon.src = img_src[i];
         var link = document.createElement('a');
@@ -653,22 +656,24 @@ map.on("load", function () {
 
     }
     else if (radio == "aggregated") {
+      $("#menu").css("display", "none");
       $("#steps").css("display", "block");
+
 
       //to clear all the layers from the map
       //   map.eachLayer(function (layer) {
       //     map.removeLayer(layer);
       // });
       // map.removeSource('route')
-      // var a = ["a", "b", "c"];
-      // layers_name.forEach(function(lyr) {
-      //   try{
-      //   map.removeLayer(lyr);
-      //   map.removeSource(lyr)
-      // }
-      // catch(err){
-      //   console.log(err);
-      // }
+      var a = ["a", "b", "c"];
+    //   layers_name.forEach(function(lyr) {
+    //     try {
+    //       map.removeSource("route");
+    //       map.removeLayer("route");
+    //     }
+    //     catch(err) {
+    // //        alert("Error!");
+    //     }
 
       // });
     }
