@@ -1,3 +1,6 @@
+import matplotlib as ccc
+ccc.use('TkAgg')
+
 import flask
 from datetime import datetime
 from elasticsearch import Elasticsearch
@@ -155,7 +158,7 @@ else:
 def generateISO(d):
     return datetime.fromtimestamp(d / 1e3).isoformat()
 
-def get_volume(lat, lon, radius, start_date, end_date):   
+def get_volume(lat, lon, radius, start_date, end_date):
     es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
 
     q = {
@@ -176,7 +179,7 @@ def get_volume(lat, lon, radius, start_date, end_date):
                 #             "lon": lon
                 #         }
                 #     }
-                # }, 
+                # },
                 # {
                 #     "range": {
                 #         "properties.createdAt": {
@@ -480,7 +483,7 @@ def check_selected():
 
     return json.dumps(data)
 
-def read_data(lat, lon, radius, start_date, end_date):   
+def read_data(lat, lon, radius, start_date, end_date):
     es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
 
     q = {
@@ -1038,4 +1041,4 @@ def needs():
 if __name__ == "__main__":
     application.run(host='127.0.0.1', port=8989)
     # interpolate_try()
-    # intp() 
+    # intp()

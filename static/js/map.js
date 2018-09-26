@@ -771,53 +771,53 @@ map.on("load", function () {
         $(".osm_agg_list").empty();
         $(".wc_agg_list").empty();
         $(".text_agg_list").append(
-          "<tr id='rescue_need'><td><button class='button_1'>rescue_need :</button></td><td>" +
+          "<td id='rescue_need' style='width: 20%;'><button class='button_1'><img src='/static/ambulance_orange.png' height='35px'><span id='zero_topic_text'>" +
           res.rescue_need +
-          "</td></tr>"
+          "</button></td>"
           // "<li id=rescue_need> rescue_need => " + res.rescue_need + "</li>"
         );
         $(".text_agg_list").append(
-          "<tr id='shelter_need'><td><button class='button_1'>shelter_need :</button></td><td>" +
-          res.shelter_need +
-          "</td></tr>"
+          "<td id='shelter_need' style='width: 20%;'><button class='button_1'><img src='/static/shelter_need.png' height='30px'><span id='zero_topic_text'>"+
+          res.shelter_need+
+          "</button></td>"
           // "<li id=shelter_need> shelter_need => " + res.shelter_need + "</li>"
         );
 
         $(".img_agg_list").append(
-          "<tr id='animals'><td><button class='button_1'>animals <img src='/static/animal.png' height='30px'> :</button></td><td>" +
+          "<td id='animals'><button class='button_1'><img src='/static/animal.png' height='30px'><span id='zero_topic_text'>" +
           res.animals +
-          "</td></tr>"
+          "</button></td>"
           // "<li id=animals> animals <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAL/SURBVGhD7dhLyExxGMfxccktGxYukSgWxIaIiOykJClFbiFiQakXCxEppZRcI2XhkixYuOdaSoRSosTGBiUScr99f5qnnk5n5j3nvP/OO5P/rz4188yc/5znzLn8z6nExMTExPzPGYYx6PvvXZOmG97iD+6jE5oyc6AmzFo0ZS7AN/IRI9ALPdEU6Y+f8I14XzEDDZ91sJX+7F573zEXDZ3HsBXeiOvuvad/bTkaMuNgK/oLg9AVOjZkPN7AN3Qa+l5DZR9sBa+qkBId9C/hm9EuqH+vO9o92vJ27ZD5qJXBuATfjDxAu8dfOz6gB1rLLLyALafXhdMZIzEB2lJ6XyTnYCt0WIUM6YIzaFMjOt8fgraeDSTfcAtbMRlZGtNYP2BjaLl60ZijcBn+ty8ic/phJz7BD1LLe2hrn6rjNuz7z9EByYzFftxB2vXlLLLsjpUB2I20QXS1fZ2oFbUJadmAtO/LEbT6z2vmqdOiVjY5wDsshGarSh9Mx2Zcg3az5DL16Nqh4ywtyUa+4B5UT/sHU3MefhDRPq0LWL1ogjcT6zNahlrxjegAL3RSmQjfhBxDmfGNHFehaGbjCmywVSgzwRpR/Ll+tQolJmgjOjvYYDtUKDFBG9kGG0zn7TITtBHNbWwwTfAyn/YCxO/WbW5EU4nfsAFHo4wshv2mBDnR3IUNuEUFF82vdGbzDmAKOqJINKPQhdd+8yaC7AktsEEfqeDyCvZZkj47Ct2eToUevqVJPiXxT1T0NGUIgkTXExtYd2qW4bB6W0yCZRH8Z0GvXXthA2sLW1bC6s+gLb8GmnPVe7yT5BvRQW31Gwh6cnkKG1xbzHISVt+lgoue386Dbph0r6IbIO33RpNFW7ZWI9tVCBU9rbCBZSAs/vjQRDFP/O1qKY0sgQ38RIVq/PGhrdsbeVJ6IydgA+9RoZoVsPpDFXKm9Ea0f9vAC1Soxk8f1GzelN6IriEHq/xN1TRYfakKOaOVtOWHqlCNxrK6pkcxMTExMTEx+VKp/AWRnYzEsg1WlAAAAABJRU5ErkJggg==' height='30px'> => " +
           //   res.animals +
           //   "</li>"
         );
         $(".img_agg_list").append(
-          "<tr id='people'><td><button class='button_1'>people <i class='fas fa-users'></i> :</button></td><td>" +
+          "<td id='people'><td><button class='button_1'><i class='fas fa-users'></i><span id='zero_topic_text'>" +
           res.people +
-          "</td></tr>"
+          "</button></td>"
           // "<li id=people>  people <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANuSURBVGhD7ZdZqFZVFIBvYRaZIKUWYin11PSaOURJRopCEEWzjxYYDT5J5NBL4kOESqBhQT0YEoFmSBRBSjT3UGAjNDwYpqGGoIWWfV+cBcvDPv+590Jwhf3BBz9rr7P2vmdYe9+hSqVSqVQqlcpZycV4Nz7Z6G9jZw2X46t4Ek+3NPYKTscxzVw8hO0/oO1BnINjkmvxKOYF/4Kv4xvN7zxm7tU4pjgHP8RY5DF8EI0H5+JSdCzyPsD/nStwNb6Nn+AOfBgnYJtbMRb3Dy7ALm5DcyJ/Pra5CB9B53Ru17AK/f5GxKN4HGOy7K94E2Y2YozvNNDDmxj5zxtIWNs5YjzrmpbjsHgcS0WyFrwBg3cxxnxqfXi3I/8dAw2z8ATGWJeP4UCuxL8wLjiAPtKHcBPmsX04DuVjjPg9BnowJ/I/MgDW+gYj7lwb0Lldw28YY3/iTOxkPUbyfpyKmVvwFEbO7Sh2pYg9baCHNRj5djVZhBFzjpsxcynmV24dduLdicQVBgrk9/tZA2BuxL7HeFIlzsMfMPLd9cWFRcw5SuR57JKdfIeRuMRAgecwcjYbgGno487x3HoDW7Bjkef3cBnKFoy4c5RwTZHjWjvZg5HY9Yq8h5Gz1kCDvyOu5tlqbaUTm9/vY86xvQfPYL62hN9K5Firk6cwEt15r8HMAxjjmo8Z4zG/dn3apn3NgnmYx50r0z45uNZOLsEjGMm22ZfQO7GriYXtO3IB+s3knEGa6zWZvZhznNO5XUPe1w6jax3IHZiLlbRQbn+eAr7AUu4gvcZrg6vQ2qXcrGsciHfoNSxdnP0bV6J4bPgZ87gnYPeAxXhdox+qsd8x5/6Ecay3prXzeMlteD52sh3zBfZzzzq78dsmln0CP2/FXsBJ2IVjuXPpZ2gbzjH9Gp3bNeT9S73hRdxBc6IHtvYhbTbm3betx5vh4k0o1VD/gBsx4yvYbibthvAfX2EkeIE9v8QU9HXIBfVFHCl+xO06P6JzlHBNb2HkfolncD3GoI+w77jcbsO2xd4uUmAy/oG51v04iBmYX7Mztoi7MAY+NdCDm1zk61YcLS9jrnUh9uE3Ffl3Ggj8q5Y1LjQwDPKdvNfAKLkPo45Pdji4xlhve9MeMbZce776f8Ro8aOOOtasVCqVSqVSqVQqAxga+heUObqqkyUf0QAAAABJRU5ErkJggg==' height='30px'> => " +
           //   res.people +
           //   "</li>"
         );
         $(".img_agg_list").append(
-          "<tr id='vehicles'><td><button class='button_1'>vehicles <i class='fas fa-car'></i> :</button></td><td>" +
+          "<td id='vehicles'><td><button class='button_1'><i class='fas fa-car'></i><span id='zero_topic_text'>" +
           res.vehicles +
-          "</td></tr>"
+          "</button></td>"
           // "<li id=vehicles> vehicles <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMhSURBVGhD7dhZyA1hHMfxQ3bJmhRZkqVkKeLKciFLKcudhJL1ygVlK8SN3CAXrpRSUrhQShI3b0pCJHu2siWFlOW1fn+n93963vGcOXPOLB31/OpT78w88yxn3nnmmSmFhISEhISEhFTSCX3r0AdNkwk4gidoxZ86fcFt7MAgFB79+vvwG74ONuIzlqGwdMAZ+DqThY0oJNvgNnwHSzEC0fvgAqzcprZ9rnHYjHewcj8wHblmFL7BGj2LbqiWc7CyG7SjSobgKazsA3RFbnE79gK9EZekA1Em4yes/FbkkoWwRkTbtVLPQJQDsPK6+Qcj03SHe+nvY3YCV2HnHGrbF2cJvsLOOYHUmYgtOA/9OlZ50d7gJNZjLBJnOFrgq7QZvIau1FqMhjcDoYK+CnTJ9QQvynP8gq8vrlc4Ck0WlRyGFVAlujK7MQtx02xe6Y9FOIhbiBuYVhl6JpXzGHZgnXY0WTSwxYgb2By0O6AndbNHA9NMp4Wn9fsyKhsyVDv+k0yF9fuDdtQaSGfMhGaMVZiGjsgrqlttqC21OQPqQzTqq9v3dhvRgayAZgi3jOjhOBdZR3W696xRH6LL/cQD2Qv3WJTurdXIKmsQN0PJHlgSDWQB3P16nlzBdWjJbfu/Q2+MaTMJqsvqVRtqS226yxdNt/OhJBrIDdg+/T0MFnX8Gez4aaSN6rD6VPd4WLTquAk7fg3KPwP55GzoYXjJ2ZYxiGYe7Lh+yYspuVfDd+9pvWXHRX10l1QfEfsKqyWDL13QyIeHWlSn6vZFffGdI6dQXv/r1dVXQFdL7+vRDICvfBb0wItGU7L7n+PS077yDqNfQc8KzRxaprg32HJEsxN2/CU036fhTvGqO5qVsOPqm/qovqrP1a5gOcdhJ+o7lF5BtXzWTbgf7uvpLqSNplWrTzOW2lBbuj/14UN9sOPHkDiaEd7DTq7mIXohbVTHI/jacOnLS92vwlrLvIWvQtEgslxkjkTcYNSXKWgouvH0ddF9d7+L7eiBrNMTqvserD29cKkP/ZBJ9M3Jt3jLK2or1+9cISEhISEhIc2ZUukv+v42ygEFkf0AAAAASUVORK5CYII=' height='30px'> => " +
           //   res.vehicles +
           //   "</li>"
         );
 
         $(".osm_agg_list").append(
-          "<tr id='osm_rescue'><td>osm_rescue :</td><td>" +
+          "<td id='osm_rescue'><span id='zero_topic_text'>Rescue: " +
           res.osm_rescue +
-          "</td></tr>"
+          "</td>"
           // "<li id=osm_rescue> osm_rescue => " + res.osm_rescue + "</li>"
         );
         $(".osm_agg_list").append(
-          "<tr id='osm_shelter'><td>osm_shelter :</td><td>" +
+          "<td id='osm_shelter'><span id='zero_topic_text'>Shelter: " +
           res.osm_shelter +
-          "</td></tr>"
+          "</td>"
           // "<li id=osm_shelter> osm_shelter => " + res.osm_shelter + "</li>"
         );
 
@@ -925,7 +925,7 @@ map.on("load", function () {
               if (response.features[key].hasOwnProperty(k)) {
                 var el = document.createElement("div");
 //                console.log("txt_agg:",txt_name);
-                
+
                 if(txt_name=='shelter_need'){
                   el.className = "marker";
                 }
