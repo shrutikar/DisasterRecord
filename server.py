@@ -923,42 +923,19 @@ def loc_name():
 @application.route('/wc', methods=['GET','POST'])
 def wc():
     # wc=''
+    min_lat = request.args.get('min_lat')
+    min_lng = request.args.get('min_lng')
+    max_lat = request.args.get('max_lat')
+    max_lng = request.args.get('max_lng')
+    start_t = request.args.get('start_date')
+    end_t = request.args.get('end_date')
     q_str = str(request.args.get('q_str'))
-    if q_str=="shelter_need":
-        q_str="shelter_matching"
-    elif q_str == "rescue_need":
-        q_str="rescue_match"
+    # if q_str=="shelter_need":
+    #     q_str="shelter_matching"
+    # elif q_str == "rescue_need":
+    #     q_str="rescue_match"
 
-    es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
-    ES_SIZE = 1000
-    need = es.search(index='chennai' + '-tweetneeds', body={"size": ES_SIZE, "query": {
-        "bool": {
-            "must": [{
-                "match": {"properties.needClass": q_str}
-            }, {"range": {
-                "properties.createdAt": {
-                    "gte": 1449025320000,
-                    "lte": 1471677320000,
-                    "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
-                }
-            }}],
-            "filter": {
-                "geo_bounding_box": {
-                    "geometry.coordinates": {
-                        "top_left": {
-                            "lat": 13.201747645288123,
-                            "lon": 80.07011480398211
-                        },
-                        "bottom_right": {
-                            "lat": 12.91175498502946,
-                            "lon": 80.43474007410384
-                        }
-                    }
-                }
-            }
-        }
-    }})['hits']['hits']
-
+    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str)
     need_req = [preprocess_tweet(s['_source']['properties']['text']) for s in need]
     myString = ",".join(need_req)
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
@@ -1039,6 +1016,6 @@ def needs():
 
 
 if __name__ == "__main__":
-    application.run(host='127.0.0.1', port=8989)
+    application.run(host='127.0.0.1', port=8080)
     # interpolate_try()
     # intp()
