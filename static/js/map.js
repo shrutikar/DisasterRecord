@@ -865,6 +865,13 @@ map.on("load", function () {
     $.ajax({
       url: "/wc",
       data: {
+        start_date: +$('input[name="daterange"]').data("daterangepicker")
+          .startDate,
+        end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
+        min_lat: start_LtLg.lat,
+        min_lng: start_LtLg.lng,
+        max_lat: end_LtLg.lat,
+        max_lng: end_LtLg.lng,
         q_str: this.id
       },
       success: function (res) {
