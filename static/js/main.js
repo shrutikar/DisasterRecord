@@ -121,3 +121,8 @@ else{
 }
 });
 
+$(document).on("click", "#wc_img", function(e){
+  // var URL = $.myURL("index", $(this).attr("src"));
+  window.open($(this).attr("src"),'_blank','',''); 
+});
+

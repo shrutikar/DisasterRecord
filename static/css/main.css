@@ -582,10 +582,14 @@ h4, .h4, h5, .h5, h6, .h6 {
 
 }
 
+#wc_img{
+  cursor: pointer;
+}
+
 #picture {
   position: absolute;
   z-index: 1;
-  bottom: 10%;
+  bottom: 11%;
   border-radius: 3px;
   font-family: "Open Sans", sans-serif;
   left: 16%;
@@ -605,6 +609,7 @@ height: 34px;
 margin-bottom: 2px;
 border-radius: 3px;
 color: #969696;
+background-color: #5c5353;
 }
 #menu a:last-child {
   border: none;
