@@ -485,13 +485,14 @@ map.on("load", function() {
             var end = response.end;
             var route_no = response.route_no;
             var ph = response.phone;
-            if (route_no == "not available") {
+            if (route_no == "not available" || route_no =="") {
               console.log("not available");
               console.log(end);
               map.loadImage(
-                "https://raw.githubusercontent.com/halolimat/FloodMapping/master/FloodMapIcons/siren_emergency.png?token=AECQADb-zk6KVJFehj9-K_0DRE-U6Nyfks5a2sl6wA%3D%3D",
+                "/static/siren_emergency.png",
                 function(error, helip) {
                   if (error) throw error;
+                  console.log("helicop");
                   map.addImage("heli", helip);
                   map.addLayer({
                     id: "emergency",
@@ -514,6 +515,7 @@ map.on("load", function() {
                 }
               );
             } else {
+              console.log("route is available?");
               console.log(end);
               console.log(route_no);
               var directionsRequest =
