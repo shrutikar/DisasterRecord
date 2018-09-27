@@ -946,7 +946,7 @@ def loc_name():
     names = defaultdict(list)
     for e in need_req:
         loc=e['properties']['locationMention']['text'].lower()
-        names[loc].append(e)
+        names[loc.title()].append(e)
 
     n = str(json.dumps({"type": "FeatureCollection", "features": names}))
     return n
@@ -975,20 +975,27 @@ def wc():
     # alice_mask = np.array(Image.open(path.join(d, "oval.png")))
     stopwords = set(STOPWORDS)
     stopwords.update("said", "NUM", "USER", "HASH")
-    wc = WordCloud( max_words=2000,
-                   stopwords=stop,background_color="white",mode='RGBA')
-    wordcloud1 = wc.generate(myString)
+    #wc = WordCloud( max_words=2000, stopwords=stop,background_color="black",mode='RGBA')
+    #wordcloud1 = wc.generate(myString)
 
-    plt.imshow(wordcloud1, interpolation="bilinear")
+    wordcloud = WordCloud(  max_words=2000,
+                            stopwords=stop,
+                            width=1200,
+                            height=900,
+                            background_color="white").generate(myString)
+
+    #plt.figure(figsize=(160,160))
+    #plt.figure()
+    plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
-    # plt.show()
+    plt.tight_layout(pad=0)
+
     strIO = StringIO.StringIO()
     plt.savefig(strIO, format='png')
     strIO.seek(0)
     figdata_png = base64.b64encode(strIO.getvalue())
     return figdata_png.decode('utf8')
     # return send_file(strIO, mimetype='image/png')
-
 
 @application.route("/")
 def index():

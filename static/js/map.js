@@ -929,10 +929,10 @@ map.on("load", function() {
         // "<li id=osm_shelter> osm_shelter => " + res.osm_shelter + "</li>"
         $("#wc").remove();
         $(".list_head").removeClass("animated flipInX");
-        $("#agg_content").append(
+        /*$("#agg_content").append(
           "<div class='list_head' id='wc'>Word Cloud:</div>"
         );
-        $("#wc").addClass("animated flipInX");
+        $("#wc").addClass("animated flipInX");*/
       }
     });
 
