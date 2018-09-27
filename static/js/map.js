@@ -25,16 +25,23 @@ var months = [
 var layers = [[150, "#f28cb1"], [20, "#f1f075"], [0, "#51bbd6"]];
 // Disable default box zooming.
 
-var txt_name = '';
+var txt_name = "";
 map.boxZoom.disable();
-var layers_name = ['Flooded Area', 'Shelter/Food/Supplies Need', 'Medical/Rescue Help Need', 'Shelter/Food/Supplies Available', 'Medical/Rescue Help Available'];
+var layers_name = [
+  "Flooded Area",
+  "Shelter/Food/Supplies Need",
+  "Medical/Rescue Help Need",
+  "Shelter/Food/Supplies Available",
+  "Medical/Rescue Help Available"
+];
+var source_names = ["trees", "shelter", "rescue", "osm_shelter", "osm_rescue"];
 
 // Create a popup, but don't add it to the map yet.
 var popup = new mapboxgl.Popup({
   closeButton: false
 });
 
-map.on("load", function () {
+map.on("load", function() {
   $("#loadingGif").show();
 
   var canvas = map.getCanvasContainer();
@@ -52,8 +59,6 @@ map.on("load", function () {
 
   var start_LtLg;
   var end_LtLg;
-
-
 
   // Set `true` to dispatch the event before other functions
   // call it. This is necessary for disabling the default map
@@ -74,13 +79,13 @@ map.on("load", function () {
       e.clientY - rect.top - canvas.clientTop
     );
   }
-  map.on("mousedown", function (e) {
+  map.on("mousedown", function(e) {
     start_LtLg = e.lngLat;
   });
-  map.on("mouseup", function (e) {
+  map.on("mouseup", function(e) {
     end_LtLg = e.lngLat;
   });
-  map.on("movestart", function (e) {
+  map.on("movestart", function(e) {
     console.log("moveend");
     if (box) {
       box.parentNode.removeChild(box);
@@ -88,17 +93,16 @@ map.on("load", function () {
     }
   });
   var radio = "";
-  $("input[type=radio][name=user_lvl]").change(function () {
+  $("input[type=radio][name=user_lvl]").change(function() {
     radio = this.value;
     if (radio == "individual") {
-    // $('#loadingGif').show();
-    $("#menu").empty();
-    $("#menu").css("display", "block");
+      // $('#loadingGif').show();
+      $("#menu").empty();
+      $("#menu").css("display", "block");
       $(".marker").remove();
       $(".r_marker").remove();
       $("#steps").css("display", "none");
       $("#agg_content").css("display", "none");
-
 
       if (box) {
         box.parentNode.removeChild(box);
@@ -109,150 +113,150 @@ map.on("load", function () {
 
       $.ajax({
         url: "/test",
-        success: function (res) {
+        success: function(res) {
           response = JSON.parse(res);
           console.log(response);
 
-          map.addSource('trees', {
-            type: 'geojson',
+          map.addSource("trees", {
+            type: "geojson",
             data: response
           });
           // add heatmap layer here
           // add circle layer here
-          map.addLayer({
-            id: 'Flooded Area',
-            type: 'heatmap',
-            source: 'trees',
-            minzoom: 9,
-            maxzoom: 15,
-            paint: {
-              // increase weight as diameter breast height increases
-              'heatmap-weight': {
-                property: 'dbh',
-                type: 'exponential',
-                stops: [
-                  [1, 0],
-                  [62, 1]
-                ]
-              },
-              // increase intensity as zoom level increases
-              'heatmap-intensity': {
-                stops: [
-                  [11, 1.5],
-                  [15, 1.5]
-                ]
-              },
-              // assign color values be applied to points depending on their density
-              'heatmap-color': [
-                'interpolate', ['linear'],
-                ['heatmap-density'],
-                0, 'rgba(117, 207, 240, 0)',
-                0.2, 'rgb(117, 207, 240)',
-                0.4, 'rgb(117, 207, 240)',
-                0.6, 'rgb(117, 207, 240)',
-                0.8, 'rgb(117, 207, 240)'
-              ],
-              // increase radius as zoom increases
-              'heatmap-radius': 15,
-              /*
+          map.addLayer(
+            {
+              id: "Flooded Area",
+              type: "heatmap",
+              source: "trees",
+              minzoom: 9,
+              maxzoom: 15,
+              paint: {
+                // increase weight as diameter breast height increases
+                "heatmap-weight": {
+                  property: "dbh",
+                  type: "exponential",
+                  stops: [[1, 0], [62, 1]]
+                },
+                // increase intensity as zoom level increases
+                "heatmap-intensity": {
+                  stops: [[11, 1.5], [15, 1.5]]
+                },
+                // assign color values be applied to points depending on their density
+                "heatmap-color": [
+                  "interpolate",
+                  ["linear"],
+                  ["heatmap-density"],
+                  0,
+                  "rgba(117, 207, 240, 0)",
+                  0.2,
+                  "rgb(117, 207, 240)",
+                  0.4,
+                  "rgb(117, 207, 240)",
+                  0.6,
+                  "rgb(117, 207, 240)",
+                  0.8,
+                  "rgb(117, 207, 240)"
+                ],
+                // increase radius as zoom increases
+                "heatmap-radius": 15,
+                /*
               'heatmap-radius': {
                   stops: [
                       [11, 15],
                       [15, 20]
                   ]
               },*/
-              // decrease opacity to transition into the circle layer
-              'heatmap-opacity': {
-                default: 1,
-                stops: [
-                  [5, 1],
-                  [20, 0]
-                ]
-              },
-            }
-          }, 'waterway-label');
-
+                // decrease opacity to transition into the circle layer
+                "heatmap-opacity": {
+                  default: 1,
+                  stops: [[5, 1], [20, 0]]
+                }
+              }
+            },
+            "waterway-label"
+          );
         }
       });
-
-
-
 
       $.ajax({
         url: "/chennai/data",
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
-          end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
+          end_date: +$('input[name="daterange"]').data("daterangepicker")
+            .endDate,
           min_lat: 13.2823848224,
           min_lng: 80.066986084,
           max_lat: 12.74,
           max_lng: 80.3464508057,
-          q_str: 'shelter_need'
+          q_str: "shelter_need"
         },
-        success: function (res) {
+        success: function(res) {
           console.log(JSON.parse(res));
           response = JSON.parse(res);
           // console.log(response['features'].length);
           map.addSource("shelter", {
-            "type": "geojson",
-            "data": response
+            type: "geojson",
+            data: response
           });
-          map.loadImage('/static/shelter_need.png', function (error, sh_image) {
+          map.loadImage("/static/shelter_need.png", function(error, sh_image) {
             if (error) throw error;
-            map.addImage('si', sh_image);
+            map.addImage("si", sh_image);
             map.addLayer({
-              "id": "Shelter/Food/Supplies Need",
-              "type": "symbol",
-              "source": "shelter",
-              "layout": {
+              id: "Shelter/Food/Supplies Need",
+              type: "symbol",
+              source: "shelter",
+              layout: {
                 "icon-image": "si",
                 "icon-size": 0.4
-              },
+              }
             });
           });
-          response.features = response.features.map(function (d) {
+          response.features = response.features.map(function(d) {
             d.properties.uxtm = new Date(d.properties.timestamp).getTime();
             return d;
           });
         }
       });
 
-
       $.ajax({
         url: "/chennai/data",
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
-          end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
+          end_date: +$('input[name="daterange"]').data("daterangepicker")
+            .endDate,
           min_lat: 13.2823848224,
           min_lng: 80.066986084,
           max_lat: 12.74,
           max_lng: 80.3464508057,
-          q_str: 'rescue_need'
+          q_str: "rescue_need"
         },
-        success: function (res) {
+        success: function(res) {
           console.log(JSON.parse(res));
           response = JSON.parse(res);
           // console.log(response['features'].length);
           map.addSource("rescue", {
-            "type": "geojson",
-            "data": response
+            type: "geojson",
+            data: response
           });
-          map.loadImage('/static/ambulance_orange.png', function (error, re_image) {
+          map.loadImage("/static/ambulance_orange.png", function(
+            error,
+            re_image
+          ) {
             if (error) throw error;
-            map.addImage('re', re_image);
+            map.addImage("re", re_image);
             map.addLayer({
-              "id": "Medical/Rescue Help Need",
-              "type": "symbol",
-              "source": "rescue",
-              "layout": {
+              id: "Medical/Rescue Help Need",
+              type: "symbol",
+              source: "rescue",
+              layout: {
                 "icon-image": "re",
                 "icon-size": 0.08
-              },
+              }
             });
           });
-          response.features = response.features.map(function (d) {
+          response.features = response.features.map(function(d) {
             d.properties.uxtm = new Date(d.properties.timestamp).getTime();
             return d;
           });
@@ -264,35 +268,35 @@ map.on("load", function () {
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
-          end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
+          end_date: +$('input[name="daterange"]').data("daterangepicker")
+            .endDate,
           min_lat: 13.2823848224,
           min_lng: 80.066986084,
           max_lat: 12.74,
           max_lng: 80.3464508057,
-          q_str: 'osm_shelter'
+          q_str: "osm_shelter"
         },
-        success: function (res) {
+        success: function(res) {
           console.log(JSON.parse(res));
           response = JSON.parse(res);
           // console.log(response['features'].length);
           map.addSource("osm_shelter", {
-            "type": "geojson",
-            "data": response
+            type: "geojson",
+            data: response
           });
-          map.loadImage('/static/shelter_green.png', function (error, o_sh) {
+          map.loadImage("/static/shelter_green.png", function(error, o_sh) {
             if (error) throw error;
-            map.addImage('osh', o_sh);
+            map.addImage("osh", o_sh);
             map.addLayer({
-              "id": "Shelter/Food/Supplies Available",
-              "type": "symbol",
-              "source": "osm_shelter",
-              "layout": {
+              id: "Shelter/Food/Supplies Available",
+              type: "symbol",
+              source: "osm_shelter",
+              layout: {
                 "icon-image": "osh",
                 "icon-size": 0.4
-              },
+              }
             });
           });
-
         }
       });
 
@@ -301,37 +305,37 @@ map.on("load", function () {
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
-          end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
+          end_date: +$('input[name="daterange"]').data("daterangepicker")
+            .endDate,
           min_lat: 13.2823848224,
           min_lng: 80.066986084,
           max_lat: 12.74,
           max_lng: 80.3464508057,
-          q_str: 'osm_rescue'
+          q_str: "osm_rescue"
         },
-        success: function (res) {
+        success: function(res) {
           console.log(JSON.parse(res));
           response = JSON.parse(res);
           // console.log(response['features'].length);
           map.addSource("osm_rescue", {
-            "type": "geojson",
-            "data": response
+            type: "geojson",
+            data: response
           });
-          map.loadImage('/static/ambulance green.png', function (error, o_re) {
+          map.loadImage("/static/ambulance green.png", function(error, o_re) {
             if (error) throw error;
-            map.addImage('ore', o_re);
+            map.addImage("ore", o_re);
             map.addLayer({
-              "id": "Medical/Rescue Help Available",
-              "type": "symbol",
-              "source": "osm_rescue",
-              "layout": {
+              id: "Medical/Rescue Help Available",
+              type: "symbol",
+              source: "osm_rescue",
+              layout: {
                 "icon-image": "ore",
                 "icon-size": 0.08
-              },
+              }
             });
           });
 
-          $('#loadingGif').hide();
-
+          $("#loadingGif").hide();
         }
       });
 
@@ -342,66 +346,81 @@ map.on("load", function () {
         closeOnClick: false
       });
 
-
-      map.on('mouseenter', 'Shelter/Food/Supplies Available', function (e) {
-
-        map.getCanvas().style.cursor = 'pointer';
+      map.on("mouseenter", "Shelter/Food/Supplies Available", function(e) {
+        map.getCanvas().style.cursor = "pointer";
         var coordinates = e.features[0].geometry.coordinates.slice();
-        description = "<table><tr><th><div class='banner-section' id='img-container' style='float:left'></div></th>";
-        description += "<th style='padding: 10px'>" + e.features[0].properties.name + "</th></tr></table>";
+        description =
+          "<table><tr><th><div class='banner-section' id='img-container' style='float:left'></div></th>";
+        description +=
+          "<th style='padding: 10px'>" +
+          e.features[0].properties.name +
+          "</th></tr></table>";
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-        pop.setLngLat(coordinates)
+        pop
+          .setLngLat(coordinates)
           .setHTML(description)
           .addTo(map);
         var img = new Image();
         $.ajax({
           url: "/data",
-          success: function (res) {
+          success: function(res) {
             response = JSON.parse(res);
-            img.src = response[e.features[0].properties.key][e.features[0].properties.value];
+            img.src =
+              response[e.features[0].properties.key][
+                e.features[0].properties.value
+              ];
           }
         });
 
         img.setAttribute("alt", "OSM-Icon");
         document.getElementById("img-container").appendChild(img);
-
       });
-      map.on('mouseenter', 'Medical/Rescue Help Available', function (e) {
-        map.getCanvas().style.cursor = 'pointer';
+      map.on("mouseenter", "Medical/Rescue Help Available", function(e) {
+        map.getCanvas().style.cursor = "pointer";
         var coordinates = e.features[0].geometry.coordinates.slice();
-        description = "<table><tr><th><div class='banner-section' id='img-container' style='float:left'></div></th>";
-        description += "<th style='padding: 10px'>" + e.features[0].properties.name + "</th></tr></table>";
+        description =
+          "<table><tr><th><div class='banner-section' id='img-container' style='float:left'></div></th>";
+        description +=
+          "<th style='padding: 10px'>" +
+          e.features[0].properties.name +
+          "</th></tr></table>";
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-        pop.setLngLat(coordinates)
+        pop
+          .setLngLat(coordinates)
           .setHTML(description)
           .addTo(map);
         var img = new Image();
         $.ajax({
           url: "/data",
-          success: function (res) {
+          success: function(res) {
             response = JSON.parse(res);
-            img.src = response[e.features[0].properties.key][e.features[0].properties.value];
+            img.src =
+              response[e.features[0].properties.key][
+                e.features[0].properties.value
+              ];
           }
         });
         img.setAttribute("alt", "OSM-Icon");
         document.getElementById("img-container").appendChild(img);
       });
 
-      map.on('mouseleave', 'Shelter/Food/Supplies Available', function () {
-        map.getCanvas().style.cursor = '';
+      map.on("mouseleave", "Shelter/Food/Supplies Available", function() {
+        map.getCanvas().style.cursor = "";
         pop.remove();
       });
-      map.on('mouseleave', 'Medical/Rescue Help Available', function () {
-        map.getCanvas().style.cursor = '';
+      map.on("mouseleave", "Medical/Rescue Help Available", function() {
+        map.getCanvas().style.cursor = "";
         pop.remove();
       });
 
-      map.on('click', function (e) {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['Shelter/Food/Supplies Need', 'Medical/Rescue Help Need'] });
+      map.on("click", function(e) {
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ["Shelter/Food/Supplies Need", "Medical/Rescue Help Need"]
+        });
         if (!features.length) {
           return;
         }
@@ -413,8 +432,9 @@ map.on("load", function () {
           .setHTML(ClickedMatchObject(feature))
           .addTo(map);
         ///HERE
-        document.getElementById('btn-collectobj')
-          .addEventListener('click', function () {
+        document
+          .getElementById("btn-collectobj")
+          .addEventListener("click", function() {
             var start_cordd = feature.geometry.coordinates;
             var cls = feature.properties.needClass;
             getRoute(start_cordd, cls);
@@ -423,21 +443,22 @@ map.on("load", function () {
       });
       function ClickedMatchObject(feature) {
         // Hide instructions if another location is chosen from the map
-        $('#instructions').hide();
-        var html = '';
+        $("#instructions").hide();
+        var html = "";
         html += "<div>";
         html += "<fieldset class='with-icon spinner'>";
         html += "<p>" + feature.properties.text + "</p>";
         //html += "<img src='https://digitalsynopsis.com/wp-content/uploads/2016/06/loading-animations-preloader-gifs-ui-ux-effects-10.gif' height='100%' alt='artist' border='1' />"
         //html += "<button class='btn btn-primary ' id='btn-collectobj' value='Collect'>Get Direction</button>";
-        html += "<p style='text-align: center;'><input type='button' class='btn btn-primary ' id='btn-collectobj' value='&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Match Need' style='color: red; font-weight: bold; padding: 0.5em 1em; background: url(https://digitalsynopsis.com/wp-content/uploads/2016/06/loading-animations-preloader-gifs-ui-ux-effects-10.gif) no-repeat; background-size:50% 100%;'></p>";
+        html +=
+          "<p style='text-align: center;'><input type='button' class='btn btn-primary ' id='btn-collectobj' value='&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Match Need' style='color: red; font-weight: bold; padding: 0.5em 1em; background: url(https://digitalsynopsis.com/wp-content/uploads/2016/06/loading-animations-preloader-gifs-ui-ux-effects-10.gif) no-repeat; background-size:50% 100%;'></p>";
         html += "</fieldset>";
         html += "</div>";
         return html;
       }
 
       function getRoute(cordd, cl) {
-        $('#loadingGif').show();
+        $("#loadingGif").show();
         var start = cordd;
         var end = [80.255722, 13.079104]; //random point. To be matched.
 
@@ -446,7 +467,8 @@ map.on("load", function () {
           data: {
             start_date: +$('input[name="daterange"]').data("daterangepicker")
               .startDate,
-            end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
+            end_date: +$('input[name="daterange"]').data("daterangepicker")
+              .endDate,
             min_lat: 13.2823848224,
             min_lng: 80.066986084,
             max_lat: 12.74,
@@ -455,46 +477,59 @@ map.on("load", function () {
             start_1: start[1],
             cl: cl
           },
-          success: function (res) {
+          success: function(res) {
             console.log(JSON.parse(res));
             response = JSON.parse(res);
             // console.log(response['features'].length);
             var end = response.end;
             var route_no = response.route_no;
             var ph = response.phone;
-            if (route_no == 'not available') {
+            if (route_no == "not available") {
               console.log("not available");
               console.log(end);
-              map.loadImage('https://raw.githubusercontent.com/halolimat/FloodMapping/master/FloodMapIcons/siren_emergency.png?token=AECQADb-zk6KVJFehj9-K_0DRE-U6Nyfks5a2sl6wA%3D%3D', function (error, helip) {
-                if (error) throw error;
-                map.addImage('heli', helip);
-                map.addLayer({
-                  "id": "emergency",
-                  "type": "symbol",
-                  source: {
-                    type: 'geojson',
-                    data: {
-                      type: 'Feature',
-                      geometry: {
-                        type: 'Point',
-                        coordinates: start
+              map.loadImage(
+                "https://raw.githubusercontent.com/halolimat/FloodMapping/master/FloodMapIcons/siren_emergency.png?token=AECQADb-zk6KVJFehj9-K_0DRE-U6Nyfks5a2sl6wA%3D%3D",
+                function(error, helip) {
+                  if (error) throw error;
+                  map.addImage("heli", helip);
+                  map.addLayer({
+                    id: "emergency",
+                    type: "symbol",
+                    source: {
+                      type: "geojson",
+                      data: {
+                        type: "Feature",
+                        geometry: {
+                          type: "Point",
+                          coordinates: start
+                        }
                       }
                     },
-                  },
-                  "layout": {
-                    "icon-image": "heli",
-                    "icon-size": 0.75
-                  },
-                });
-              });
+                    layout: {
+                      "icon-image": "heli",
+                      "icon-size": 0.75
+                    }
+                  });
+                }
+              );
             } else {
               console.log(end);
               console.log(route_no);
-              var directionsRequest = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?overview=full&alternatives=true&steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+              var directionsRequest =
+                "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" +
+                start[0] +
+                "," +
+                start[1] +
+                ";" +
+                end[0] +
+                "," +
+                end[1] +
+                "?overview=full&alternatives=true&steps=true&geometries=geojson&access_token=" +
+                mapboxgl.accessToken;
               var result = $.ajax({
-                method: 'GET',
-                url: directionsRequest,
-              }).done(function (data) {
+                method: "GET",
+                url: directionsRequest
+              }).done(function(data) {
                 console.log(data);
                 var route = data.routes[route_no].geometry;
 
@@ -503,47 +538,55 @@ map.on("load", function () {
                   map.removeSource("route");
                 }
                 map.addLayer({
-                  id: 'route',
-                  type: 'line',
+                  id: "route",
+                  type: "line",
                   source: {
-                    type: 'geojson',
+                    type: "geojson",
                     data: {
-                      type: 'Feature',
+                      type: "Feature",
                       geometry: route
                     }
                   },
                   paint: {
-                    'line-width': 2,
-                    'line-color': "blue"
+                    "line-width": 2,
+                    "line-color": "blue"
                   }
                 });
-                $('#instructions').show();
-                $('instructions').html('');
-                $('instructions').empty();
-                var instructions = document.getElementById('instructions');
+                $("#instructions").show();
+                $("instructions").html("");
+                $("instructions").empty();
+                var instructions = document.getElementById("instructions");
                 var steps = data.routes[route_no].legs[0].steps;
-                instructions.innerHTML = '<p style="color:white;background-color: #71a419;" >' + 'Turn-by-Turn Directions' + '</p>';
-                steps.forEach(function (step) {
-                  instructions.insertAdjacentHTML('beforeend', '<p style="color:black;background-color:white;">' + step.maneuver.instruction + '</p>');
+                instructions.innerHTML =
+                  '<p style="color:white;background-color: #71a419;" >' +
+                  "Turn-by-Turn Directions" +
+                  "</p>";
+                steps.forEach(function(step) {
+                  instructions.insertAdjacentHTML(
+                    "beforeend",
+                    '<p style="color:black;background-color:white;">' +
+                      step.maneuver.instruction +
+                      "</p>"
+                  );
                 });
-                $('#instructions').show();
+                $("#instructions").show();
               });
               if (map.getLayer("start")) {
                 map.removeLayer("start");
                 map.removeSource("start");
               }
               map.addLayer({
-                id: 'start',
-                type: 'circle',
+                id: "start",
+                type: "circle",
                 source: {
-                  type: 'geojson',
+                  type: "geojson",
                   data: {
-                    type: 'Feature',
+                    type: "Feature",
                     geometry: {
-                      type: 'Point',
+                      type: "Point",
                       coordinates: start
                     }
-                  },
+                  }
                 }
               });
               if (map.getLayer("end")) {
@@ -551,87 +594,94 @@ map.on("load", function () {
                 map.removeSource("end");
               }
               map.addLayer({
-                id: 'end',
-                type: 'circle',
+                id: "end",
+                type: "circle",
                 source: {
-                  type: 'geojson',
+                  type: "geojson",
                   data: {
-                    type: 'Feature',
+                    type: "Feature",
                     geometry: {
-                      type: 'Point',
+                      type: "Point",
                       coordinates: end
                     }
-                  },
+                  }
                 }
               });
             }
-            $('#loadingGif').hide();
-
-
+            $("#loadingGif").hide();
           }
         });
-
       }
       // $('#loadingGif').show();
 
-      var toggleableLayerIds = ['Shelter/Food/Supplies Need', 'Medical/Rescue Help Need', 'Shelter/Food/Supplies Available', 'Medical/Rescue Help Available',
-        'Flooded Area'];
-      var about = ['Click the above tab to show or hide Shelter/Food/Supplies Help Need layer on the map. This layer corresponds to the tweets that are related to shelter/food/supplies. Clicking on the respective icon on the map will give you the tweet and a button to start a match with available shelter/food/supplies.',
-        'Click the above tab to show or hide Medical/Rescue Help Need Layer on the map. This layer corresponds to the tweets that are related to medical/rescue. Clicking on the respective icon on the map will give you the tweet and a button to start a match with available helps for medical/recue.',
-        'Click the above tab to show or hide Shelter/Food/Supplies Available layer on the map. This layer corresponds to the available locations that provide shelter/food/supplies obtained from OpenStreetMap. Hovering over the respective icons will give you the name of the location. When a match is made to these locations, an instruction box is provided with address, phone number and turn-by-turn directions to it.',
-        'Click the above tab to show or hide Medical/Supplies Help Available layer on the map. This layer corresponds to the available locations that provide help for medical/rescue obtained from OpenStreetMap. Hovering over the respective icons will give you the name of the location. When a match is made to these locations, an instruction box is provided with address, phone number and turn-by-turn directions to the location.',
-        'The Red Helicopter icon marks the reagion that is flooded and cannot be matched to any of the available helps.']
-      var img_src = ["/static/shelter_need.png", "/static/ambulance_orange.png",
-        "/static/shelter_green.png", "/static/ambulance green.png",
+      var toggleableLayerIds = [
+        "Shelter/Food/Supplies Need",
+        "Medical/Rescue Help Need",
+        "Shelter/Food/Supplies Available",
+        "Medical/Rescue Help Available",
+        "Flooded Area"
+      ];
+      var about = [
+        "Click the above tab to show or hide Shelter/Food/Supplies Help Need layer on the map. This layer corresponds to the tweets that are related to shelter/food/supplies. Clicking on the respective icon on the map will give you the tweet and a button to start a match with available shelter/food/supplies.",
+        "Click the above tab to show or hide Medical/Rescue Help Need Layer on the map. This layer corresponds to the tweets that are related to medical/rescue. Clicking on the respective icon on the map will give you the tweet and a button to start a match with available helps for medical/recue.",
+        "Click the above tab to show or hide Shelter/Food/Supplies Available layer on the map. This layer corresponds to the available locations that provide shelter/food/supplies obtained from OpenStreetMap. Hovering over the respective icons will give you the name of the location. When a match is made to these locations, an instruction box is provided with address, phone number and turn-by-turn directions to it.",
+        "Click the above tab to show or hide Medical/Supplies Help Available layer on the map. This layer corresponds to the available locations that provide help for medical/rescue obtained from OpenStreetMap. Hovering over the respective icons will give you the name of the location. When a match is made to these locations, an instruction box is provided with address, phone number and turn-by-turn directions to the location.",
+        "The Red Helicopter icon marks the reagion that is flooded and cannot be matched to any of the available helps."
+      ];
+      var img_src = [
+        "/static/shelter_need.png",
+        "/static/ambulance_orange.png",
+        "/static/shelter_green.png",
+        "/static/ambulance green.png",
         "/static/fl.png",
-        "/static/siren_emergency.png"]
+        "/static/siren_emergency.png"
+      ];
       for (var i = 0; i < toggleableLayerIds.length; i++) {
         var id = toggleableLayerIds[i];
-        var icon = document.createElement('img');
+        var icon = document.createElement("img");
         icon.height = 34;
-        id_obj = document.createElement('h5');
+        id_obj = document.createElement("h5");
         id_obj.textContent = id;
-        id_obj.style='display: inline-block;';
-        id_obj.id = 'nav_id';
+        id_obj.style = "display: inline-block;";
+        id_obj.id = "nav_id";
         icon.src = img_src[i];
-        var link = document.createElement('a');
-        link.href = '#';
-        link.className = 'active';
+        var link = document.createElement("a");
+        link.href = "#";
+        link.className = "active";
 
-        var aboutE = document.createElement('p');
-        aboutE.className = 'about_E';
+        var aboutE = document.createElement("p");
+        aboutE.className = "about_E";
         aboutE.textContent = about[i];
-        link.onclick = function (e) {
+        link.onclick = function(e) {
           var clickedLayer = this.textContent;
           e.preventDefault();
           e.stopPropagation();
-          var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-          if (visibility === 'visible') {
-            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-            this.className = '';
+          var visibility = map.getLayoutProperty(clickedLayer, "visibility");
+          if (visibility === "visible") {
+            map.setLayoutProperty(clickedLayer, "visibility", "none");
+            this.className = "";
           } else {
-            this.className = 'active';
-            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            this.className = "active";
+            map.setLayoutProperty(clickedLayer, "visibility", "visible");
           }
         };
 
-
         //Dipesh: place this on the right slider
 
-
-        var layers = document.getElementById('menu');
-        var info = document.createElement('img');
-        info.src = 'static/information-o.png';
-        info.className = 'info';
+        var layers = document.getElementById("menu");
+        var info = document.createElement("img");
+        info.src = "static/information-o.png";
+        info.className = "info";
         var first_click = true;
-        info.onclick = function (e) {
+        info.onclick = function(e) {
           if (first_click) {
-            $('.about_E').css('display', 'none');
-            $(this).next().toggle();
+            $(".about_E").css("display", "none");
+            $(this)
+              .next()
+              .toggle();
             first_click = false;
-          }
-          else {
-            $('.about_E').hide();
+          } else {
+            $(".about_E").hide();
             first_click = true;
           }
         };
@@ -640,8 +690,8 @@ map.on("load", function () {
         //link.textContent = id;
 
         layers.appendChild(link);
-//        layers.appendChild(info);
-//        layers.appendChild(aboutE);
+        //        layers.appendChild(info);
+        //        layers.appendChild(aboutE);
         // $('#agg_content').css('display', 'block');
         //link.onmouseenter = function(e){
         //    $('#nav_id').show();
@@ -651,35 +701,29 @@ map.on("load", function () {
         //    $('#nav_id').hide();
         //};
       }
-
-
-
-    }
-    else if (radio == "aggregated") {
+    } else if (radio == "aggregated") {
       $("#menu").css("display", "none");
       $("#steps").css("display", "block");
 
-
       //to clear all the layers from the map
-      //   map.eachLayer(function (layer) {
-      //     map.removeLayer(layer);
-      // });
-      // map.removeSource('route')
-      // var a = ["a", "b", "c"];
-    //   layers_name.forEach(function(lyr) {
-    //     try {
-    //       map.removeSource("route");
-    //       map.removeLayer("route");
-    //     }
-    //     catch(err) {
-    // //        alert("Error!");
-    //     }
-
-      // });
+      layers_name.forEach(function(lyr) {
+        try {
+          map.removeLayer(lyr);
+          map.removeSource(lyr);
+        } catch (err) {
+          //        alert("Error!");
+        }
+      });
+      //remove all the existing sources from the map
+      source_names.forEach(function(lyr) {
+        try {
+          map.removeSource(lyr);
+        } catch (err) {
+          //        alert("Error!");
+        }
+      });
     }
   });
-
-
 
   function mouseDown(e) {
     // Continue the rest of the function if the shiftkey is pressed.
@@ -746,7 +790,6 @@ map.on("load", function () {
     document.removeEventListener("mouseup", onMouseUp);
     map.dragPan.enable();
 
-
     $.ajax({
       url: "/chennai/count",
       data: {
@@ -758,7 +801,7 @@ map.on("load", function () {
         max_lat: end_LtLg.lat,
         max_lng: end_LtLg.lng
       },
-      success: function (res) {
+      success: function(res) {
         $("#steps").css("display", "none");
         $("#agg_content").css("display", "block");
         $(".list_head").addClass("animated flipInX");
@@ -771,11 +814,15 @@ map.on("load", function () {
         $(".osm_agg_list").empty();
         $(".wc_agg_list").empty();
         $(".text_agg_list").append(
-          "<tr id='rescue_need'><td><button class='button_1'> <img src='/static/ambulance_orange.png' height='30px'> <span id='zero_topic_text'>"+res.rescue_need+"</span></button></td></tr>"
+          "<tr id='rescue_need'><td><button class='button_1'> <img src='/static/ambulance_orange.png' height='30px'> <span id='zero_topic_text'>" +
+            res.rescue_need +
+            "</span></button></td></tr>"
           // "<li id=rescue_need> rescue_need => " + res.rescue_need + "</li>"
         );
         $(".text_agg_list").append(
-          "<tr id='shelter_need'><td><button class='button_1'> <img src='/static/shelter_need.png' height='30px'> <span id='zero_topic_text'>"+res.shelter_need+"</span></button></td></tr>"
+          "<tr id='shelter_need'><td><button class='button_1'> <img src='/static/shelter_need.png' height='30px'> <span id='zero_topic_text'>" +
+            res.shelter_need +
+            "</span></button></td></tr>"
           // "<li id=shelter_need> shelter_need => " + res.shelter_need + "</li>"
         );
 
@@ -784,8 +831,10 @@ map.on("load", function () {
           // res.animals +
           // "</button></td>"
 
-          "<tr id='animals'><td><button class='button_1'><img src='/static/animal.png' height='30px'><span id='zero_topic_text'> "+res.animals +"</span></button></td><tr>"
-          
+          "<tr id='animals'><td><button class='button_1'><img src='/static/animal.png' height='30px'><span id='zero_topic_text'> " +
+            res.animals +
+            "</span></button></td><tr>"
+
           // "<li id=animals> animals <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAL/SURBVGhD7dhLyExxGMfxccktGxYukSgWxIaIiOykJClFbiFiQakXCxEppZRcI2XhkixYuOdaSoRSosTGBiUScr99f5qnnk5n5j3nvP/OO5P/rz4188yc/5znzLn8z6nExMTExPzPGYYx6PvvXZOmG97iD+6jE5oyc6AmzFo0ZS7AN/IRI9ALPdEU6Y+f8I14XzEDDZ91sJX+7F573zEXDZ3HsBXeiOvuvad/bTkaMuNgK/oLg9AVOjZkPN7AN3Qa+l5DZR9sBa+qkBId9C/hm9EuqH+vO9o92vJ27ZD5qJXBuATfjDxAu8dfOz6gB1rLLLyALafXhdMZIzEB2lJ6XyTnYCt0WIUM6YIzaFMjOt8fgraeDSTfcAtbMRlZGtNYP2BjaLl60ZijcBn+ty8ic/phJz7BD1LLe2hrn6rjNuz7z9EByYzFftxB2vXlLLLsjpUB2I20QXS1fZ2oFbUJadmAtO/LEbT6z2vmqdOiVjY5wDsshGarSh9Mx2Zcg3az5DL16Nqh4ywtyUa+4B5UT/sHU3MefhDRPq0LWL1ogjcT6zNahlrxjegAL3RSmQjfhBxDmfGNHFehaGbjCmywVSgzwRpR/Ll+tQolJmgjOjvYYDtUKDFBG9kGG0zn7TITtBHNbWwwTfAyn/YCxO/WbW5EU4nfsAFHo4wshv2mBDnR3IUNuEUFF82vdGbzDmAKOqJINKPQhdd+8yaC7AktsEEfqeDyCvZZkj47Ct2eToUevqVJPiXxT1T0NGUIgkTXExtYd2qW4bB6W0yCZRH8Z0GvXXthA2sLW1bC6s+gLb8GmnPVe7yT5BvRQW31Gwh6cnkKG1xbzHISVt+lgoue386Dbph0r6IbIO33RpNFW7ZWI9tVCBU9rbCBZSAs/vjQRDFP/O1qKY0sgQ38RIVq/PGhrdsbeVJ6IydgA+9RoZoVsPpDFXKm9Ea0f9vAC1Soxk8f1GzelN6IriEHq/xN1TRYfakKOaOVtOWHqlCNxrK6pkcxMTExMTEx+VKp/AWRnYzEsg1WlAAAAABJRU5ErkJggg==' height='30px'> => " +
           //   res.animals +
           //   "</li>"
@@ -795,7 +844,9 @@ map.on("load", function () {
           // res.people +
           // "</button></td>"
 
-          "<tr id='people'><td><button class='button_1'><i class='fas fa-users'></i><span id='zero_topic_text'> "+res.people +"</span></button></td><tr>"
+          "<tr id='people'><td><button class='button_1'><i class='fas fa-users'></i><span id='zero_topic_text'> " +
+            res.people +
+            "</span></button></td><tr>"
           // "<li id=people>  people <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANuSURBVGhD7ZdZqFZVFIBvYRaZIKUWYin11PSaOURJRopCEEWzjxYYDT5J5NBL4kOESqBhQT0YEoFmSBRBSjT3UGAjNDwYpqGGoIWWfV+cBcvDPv+590Jwhf3BBz9rr7P2vmdYe9+hSqVSqVQqlcpZycV4Nz7Z6G9jZw2X46t4Ek+3NPYKTscxzVw8hO0/oO1BnINjkmvxKOYF/4Kv4xvN7zxm7tU4pjgHP8RY5DF8EI0H5+JSdCzyPsD/nStwNb6Nn+AOfBgnYJtbMRb3Dy7ALm5DcyJ/Pra5CB9B53Ru17AK/f5GxKN4HGOy7K94E2Y2YozvNNDDmxj5zxtIWNs5YjzrmpbjsHgcS0WyFrwBg3cxxnxqfXi3I/8dAw2z8ATGWJeP4UCuxL8wLjiAPtKHcBPmsX04DuVjjPg9BnowJ/I/MgDW+gYj7lwb0Lldw28YY3/iTOxkPUbyfpyKmVvwFEbO7Sh2pYg9baCHNRj5djVZhBFzjpsxcynmV24dduLdicQVBgrk9/tZA2BuxL7HeFIlzsMfMPLd9cWFRcw5SuR57JKdfIeRuMRAgecwcjYbgGno487x3HoDW7Bjkef3cBnKFoy4c5RwTZHjWjvZg5HY9Yq8h5Gz1kCDvyOu5tlqbaUTm9/vY86xvQfPYL62hN9K5Firk6cwEt15r8HMAxjjmo8Z4zG/dn3apn3NgnmYx50r0z45uNZOLsEjGMm22ZfQO7GriYXtO3IB+s3knEGa6zWZvZhznNO5XUPe1w6jax3IHZiLlbRQbn+eAr7AUu4gvcZrg6vQ2qXcrGsciHfoNSxdnP0bV6J4bPgZ87gnYPeAxXhdox+qsd8x5/6Ecay3prXzeMlteD52sh3zBfZzzzq78dsmln0CP2/FXsBJ2IVjuXPpZ2gbzjH9Gp3bNeT9S73hRdxBc6IHtvYhbTbm3betx5vh4k0o1VD/gBsx4yvYbibthvAfX2EkeIE9v8QU9HXIBfVFHCl+xO06P6JzlHBNb2HkfolncD3GoI+w77jcbsO2xd4uUmAy/oG51v04iBmYX7Mztoi7MAY+NdCDm1zk61YcLS9jrnUh9uE3Ffl3Ggj8q5Y1LjQwDPKdvNfAKLkPo45Pdji4xlhve9MeMbZce776f8Ro8aOOOtasVCqVSqVSqVQqAxga+heUObqqkyUf0QAAAABJRU5ErkJggg==' height='30px'> => " +
           //   res.people +
           //   "</li>"
@@ -805,7 +856,9 @@ map.on("load", function () {
           // res.vehicles +
           // "</button></td>"
 
-          "<tr id='vehicles'><td><button class='button_1'><i class='fas fa-car'></i><span id='zero_topic_text'> "+res.vehicles +"</span></button></td><tr>"
+          "<tr id='vehicles'><td><button class='button_1'><i class='fas fa-car'></i><span id='zero_topic_text'> " +
+            res.vehicles +
+            "</span></button></td><tr>"
           // "<li id=vehicles> vehicles <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMhSURBVGhD7dhZyA1hHMfxQ3bJmhRZkqVkKeLKciFLKcudhJL1ygVlK8SN3CAXrpRSUrhQShI3b0pCJHu2siWFlOW1fn+n93963vGcOXPOLB31/OpT78w88yxn3nnmmSmFhISEhISEhFTSCX3r0AdNkwk4gidoxZ86fcFt7MAgFB79+vvwG74ONuIzlqGwdMAZ+DqThY0oJNvgNnwHSzEC0fvgAqzcprZ9rnHYjHewcj8wHblmFL7BGj2LbqiWc7CyG7SjSobgKazsA3RFbnE79gK9EZekA1Em4yes/FbkkoWwRkTbtVLPQJQDsPK6+Qcj03SHe+nvY3YCV2HnHGrbF2cJvsLOOYHUmYgtOA/9OlZ50d7gJNZjLBJnOFrgq7QZvIau1FqMhjcDoYK+CnTJ9QQvynP8gq8vrlc4Ck0WlRyGFVAlujK7MQtx02xe6Y9FOIhbiBuYVhl6JpXzGHZgnXY0WTSwxYgb2By0O6AndbNHA9NMp4Wn9fsyKhsyVDv+k0yF9fuDdtQaSGfMhGaMVZiGjsgrqlttqC21OQPqQzTqq9v3dhvRgayAZgi3jOjhOBdZR3W696xRH6LL/cQD2Qv3WJTurdXIKmsQN0PJHlgSDWQB3P16nlzBdWjJbfu/Q2+MaTMJqsvqVRtqS226yxdNt/OhJBrIDdg+/T0MFnX8Gez4aaSN6rD6VPd4WLTquAk7fg3KPwP55GzoYXjJ2ZYxiGYe7Lh+yYspuVfDd+9pvWXHRX10l1QfEfsKqyWDL13QyIeHWlSn6vZFffGdI6dQXv/r1dVXQFdL7+vRDICvfBb0wItGU7L7n+PS077yDqNfQc8KzRxaprg32HJEsxN2/CU036fhTvGqO5qVsOPqm/qovqrP1a5gOcdhJ+o7lF5BtXzWTbgf7uvpLqSNplWrTzOW2lBbuj/14UN9sOPHkDiaEd7DTq7mIXohbVTHI/jacOnLS92vwlrLvIWvQtEgslxkjkTcYNSXKWgouvH0ddF9d7+L7eiBrNMTqvserD29cKkP/ZBJ9M3Jt3jLK2or1+9cISEhISEhIc2ZUukv+v42ygEFkf0AAAAASUVORK5CYII=' height='30px'> => " +
           //   res.vehicles +
           //   "</li>"
@@ -813,14 +866,14 @@ map.on("load", function () {
 
         $(".osm_agg_list").append(
           "<td id='osm_rescue'><span id='zero_topic_text'>Rescue: " +
-          res.osm_rescue +
-          "</td>"
+            res.osm_rescue +
+            "</td>"
           // "<li id=osm_rescue> osm_rescue => " + res.osm_rescue + "</li>"
         );
         $(".osm_agg_list").append(
           "<td id='osm_shelter'><span id='zero_topic_text'>Shelter: " +
-          res.osm_shelter +
-          "</td>"
+            res.osm_shelter +
+            "</td>"
           // "<li id=osm_shelter> osm_shelter => " + res.osm_shelter + "</li>"
         );
 
@@ -838,11 +891,11 @@ map.on("load", function () {
     });
   }
 
-  $(document).on("click", ".text_agg_list tr", function () {
+  $(document).on("click", ".text_agg_list tr", function() {
     console.log("Clicked list. " + this.id);
-    var txt_name=this.id;
-    $('.marker').remove();
-    $('.r_marker').remove();
+    var txt_name = this.id;
+    $(".marker").remove();
+    $(".r_marker").remove();
     $("#zero_container").empty();
     $("#close_zero").css("display", "block");
     $(".zero").css("display", "block");
@@ -853,17 +906,16 @@ map.on("load", function () {
     if (this.id == "rescue_need") {
       $("#zero_topic").append(
         "<img src='/static/ambulance_orange.png' height='35px'> <span id='zero_topic_text'>" +
-        this.id +
-        "</span>"
+          this.id +
+          "</span>"
       );
     } else {
       $("#zero_topic").append(
         "<img src='/static/shelter_need.png' height='30px'> <span id='zero_topic_text'>" +
-        this.id +
-        "</span>"
+          this.id +
+          "</span>"
       );
     }
-
 
     $.ajax({
       url: "/wc",
@@ -877,28 +929,32 @@ map.on("load", function () {
         max_lng: end_LtLg.lng,
         q_str: this.id
       },
-      success: function (res) {
+      success: function(res) {
         console.log(res);
 
-      // var layers = document.getElementById('picture')
-      $('#picture').empty();
+        // var layers = document.getElementById('picture')
+        $("#picture").empty();
 
-      $('#picture').append("<img src='data:image/png;base64," + res + "' height='190px' id='wc_img'>");
-      // var icon = document.createElement('img');
-      //   icon.height = 80;
-      //   icon.src = 'data:image/png;base64,' + res;
-      //  layers.appendChild(icon);
+        $("#picture").append(
+          "<img src='data:image/png;base64," +
+            res +
+            "' height='190px' id='wc_img'>"
+        );
+        // var icon = document.createElement('img');
+        //   icon.height = 80;
+        //   icon.src = 'data:image/png;base64,' + res;
+        //  layers.appendChild(icon);
 
-//        $(".wc_agg_list").src = 'data:image/png,' + res;
-          // "<li id=osm_shelter> osm_shelter => " + res.osm_shelter + "</li>"
-          $("#wc").remove();
-          $(".list_head").removeClass("animated flipInX");
-          $('#agg_content').append("<div class='list_head' id='wc'>Word Cloud:</div>");
-          $("#wc").addClass("animated flipInX");
+        //        $(".wc_agg_list").src = 'data:image/png,' + res;
+        // "<li id=osm_shelter> osm_shelter => " + res.osm_shelter + "</li>"
+        $("#wc").remove();
+        $(".list_head").removeClass("animated flipInX");
+        $("#agg_content").append(
+          "<div class='list_head' id='wc'>Word Cloud:</div>"
+        );
+        $("#wc").addClass("animated flipInX");
       }
     });
-
-
 
     $.ajax({
       url: "/chennai/loc_name",
@@ -912,7 +968,7 @@ map.on("load", function () {
         max_lng: end_LtLg.lng,
         q_str: this.id
       },
-      success: function (res) {
+      success: function(res) {
         console.log(JSON.parse(res));
         response = JSON.parse(res);
         // console.log(response.features);
@@ -920,16 +976,16 @@ map.on("load", function () {
 
         for (var key in response.features) {
           if (response.features.hasOwnProperty(key)) {
-//            console.log(key + " => " + response.features[key]);
+            //            console.log(key + " => " + response.features[key]);
             id_n = key.replace("#", "");
             var id_name = id_n.replace(/ /g, "_");
             $("#zero_container").append(
               key +
-              " [" +
-              response.features[key].length +
-              "] <img src='/static/plus.png' height='15px' class='plus' id='plus-" +
-              id_name +
-              "'><br>"
+                " [" +
+                response.features[key].length +
+                "] <img src='/static/plus.png' height='15px' class='plus' id='plus-" +
+                id_name +
+                "'><br>"
             );
             $("#zero_container").append(
               " <div id='" + id_name + "' class='twt_pack'></div>"
@@ -938,12 +994,11 @@ map.on("load", function () {
             for (var k in response.features[key]) {
               if (response.features[key].hasOwnProperty(k)) {
                 var el = document.createElement("div");
-//                console.log("txt_agg:",txt_name);
+                //                console.log("txt_agg:",txt_name);
 
-                if(txt_name=='shelter_need'){
+                if (txt_name == "shelter_need") {
                   el.className = "marker";
-                }
-                else if(txt_name=='rescue_need'){
+                } else if (txt_name == "rescue_need") {
                   el.className = "r_marker";
                 }
 
@@ -955,8 +1010,8 @@ map.on("load", function () {
                 count = count + 1;
                 $(id).append(
                   " <div id='twt_content' class='animated flipInX'>" +
-                  response.features[key][k].properties.text +
-                  "</div>"
+                    response.features[key][k].properties.text +
+                    "</div>"
                 );
                 // console.log(k + " => " + response.features[key][k].geometry.coordinates);
               }
@@ -964,7 +1019,7 @@ map.on("load", function () {
             $(id)
               .children()
               .mark(key);
-//            console.log(count);
+            //            console.log(count);
           }
         }
         //  response["features"].forEach(function(marker) {
@@ -1051,10 +1106,10 @@ map.on("load", function () {
   //   });
   // });
 
-  $(document).on("click", ".img_agg_list tr", function () {
-//    console.log("Clicked list. " + this.id);
-    $('.marker').remove();
-    $('.r_marker').remove();
+  $(document).on("click", ".img_agg_list tr", function() {
+    //    console.log("Clicked list. " + this.id);
+    $(".marker").remove();
+    $(".r_marker").remove();
     $("#zero_container").empty();
     $("#zero_topic").empty();
     $("#close_zero").css("display", "block");
@@ -1079,7 +1134,7 @@ map.on("load", function () {
         max_lng: end_LtLg.lng,
         q_str: this.id
       },
-      success: function (res) {
+      success: function(res) {
         console.log(JSON.parse(res));
         response = JSON.parse(res);
         // console.log(response['features'].length);
@@ -1089,15 +1144,15 @@ map.on("load", function () {
             "<h3 id='no_data' class='animated rubberBand'>No Data Avaiable</h3>"
           );
         } else {
-          response["features"].forEach(function (featr) {
-//            console.log(featr.properties.image[0].imageURL);
+          response["features"].forEach(function(featr) {
+            //            console.log(featr.properties.image[0].imageURL);
             $("#zero_container").append(
               "<div id='twt_content' class='animated flipInX'>" +
-              featr.properties.text +
-              "<br><img src='" +
-              featr.properties.image[0].imageURL +
-              "' height='100px'>" +
-              "</div>"
+                featr.properties.text +
+                "<br><img src='" +
+                featr.properties.image[0].imageURL +
+                "' height='100px'>" +
+                "</div>"
             );
           });
         }
@@ -1112,7 +1167,7 @@ map.on("load", function () {
     });
   });
 
-  $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+  $("#daterange").on("apply.daterangepicker", function(ev, picker) {
     $(".marker").remove();
     $(".r_marker").remove();
   });
