@@ -36,11 +36,9 @@ body {
 }
 table {
   width: 10%;
-  margin-bottom: 2%;
-  margin-left: 8%;
   border-spacing: 10px 0px;
   border-collapse: separate;
-  /* color: #fff; */
+  margin: auto;
 }
 th,
 td {
@@ -52,12 +50,13 @@ td {
 .button_1 {
   background-color: #71A42B;
   color: white;
-  padding: 2px 17px;
+  /* padding: 2px 17px; */
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
   border: none;
   width: 134px;
+  height: 33px;
   /* border: 2px solid #4CAF50; */
 }
 .button_1:hover {
@@ -101,7 +100,7 @@ td {
   color: #fff;
 }
 .osm_agg_list {
-  width: 100%;
+  width: 75%;
   color: #fff;
 }
 .img_agg_list {
@@ -589,9 +588,7 @@ h4, .h4, h5, .h5, h6, .h6 {
 #picture {
   position: absolute;
   z-index: 1;
-  bottom: 11%;
-  border-radius: 3px;
-  font-family: "Open Sans", sans-serif;
+  bottom: 20%;
   left: 16%;
 }
 
@@ -610,6 +607,9 @@ margin-bottom: 2px;
 border-radius: 3px;
 color: #969696;
 background-color: #5c5353;
+}
+#img_btn{
+  width: 102px;
 }
 #menu a:last-child {
   border: none;
