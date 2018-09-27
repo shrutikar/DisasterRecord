@@ -55,7 +55,7 @@ td {
   cursor: pointer;
   border-radius: 3px;
   border: none;
-  width: 134px;
+  width: 115px;
   height: 33px;
   /* border: 2px solid #4CAF50; */
 }
@@ -73,7 +73,7 @@ td {
 
 #close_zero {
   position: absolute;
-  right: 94%;
+  right: 92%;
   top: -1%;
   cursor: pointer;
   margin-top: 3px;
@@ -100,7 +100,7 @@ td {
   color: #fff;
 }
 .osm_agg_list {
-  width: 75%;
+  width: 100%;
   color: #fff;
 }
 .img_agg_list {
@@ -126,10 +126,10 @@ td {
 }
 #zero_topic_text {
   /*color: #474747;*/
-  font-size: 120%;
+  font-size: 103%;
   font-weight: bold;
   vertical-align: text-top;
-  margin-left: 10px;
+  margin-left: 9px;
 }
 #zero_topic {
   position: absolute;
@@ -157,21 +157,21 @@ mark{
   display: inline-block;
   margin-left: 4%;
   position: absolute;
-  bottom: 7%;
+  bottom: 18%;
   left: -1%;
 }
 #nsf {
   display: inline-block;
   margin-left: 20%;
   position: absolute;
-  bottom: 7%;
-  right: 53%;
+  bottom: 18%;
+  right: 49%;
 }
 #ibm {
   display: inline-block;
   margin-left: 17%;
   position: absolute;
-  bottom: 35%;
+  bottom: 30%;
   right: 11%;
 }
 .one {
@@ -198,7 +198,7 @@ mark{
   border-radius: 6px;
 }
 #icon_p {
-  bottom: 3px;
+  bottom: -3px;
   position: absolute;
   right: 3px;
   font-size: 12px;
@@ -235,7 +235,7 @@ ul {
   /* color: #fff; */
 }
 #kno {
-  font-size: 14px;
+  font-size: 12px;
   margin-left: 1%;
 }
 
@@ -498,7 +498,7 @@ input[type="text"] {
   color: #fff;
   border-bottom: 1px solid white;
   border-radius: 2px;
-  width: 50%;
+  width: 60%;
   border-top: 0px;
   border-left: 0px;
   border-right: 0px;
@@ -588,16 +588,16 @@ h4, .h4, h5, .h5, h6, .h6 {
 #picture {
   position: absolute;
   z-index: 1;
-  bottom: 20%;
-  left: 16%;
+  bottom: 11%;
+  left: 10%;
 }
 
 #menu {
 position: absolute;
 z-index: 1;
 top: 231px;
-right: 30px;
-left: 36px;
+right: 2%;
+left: 2%;
 }
 #menu a {
 display: block;
@@ -609,7 +609,7 @@ color: #969696;
 background-color: #5c5353;
 }
 #img_btn{
-  width: 102px;
+  width: 79px;
 }
 #menu a:last-child {
   border: none;

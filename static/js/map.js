@@ -97,6 +97,7 @@ map.on("load", function() {
     radio = this.value;
     if (radio == "individual") {
       // $('#loadingGif').show();
+      $("#picture").empty();
       $("#menu").empty();
       $("#menu").css("display", "block");
       $(".marker").remove();
@@ -888,7 +889,7 @@ map.on("load", function() {
       );
     } else {
       $("#zero_topic").append(
-        "<img src='/static/shelter_need.png' height='30px'> <span id='zero_topic_text'>" +
+        "<img src='/static/shelter_need.png' height='35px'> <span id='zero_topic_text'>" +
           this.id +
           "</span>"
       );
@@ -915,7 +916,7 @@ map.on("load", function() {
         $("#picture").append(
           "<img src='data:image/png;base64," +
             res +
-            "' height='190px' id='wc_img'>"
+            "' height='165px' id='wc_img'>"
         );
         // var icon = document.createElement('img');
         //   icon.height = 80;
