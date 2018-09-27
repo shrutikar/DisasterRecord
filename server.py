@@ -65,6 +65,38 @@ Disaster Response
 Social Media
 """
 
+
+def download_file_cos(cos_credentials,key):
+    auth_endpoint = 'https://iam.bluemix.net/oidc/token'
+    _cos = ibm_boto3.client('s3',
+                            ibm_api_key_id=cos_credentials['apikey'],
+                            ibm_service_instance_id=cos_credentials['resource_instance_id'],
+                            ibm_auth_endpoint=auth_endpoint,
+                            config=Config(signature_version='oauth'),
+                            endpoint_url=cos_credentials['service_endpoint'])
+    f = get_item(bucket_name=cos_credentials['BUCKET'], item_name=key, cos=_cos)
+    print f
+    print ("=====================*********************")
+
+    tweets = f['Body'].read()
+    tweetsList = tweets.split("\n")
+    return tweets
+
+
+def get_item(bucket_name, item_name, cos):
+    print("Retrieving item from bucket: {0}, key: {1}".format(bucket_name, item_name))
+    try:
+        tweets = cos.get_object(Bucket=bucket_name, Key=item_name)
+        return tweets
+        # print("File Contents: {0}".format(file["Body"].read()))
+    except ClientError as be:
+        print("CLIENT ERROR: {0}\n".format(be))
+    except Exception as e:
+        print("Unable to retrieve file contents: {0}".format(e))
+
+
+
+
 def strip_non_ascii(s):
 
     if isinstance(s, unicode):
@@ -144,16 +176,45 @@ def make_map(params):
     return render_template('index.html', **params)
 
 
-dname = "chennai"
-geohash_fname = "_Data/"+dname+"_geohashes_8prec.json"
+# dname = "chennai"
+# geohash_fname = "_Data/"+dname+"_geohashes_8prec.json"
+# geohash_dict = defaultdict(bool)
+# if os.path.isfile(geohash_fname):
+#     print "returning cached file..."
+#     with open(geohash_fname) as f:
+#         geohash_dict = json.load(f)
+#     print len(geohash_dict.keys()), "geohashes"
+# else:
+#     print "Geohash File is not in folder"
+
+
+cos_cred={
+        "apikey": "C-BGVS6j-VncIFkpj6hIVVQCD96__x9cxSJHxFaAymwB",
+        "endpoints": "https://cos-service.bluemix.net/endpoints",
+        "iam_apikey_description": "Auto generated apikey during resource-key operation for Instance - crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
+        "iam_apikey_name": "auto-generated-apikey-7e34a98b-6014-4c1e-bbf3-3e99b48020aa",
+        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
+        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/022374f4b8504a0eaa1ce419e7b5e793::serviceid:ServiceId-d14c9908-da0d-43d5-ab25-30a814045c46",
+        "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
+        "BUCKET":"8prec",
+        "FILE":"chennai.geojson",
+        "service_endpoint": "https://s3-api.us-geo.objectstorage.softlayer.net"
+    }
+
+f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
 geohash_dict = defaultdict(bool)
-if os.path.isfile(geohash_fname):
-    print "returning cached file..."
-    with open(geohash_fname) as f:
-        geohash_dict = json.load(f)
-    print len(geohash_dict.keys()), "geohashes"
-else:
-    print "Geohash File is not in folder"
+tweetsList = f2.split("\n")
+for t in tweetsList:
+    geohash_dict = json.loads(t)
+
+
+def flooded(lat, lon):
+    geohash = Geohash.encode(lon,lat, precision=8)
+    if geohash_dict.get(geohash) is not None:
+        return geohash_dict[geohash]
+    else:
+        return "No Satellite Data!"
+
 
 def generateISO(d):
     return datetime.fromtimestamp(d / 1e3).isoformat()
@@ -424,34 +485,6 @@ def get_data():
         OSM_features_icons_dict = json.dumps(json.load(f))
     return OSM_features_icons_dict
 
-
-def download_file_cos(cos_credentials,key):
-    auth_endpoint = 'https://iam.bluemix.net/oidc/token'
-    _cos = ibm_boto3.client('s3',
-                            ibm_api_key_id=cos_credentials['apikey'],
-                            ibm_service_instance_id=cos_credentials['resource_instance_id'],
-                            ibm_auth_endpoint=auth_endpoint,
-                            config=Config(signature_version='oauth'),
-                            endpoint_url=cos_credentials['service_endpoint'])
-    f = get_item(bucket_name=cos_credentials['BUCKET'], item_name=key, cos=_cos)
-    print f
-    print ("=====================*********************")
-
-    tweets = f['Body'].read()
-    tweetsList = tweets.split("\n")
-    return tweets
-
-
-def get_item(bucket_name, item_name, cos):
-    print("Retrieving item from bucket: {0}, key: {1}".format(bucket_name, item_name))
-    try:
-        tweets = cos.get_object(Bucket=bucket_name, Key=item_name)
-        return tweets
-        # print("File Contents: {0}".format(file["Body"].read()))
-    except ClientError as be:
-        print("CLIENT ERROR: {0}\n".format(be))
-    except Exception as e:
-        print("Unable to retrieve file contents: {0}".format(e))
 
 
 
@@ -1017,5 +1050,3 @@ def needs():
 
 if __name__ == "__main__":
     application.run(host='127.0.0.1', port=8080)
-    # interpolate_try()
-    # intp()
