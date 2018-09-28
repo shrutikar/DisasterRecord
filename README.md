@@ -9,9 +9,9 @@ Pipeline for disaster relief, coordination and response.
 pip install -r requirements.txt
 
 
-# IBM Kubernetes Cluster Creation
+## IBM Kubernetes Cluster Creation
 
-## Create an Image
+### Create an Image
 
 #### One - Create Docker Image
 
@@ -26,7 +26,7 @@ docker commit 869f6813494b es_test
 
 ```
 
-### Two - Push to IBM Registry
+#### Two - Push to IBM Registry
 
 Tag then push the "es_test" image to the IBM registry.
 
@@ -38,13 +38,13 @@ docker tag es_test registry.ng.bluemix.net/drecord/hazardsees:drecord
 docker push registry.ng.bluemix.net/drecord/hazardsees:drecord
 ```
 
-## Create the Cluster
+### Create the Cluster
 
-### Three - Create a cluster
+#### Three - Create a cluster
 
 From your IBM Cloud dashboard click Catalog and search for "kubernetes". Under the "Containers" category you should see "Kubernetes Service". Select this one and follow the steps to create a new cluster.
 
-### Four - Run the image in your cluster
+#### Four - Run the image in your cluster
 
 Once the cluster is created you can return to your dashboard and find the cluster there. Select the newly formed cluster and click on the "Access" tab for commands on how to export KUBECONFIG. Below is the content of my KUBECONFIG. This file will need to be exported in order to execute the run and subsequent commands.
 
