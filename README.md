@@ -6,7 +6,30 @@
 Pipeline for disaster relief, coordination and response.
 ---
 
+You can clone this repository by:
+```
+git clone https://github.com/shrutikar/DisasterRecord/tree/CFC
+```
+
+Make sure to install the packages mentioned in requirements.txt by the following command:
+```
 pip install -r requirements.txt
+```
+
+Clone LNEx - Location Name Extractor with the following command:
+```
+git clone https://github.com/halolimat/LNEx.git
+```
+Our work LNEx is used to extract location names mentioned from tweet text data. We extract location names and their corresponding geo-coordinates by supplying LNEx with the text in data_prepare.py.
+
+Clone Image objet detenction module with the following command:
+```
+git clone https://github.com/halolimat/Tensorflow-ImageObjects-Summarizer
+```
+We use detect objects from flooded images to process images posted as tweet updates in data_prepare.py.
+
+
+
 
 
 ## IBM Kubernetes Cluster Creation
@@ -14,7 +37,7 @@ pip install -r requirements.txt
 ### Create an Image
 
 #### One - Create Docker Image
-
+HUSSEIN PLZ ADD HOW TO GET PHOTON WORKING FOR CHENNAI HERE. 
 First we'll need to create an image of a docker container. Here we simply pull an Elasticsearch container from the repo and commit it, naming it "es_test".
 
 ```
