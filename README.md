@@ -1,3 +1,5 @@
+<img src="drecord-logo.png" align="left" alt="LNEx Logo" width="120"/>
+
 # DisasterRecord
 
 
