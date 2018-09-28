@@ -3,9 +3,7 @@
 <img src="http://knoesis.org/resources/images/hazardssees_logo_final.png" align="right" alt="Knoesis Hazards SEES Project Logo" width="90"/>
 
 # DisasterRecord
-
 Pipeline for disaster relief, coordination and response.
-
 ---
 pip install -r requirements.txt
 
