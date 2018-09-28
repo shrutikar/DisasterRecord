@@ -26,7 +26,7 @@ Clone Image objet detenction module with the following command:
 ```
 git clone https://github.com/halolimat/Tensorflow-ImageObjects-Summarizer
 ```
-We use detect objects from flooded images to process images posted as tweet updates in data_prepare.py.
+We extract objects from flooded images to process images posted as tweet updates in data_prepare.py.
 
 
 
@@ -130,3 +130,8 @@ Attempt access to this IP and port with curl:
 ```
 curl -X GET "<IP>:<port>"
 ```
+PORT MODIFICATION
+
+The relevant data from Object Storage and their credentials have been provided in the code. Natural Language classifier has been custon trained and is been used in data_prepare.py. The credential to those have also been provided in the code. No modification is required for these.
+
+The data in Object Storage is private data and have been used solely for the demonstration of this tool. We do not intend to distribute the data publicaly. Kindly request us permission if you intend to use the data beyond this event.
