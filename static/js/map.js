@@ -24,7 +24,7 @@ var months = [
 ];
 var layers = [[150, "#f28cb1"], [20, "#f1f075"], [0, "#51bbd6"]];
 // Disable default box zooming.
-
+$('#menu').hide();
 var txt_name = "";
 map.boxZoom.disable();
 var layers_name = [
@@ -670,6 +670,7 @@ map.on("load", function() {
         };
 
         //Dipesh: place this on the right slider
+        $('#menu').show();
 
         var layers = document.getElementById("menu");
         var info = document.createElement("img");
@@ -706,6 +707,8 @@ map.on("load", function() {
       }
     } else if (radio == "aggregated") {
       $("#menu").css("display", "none");
+      $('#instructions').hide();
+      $('#menu').hide();
       $("#steps").css("display", "block");
 
       //to clear all the layers from the map
@@ -1099,7 +1102,7 @@ map.on("load", function() {
     $("#map").css("z-index", "-1");
 
     $("#zero_topic").append(
-      "<span id='zero_topic_text'>" + this.id + "</span>"
+      "<span id='zero_topic_img_txt'>" + this.id + "</span>"
     );
 
     $.ajax({
