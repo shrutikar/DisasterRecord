@@ -32,7 +32,7 @@ var layers_name = [
   "Shelter/Food/Supplies Need",
   "Medical/Rescue Help Need",
   "Shelter/Food/Supplies Available",
-  "Medical/Rescue Help Available"
+  "Medical/Rescue Help Available","start","end","route"
 ];
 var source_names = ["trees", "shelter", "rescue", "osm_shelter", "osm_rescue"];
 
@@ -561,7 +561,7 @@ map.on("load", function() {
                 var instructions = document.getElementById("instructions");
                 var steps = data.routes[route_no].legs[0].steps;
                 instructions.innerHTML =
-                  '<p style="color:white;background-color: #71a419;" >' +
+                  '<p id="dir_head" >' +
                   "Turn-by-Turn Directions" +
                   "</p>";
                 steps.forEach(function(step) {
