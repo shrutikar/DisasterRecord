@@ -1,5 +1,3 @@
-# from cloudant import Cloudant
-# from flask import Flask, render_template, request, jsonify
 import atexit
 import os
 import time as tm
@@ -41,7 +39,6 @@ stemmer = PorterStemmer()
 
 printable = set(string.printable)
 
-# app = Flask(__name__, static_url_path='')
 
 natural_language_classifier = NaturalLanguageClassifierV1(
   username='99eb081e-2c0c-4080-960e-4a3a0183c8b0',
@@ -381,28 +378,6 @@ def prepare_data(gaz_name):
     geo_info = init_using_elasticindex(gaz_name)
     all_geo_points = prepare_geo_points(gaz_name, geo_info)
 
-    # with open('tweetNeed.json', 'w') as f:
-    #     json.dump(all_geo_points, f)
-    #if 'VCAP_SERVICES' in os.environ:
-    #    vcap = json.loads(os.getenv('VCAP_SERVICES'))
-    #    print('Found VCAP_SERVICES')
-    #    if 'cloudantNoSQLDB' in vcap:
-    #        creds = vcap['cloudantNoSQLDB'][0]['credentials']
-    #        user = creds['username']
-    #        password = creds['password']
-    #        url = 'https://' + creds['host']
-    #        client = Cloudant(user, password, url=url, connect=True)
-    #        db = client.create_database(db_name, throw_on_exists=False)
-    #elif os.path.isfile('vcap-local.json'):
-    #    with open('vcap-local.json') as f:
-    #        vcap = json.load(f)
-    #        print('Found local VCAP_SERVICES')
-    #        creds = vcap['services']['cloudantNoSQLDB'][0]['credentials']
-    #        user = creds['username']
-    #        password = creds['password']
-    #        url = 'https://' + creds['host']
-    #        client = Cloudant(user, password, url=url, connect=True)
-    #        db = client.create_database(db_name, throw_on_exists=False)
 
 port = int(os.getenv('PORT', 8000))
 
@@ -519,9 +494,7 @@ def prepare_data_events(gaz_name):
 
 
 if __name__ == '__main__':
-    
 
     prepare_data_events("chennai")
     prepare_data("chennai")
 
-    # app.run(host='0.0.0.0', port=port)
