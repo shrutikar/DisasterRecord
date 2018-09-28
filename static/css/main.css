@@ -43,7 +43,7 @@ table {
 th,
 td {
   /* padding-left: 12%; */
-  text-align: left;
+  text-align: center;
   padding-bottom: 3%;
 }
 
@@ -73,7 +73,7 @@ td {
 
 #close_zero {
   position: absolute;
-  right: 92%;
+  right: 93%;
   top: -1%;
   cursor: pointer;
   margin-top: 3px;
@@ -82,6 +82,8 @@ td {
 }
 
 #close {
+  background-color: #c9c9c9;
+border-radius: 15px;
   font-size: 25px;
 }
 #no_data {
@@ -100,7 +102,7 @@ td {
   color: #fff;
 }
 .osm_agg_list {
-  width: 100%;
+  width: 90%;
   color: #fff;
 }
 .img_agg_list {
@@ -131,10 +133,18 @@ td {
   vertical-align: text-top;
   margin-left: 9px;
 }
+#zero_topic_img_txt{
+  font-size: 136%;
+  font-weight: bold;  
+  vertical-align: text-top;  
+  margin-left: 1%;  
+  display: block;  
+  margin-top: 2%;
+}
 #zero_topic {
   position: absolute;
   left: 15%;
-  top: -14%;
+  top: 0%;
 }
 mark{
   background: #71a419;
@@ -387,6 +397,12 @@ ul {
 .radio input[type="radio"]:checked + span {
   color: #71A42B;
 }
+#menu {
+
+  margin-top: 17% !important;
+width: 92%;
+margin: auto;
+}
 .radio input[type="radio"]:checked + span:before {
   content: "";
   width: 5px;
@@ -421,18 +437,26 @@ ul {
   top: 5em;
 }
 #instructions {
-  position: absolute;
-  margin-left: 5%;
-  margin-top: 176%;
   height: 22%;
-  width: 90%;
-  top: 0;
-  bottom: 0;
-  padding: 10px;
-  background-color: rgba(141, 141, 141);
-  overflow-y: scroll;
-  display: none;
-  color: rgb(0, 0, 0);
+width: 90%;
+padding: 5px;
+background-color: rgba(141, 141, 141);
+overflow-y: scroll;
+display: none;
+color: rgb(0, 0, 0);
+margin: auto;
+margin-top: 17%;
+}
+p {
+  margin: 0px 0 2px !important;
+  padding: 3px;
+}
+#dir_head{
+  font-size: 18px;
+  font-weight: bold;  
+  background-color: #71a419;
+  color: #fff;
+  text-align: center;
 }
 .map-overlay {
   font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -574,23 +598,25 @@ input[type="text"]:focus {
   /* margin-top: -19px; */
 }
 
-h4, .h4, h5, .h5, h6, .h6 {
+/* h4, .h4, h5, .h5, h6, .h6 {
 
     margin-top: 7px;
     margin-bottom: 2px;
 
-}
+} */
 
 #wc_img{
   cursor: pointer;
+  position: absolute;
+  bottom: 13%;
+  left: 14%;
+  max-width: 75%;
+  max-height: 75%;
+}
 }
 
-#picture {
-  position: absolute;
-  z-index: 1;
-  bottom: 11%;
-  left: 10%;
-}
+/* #picture {
+} */
 
 #menu {
 position: absolute;
@@ -602,14 +628,14 @@ left: 2%;
 #menu a {
 display: block;
 text-align: center;
-height: 34px;
-margin-bottom: 2px;
+/* height: 34px; */
+margin-bottom: 1%;
 border-radius: 3px;
 color: #969696;
 background-color: #5c5353;
 }
 #img_btn{
-  width: 79px;
+  width: 80px;
 }
 #menu a:last-child {
   border: none;
