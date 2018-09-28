@@ -1,0 +1,6 @@
+---
+applications:
+ - name: GetStartedPythonFlaskShruti
+   random-route: true
+   memory: 2600M
+   stack: cflinuxfs2
