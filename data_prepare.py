@@ -1,5 +1,5 @@
-from cloudant import Cloudant
-from flask import Flask, render_template, request, jsonify
+# from cloudant import Cloudant
+# from flask import Flask, render_template, request, jsonify
 import atexit
 import os
 import time as tm
@@ -41,12 +41,7 @@ stemmer = PorterStemmer()
 
 printable = set(string.printable)
 
-app = Flask(__name__, static_url_path='')
-
-db_name = 'mydb'
-client = None
-db = None
-
+# app = Flask(__name__, static_url_path='')
 
 natural_language_classifier = NaturalLanguageClassifierV1(
   username='99eb081e-2c0c-4080-960e-4a3a0183c8b0',
@@ -517,49 +512,16 @@ def prepare_data_events(gaz_name):
         else:
             fl = False
             p_points.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"name": c, "key": k, "value": v, "needClass": cls, "Flood": fl}})
-            # es.index(index=gaz_name + '-osm', doc_type='doc', body={"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"name": c, "key": k, "value": v, "needClass": cls, "Flood": fl}})
+            es.index(index=gaz_name + '-osm', doc_type='doc', body={"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"name": c, "key": k, "value": v, "needClass": cls, "Flood": fl}})
         cnt+=1
 
 
 
 
-@app.route('/')
-def root():
-    # print('I found this place')
-    return app.send_static_file('index.html')
-
-
-@app.route('/api/visitors', methods=['GET'])
-def get_visitor():
-    if client:
-        return jsonify(list(map(lambda doc: doc['name'], db)))
-    else:
-        print('No database')
-        return jsonify([])
-
-
-# @app.route('/api/visitors', methods=['POST'])
-# def put_visitor():
-#     user = request.json['name']
-#     data = {'name': user}
-#     if client:
-#         my_document = db.create_document(data)
-#         data['_id'] = my_document['_id']
-#         return jsonify(data)
-#     else:
-#         print('No database')
-#         return jsonify(data)
-
-
-@atexit.register
-def shutdown():
-    if client:
-        client.disconnect()
-
-
 if __name__ == '__main__':
+    
 
-    # prepare_data_events("chennai")
-    # prepare_data("chennai")
+    prepare_data_events("chennai")
+    prepare_data("chennai")
 
-    app.run(host='0.0.0.0', port=port)
+    # app.run(host='0.0.0.0', port=port)
