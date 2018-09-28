@@ -485,7 +485,7 @@ map.on("load", function() {
             var end = response.end;
             var route_no = response.route_no;
             var ph = response.phone;
-            if (route_no == "not available" || route_no =="") {
+            if (route_no == "not available") {
               console.log("not available");
               console.log(end);
               map.loadImage(
