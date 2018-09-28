@@ -930,7 +930,6 @@ def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str):
 
     return need
 
-
 @application.route('/chennai/loc_name', methods=['GET','POST'])
 def loc_name():
     min_lat = request.args.get('min_lat')
