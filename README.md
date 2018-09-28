@@ -1,4 +1,4 @@
-<img src="drecord-logo.png" align="left" alt="LNEx Logo" width="120"/>
+<img src="drecord-logo.png" align="left" bottom="50%" alt="LNEx Logo" width="120"/>
 
 <img src="http://knoesis.org/resources/images/hazardssees_logo_final.png" align="right" alt="Knoesis Hazards SEES Project Logo" width="90"/>
 
