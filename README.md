@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 ## Create an Image
 
-### One - Create Docker Image
+#### One - Create Docker Image
 
 First we'll need to create an image of a docker container. Here we simply pull an Elasticsearch container from the repo and commit it, naming it "es_test".
 
