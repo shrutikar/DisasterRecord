@@ -38,7 +38,7 @@ We extract objects from flooded images to process images posted as tweet updates
 ### Create an Image
 
 #### One - Create Docker Image
-HUSSEIN PLZ ADD HOW TO GET PHOTON WORKING FOR CHENNAI HERE. 
+# HUSSEIN PLZ ADD HOW TO GET PHOTON WORKING FOR CHENNAI HERE. 
 First we'll need to create an image of a docker container. Here we simply pull an Elasticsearch container from the repo and commit it, naming it "es_test".
 
 ```
@@ -139,7 +139,7 @@ We have two main python files.
 one - data_prepare.py
 two - server.py
 
-###data_prepare.py
+### data_prepare.py
 This file is responsible for the backend processing of data. It reads the data present on Object Storage and performs vigourous processing. Which includes:
 classification of text data_prepare.py;333
 classification of images data_prepare.py;232
@@ -148,14 +148,15 @@ Classification of OSM data data_prepare.py;328
 
 All of these data are then written to indices of ElasticCluster. 
 
-These data is read by flask application server.py, and provides the front-end with all the data required.
+### server.py
+These data are read by flask application server.py, and provides the front-end with all the data required.
 
-Therefore, make sure to run the file: data_prepare.py by:
+Therefore, make sure to run the file: data_prepare.py when you have the kubernetes cluster and ElasticSearch with photon dump working:
 ```
 python data_prepare.py
 ```
 
-This whole process can be made to run for streaming in data with small modifications like, data_prepare.py can read every new data (monitoring the timestamp) from the streaming data provided an endpoint, and keeps broadcasting to a socket. Where simultaneously server.py keeps listening to the socket to get all the data that is available and updates as soon as anything new is updated.
+This application can be used for streaming-in data with small modifications like, data_prepare.py can read every new data (monitoring the timestamp) from the streaming data provided an endpoint, and keeps broadcasting to a socket. Where simultaneously server.py keeps listening to the socket to get all the data that is available and updates as soon as anything new is updated.
 
 ---
 
@@ -163,7 +164,39 @@ We deploy using cloud foundry command line. From within the folder DisasterRecor
 ```
 cf push get-started-python-flask-shruti -b python_buildpack
 ```
-PORT MODIFICATION----------> HUSSEIN KINDLY CHANGE THE FILES data_prepare.py AND server.py TO ACCEPT PORT and IP AS CMD LINE ARG AND USE THIS PORT WHEREVER 31169 IS USED AND IP WHEREVER 173.193.79.31 IS USED.
+
+You will be able to view the working of the application from the application's dashboard by visiting the URL that is provided.
+
+## Working of the tool
+
+# Hussein provide screenshots of the tool
+
+.
+    └── DisasterRecord
+        ├── Aggregate Level  
+        │   ├── Need classification
+        │   │   └── need    : rescue
+        │   │   └── need    : shelter
+        │   ├── Object detection from flooded images
+        │   │   └── object    : animals
+        │   │   └── object    : people
+        │   │   └── object    : vehicles
+        │   ├── Available help location from OpenStreetMap
+        │   │   └── osm    : rescue
+        │   │   └── osm    : shelter
+        │   └── Word cloud concepts
+        │       
+        │
+        └── Individual Level 
+            ├── Need markers
+            │   │   └── need    : rescue
+            │   │   └── need    : shelter
+            ├── Available Location markers
+            │   │   └── need    : rescue
+            │   │   └── need    : shelter
+            └── Flood Mapping
+
+# PORT MODIFICATION----------> HUSSEIN KINDLY CHANGE THE FILES data_prepare.py AND server.py TO ACCEPT PORT and IP AS CMD LINE ARG AND USE THIS PORT WHEREVER 31169 IS USED AND IP WHEREVER 173.193.79.31 IS USED.
 
 The relevant data from Object Storage and their credentials have been provided in the code. Natural Language classifier has been custon trained and is been used in data_prepare.py. The credential to those have also been provided in the code. No modification is required for these.
 
