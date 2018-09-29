@@ -171,6 +171,8 @@ You will be able to view the working of the application from the application's d
 
 <img src="static/screenshot1.png" align="left" alt="LNEx Logo" width="120"/>
 
+![screenshot](static/screenshot1.png)
+
         .
         └── src
             ├── Aggregate Level  
