@@ -37,7 +37,7 @@ Now, you should follow the steps below to deploy the code on IBM cloud.
 
 ---
 
-## IBM Kubernetes Cluster Creation
+## IBM Kubernetes Cluster Creation and Code Deployment
 
 ### Create an Image:
 
@@ -130,6 +130,15 @@ Attempt access to this IP and port with curl:
 curl -X GET "<IP>:<port>"
 ```
 
+### Deploy the code
+
+We deploy the tool using cloud foundry command line. From within the folder DisasterRecord-CFC, run the following command:
+```
+cf push get-started-python-flask-shruti -b python_buildpack
+```
+
+You will then be able to view the tool working from the application's dashboard by visiting the URL displayed there.
+
 ---
 
 ## Basic explanation of code
@@ -161,15 +170,6 @@ python data_prepare.py
 DisasterRecord is capable of stream processing and is designed to for that purpose. However, since we are demoing the tool for the purpose of the competition we are using pre-disaster data. In order to process streams you should make minor modifcations to read from the streaming API instead of from the JSON file we have in the bucket Shruti???
 
 ---
-
-## Tool Deployment
-
-We deploy the tool using cloud foundry command line. From within the folder DisasterRecord-CFC, run the following command:
-```
-cf push get-started-python-flask-shruti -b python_buildpack
-```
-
-You will then be able to view the tool working from the application's dashboard by visiting the URL displayed there.
 
 ## Working of the tool
 
