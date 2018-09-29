@@ -129,6 +129,26 @@ Attempt access to this IP and port with curl:
 curl -X GET "<IP>:<port>"
 ```
 
+Use this IP and PORT to create an index, named "photon". 
+Follow the instructions provided at [ElasticDump](https://www.npmjs.com/package/elasticdump) to get a dump of the photon index along with its mapping, that was created during the installation of LNEx. Prefferably a geo bounding box query for chennai:
+
+```
+"filter" : {
+                "geo_bounding_box" : {
+                    "geometry.coordinates" : {
+                        "top_left" : {
+                            "lat" : 13.201747645288123,
+                            "lon" : 80.07011480398211
+                        },
+                        "bottom_right" : {
+                            "lat" : 12.91175498502946,
+                            "lon" : 80.43474007410384
+                        }
+                    }
+                }
+            }
+```
+
 ### Deploy the code
 
 We deploy the tool using cloud foundry command line. From within the folder DisasterRecord-CFC, run the following command:
