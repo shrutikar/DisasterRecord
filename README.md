@@ -169,7 +169,7 @@ You will be able to view the working of the application from the application's d
 
 ## Working of the tool
 
-Hussein provide screenshots of the tool
+# Hussein provide screenshots of the tool
 
 .
     └── src
