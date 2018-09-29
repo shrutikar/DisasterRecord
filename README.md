@@ -170,30 +170,11 @@ cf push get-started-python-flask-shruti -b python_buildpack
 You will then be able to view the tool working from the application's dashboard by visiting the URL displayed there.
 
 ---
----
-
-## Basic explanation of code
-
-We have two main python files: data_prepare.py and server.py.
-
-### data_prepare.py
-
-This file is responsible for the backend processing of data streams. It reads the data present on Object Storage and performs vigourous processing including:
-- classification of text data_prepare.py; 333
-- classification of images data_prepare.py; 232
-- object detection from images data_prepare.py; 256
-- Classification of OSM data data_prepare.py; 328
-
-All of these data are then written to indices of ElasticCluster. 
-
-### server.py
-
-The data indexed by data_prepare.py is then read by the front-end flask application in server.py.
 
 ##### Note for Stream processing
 
 #YOU SHOULD EDIT here
-DisasterRecord is capable of stream processing and is designed to for that purpose. However, since we are demoing the tool for the purpose of the competition we are using pre-disaster data. In order to process streams you should make minor modifcations to read from the streaming API instead of from the JSON file we have in the bucket Shruti???
+DisasterRecord is capable of stream processing and is designed for that purpose. However, since we are demoing the tool for the purpose of the competition we are using pre-disaster data. In order to process streams you should make minor modifcations to read from the streaming API instead of reading from the JSON file we have in the Object Storage.
 
 ---
 
@@ -202,7 +183,7 @@ DisasterRecord is capable of stream processing and is designed to for that purpo
 ![screenshot](static/screenshot1.png)
 
         .
-        └── src
+        └── DisasterRecord
             ├── Aggregate Level  
             │   ├── Need classification
             │   │   └── need    : rescue
@@ -226,8 +207,5 @@ DisasterRecord is capable of stream processing and is designed to for that purpo
                 │   │   └── need    : shelter
                 └── Flood Mapping
 
-# PORT MODIFICATION----------> HUSSEIN KINDLY CHANGE THE FILES data_prepare.py AND server.py TO ACCEPT PORT and IP AS CMD LINE ARG AND USE THIS PORT WHEREVER 31169 IS USED AND IP WHEREVER 173.193.79.31 IS USED.
 
-The relevant data from Object Storage and their credentials have been provided in the code. Natural Language classifier has been custon trained and is been used in data_prepare.py. The credential to those have also been provided in the code. No modification is required for these.
-
-The data in Object Storage is private data and have been used solely for the demonstration of this tool. We do not intend to distribute the data publicaly. Kindly request us permission if you intend to use the data beyond this event.
+The data in Object Storage is private data and have been used solely for the demonstration of this tool. We do not intend to distribute the data publicly. Kindly request us permission if you intend to use the data beyond this event.
