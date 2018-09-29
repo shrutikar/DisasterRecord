@@ -170,6 +170,7 @@ cf push get-started-python-flask-shruti -b python_buildpack
 You will then be able to view the tool working from the application's dashboard by visiting the URL displayed there.
 
 ---
+---
 
 ## Basic explanation of code
 
