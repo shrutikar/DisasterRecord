@@ -173,8 +173,7 @@ You will then be able to view the tool working from the application's dashboard 
 
 ##### Note for Stream processing
 
-#YOU SHOULD EDIT here
-DisasterRecord is capable of stream processing and is designed for that purpose. However, since we are demoing the tool for the purpose of the competition we are using pre-disaster data. In order to process streams you should make minor modifcations to read from the streaming API instead of reading from the JSON file we have in the Object Storage.
+DisasterRecord is capable of stream processing and is designed for that purpose. However, since we are demonstrting the tool for the purpose of this competition, we use pre-disaster data. In order to process streams you should make minor modifcations to read from the streaming API instead of reading from the JSON file we have in the Object Storage.
 
 ---
 
