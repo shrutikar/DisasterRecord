@@ -199,11 +199,11 @@ DisasterRecord is capable of stream processing and is designed for that purpose.
             │
             └── Individual Level 
                 ├── Need markers
-                │   │   └── need    : rescue
-                │   │   └── need    : shelter
+                │   └── need    : rescue
+                │   └── need    : shelter
                 ├── Available Location markers
-                │   │   └── need    : rescue
-                │   │   └── need    : shelter
+                │   └── need    : rescue
+                │   └── need    : shelter
                 └── Flood Mapping
 
 
