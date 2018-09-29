@@ -41,8 +41,8 @@ printable = set(string.printable)
 
 
 natural_language_classifier = NaturalLanguageClassifierV1(
-  username='99eb081e-2c0c-4080-960e-4a3a0183c8b0',
-  password='uPNV4Saj0pLO')
+  username='****',
+  password='****')
 
 
 def download_file_cos(cos_credentials,key):
