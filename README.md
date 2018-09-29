@@ -18,7 +18,7 @@ Install the requirements in requirements.txt:
 pip install -r requirements.txt
 ```
 
-Clone the Location Name Extractor (LNEx) and follow the instructions in the readme to get the Elasticindex gazetteer used by the tool to extract and geolocate location names (in data_prepare.py function of DisasterRecord):
+Clone the Location Name Extractor (LNEx) to extract and geolocate location names (in data_prepare.py function of DisasterRecord):
 ```
 git clone https://github.com/halolimat/LNEx.git
 ```
@@ -53,7 +53,6 @@ docker commit 869f6813494b es_test
 #### Two - Push to IBM Registry:
 
 Tag then push the "es_test" image to the IBM registry as follows:
-
 ```
 docker tag es_test registry.ng.bluemix.net/drecord/hazardsees:drecord
 
