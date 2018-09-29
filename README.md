@@ -1,76 +1,74 @@
-
-
 <img src="drecord-logo.png" align="left" alt="LNEx Logo" width="120"/>
 
-# DisasterRecord-Pipeline for disaster relief, coordination and response.
+# DisasterRecord: 
+
+#### A pipeline for disaster relief, coordination and response.
+
 ---
 ## Installation of packages and libraries
 
 
-You can clone this repository by:
+Clone DisasterRecord CRC branch:
 ```
 git clone https://github.com/shrutikar/DisasterRecord/tree/CFC
 ```
 
-Make sure to install the packages mentioned in requirements.txt by the following command:
+Install the requirements in requirements.txt:
 ```
 pip install -r requirements.txt
 ```
 
-Clone LNEx - Location Name Extractor with the following command:
+Clone the Location Name Extractor (LNEx) and follow the instructions in the readme to get the Elasticindex gazetteer used by the tool to extract and geolocate location names (in data_prepare.py function of DisasterRecord):
 ```
 git clone https://github.com/halolimat/LNEx.git
 ```
-In our work, LNEx is used to extract location names mentioned from tweet text data. We extract location names and their corresponding geo-coordinates by supplying LNEx with the text in data_prepare.py.
 
-Clone Image objet detenction module with the following command:
+DisasterRecord use our in-house research developed to detect flooded images. The tool call the RESTful API end (in data_prepare.py):
+```
+http://twitris.knoesis.org/floodEstimate/submitImage
+```
+
+We then detect objects (Vehicles, Animals, and People) in the images of flooded areas (in data_prepare.py). You should also clone the image objet detenction module with the following command:
 ```
 git clone https://github.com/halolimat/Tensorflow-ImageObjects-Summarizer
 ```
-We extract objects from flooded images to process images posted as tweet updates in data_prepare.py.
 
+Now, you should follow the steps below to deploy the code on IBM cloud.
 
 ---
 
-
 ## IBM Kubernetes Cluster Creation
 
-### Create an Image
+### Create an Image:
 
-#### One - Create Docker Image
-# HUSSEIN PLZ ADD HOW TO GET PHOTON WORKING FOR CHENNAI HERE. 
-First we'll need to create an image of a docker container. Here we simply pull an Elasticsearch container from the repo and commit it, naming it "es_test".
+#### One - Create Docker Image:
 
+We'll need to create an image of a docker container. Here we simply pull an Elasticsearch container from the repo and commit it, naming it "es_test" as follows:
 ```
 docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.2
-```
 
-```
 docker commit 869f6813494b es_test
-
 ```
 
-#### Two - Push to IBM Registry
+#### Two - Push to IBM Registry:
 
-Tag then push the "es_test" image to the IBM registry.
+Tag then push the "es_test" image to the IBM registry as follows:
 
 ```
 docker tag es_test registry.ng.bluemix.net/drecord/hazardsees:drecord
-```
 
-```
 docker push registry.ng.bluemix.net/drecord/hazardsees:drecord
 ```
 
-### Create the Cluster
+### Create the Cluster:
 
-#### Three - Create a cluster
+#### Three - Create a cluster:
 
 From your IBM Cloud dashboard click Catalog and search for "kubernetes". Under the "Containers" category you should see "Kubernetes Service". Select this one and follow the steps to create a new cluster.
 
-#### Four - Run the image in your cluster
+#### Four - Run the image in your cluster:
 
-Once the cluster is created you can return to your dashboard and find the cluster there. Select the newly formed cluster and click on the "Access" tab for commands on how to export KUBECONFIG. Below is the content of my KUBECONFIG. This file will need to be exported in order to execute the run and subsequent commands.
+Once the cluster is created, you can return to your dashboard and find the cluster there. Select the newly formed cluster and click on the "Access" tab for commands on how to export KUBECONFIG. Below is the content of our KUBECONFIG. This file will need to be exported in order to execute the run and subsequent commands.
 
 ```
 apiVersion: v1
@@ -133,39 +131,45 @@ curl -X GET "<IP>:<port>"
 ```
 
 ---
+
 ## Basic explanation of code
 
-We have two main python files.
-one - data_prepare.py
-two - server.py
+We have two main python files: data_prepare.py and server.py.
 
 ### data_prepare.py
-This file is responsible for the backend processing of data. It reads the data present on Object Storage and performs vigourous processing. Which includes:
-classification of text data_prepare.py;333
-classification of images data_prepare.py;232
-object detection from images data_prepare.py;256
-Classification of OSM data data_prepare.py;328
+
+This file is responsible for the backend processing of data streams. It reads the data present on Object Storage and performs vigourous processing including:
+- classification of text data_prepare.py; 333
+- classification of images data_prepare.py; 232
+- object detection from images data_prepare.py; 256
+- Classification of OSM data data_prepare.py; 328
 
 All of these data are then written to indices of ElasticCluster. 
 
 ### server.py
-These data are read by flask application server.py, and provides the front-end with all the data required.
 
-Therefore, make sure to run the file: data_prepare.py when you have the kubernetes cluster and ElasticSearch with photon dump working:
+The data indexed by data_prepare.py is then read by the front-end flask application in server.py.
+
+Therefore, make sure to run the file: data_prepare.py when you have the kubernetes cluster and ElasticSearch with photon dump working before running the front-end which serves the data to users:
 ```
 python data_prepare.py
 ```
 
-This application can be used for streaming-in data with small modifications like, data_prepare.py can read every new data (monitoring the timestamp) from the streaming data provided an endpoint, and keeps broadcasting to a socket. Where simultaneously server.py keeps listening to the socket to get all the data that is available and updates as soon as anything new is updated.
+##### Note for Stream processing
+
+#YOU SHOULD EDIT here
+DisasterRecord is capable of stream processing and is designed to for that purpose. However, since we are demoing the tool for the purpose of the competition we are using pre-disaster data. In order to process streams you should make minor modifcations to read from the streaming API instead of from the JSON file we have in the bucket Shruti???
 
 ---
 
-We deploy using cloud foundry command line. From within the folder DisasterRecord-CFC, run the following command:
+## Tool Deployment
+
+We deploy the tool using cloud foundry command line. From within the folder DisasterRecord-CFC, run the following command:
 ```
 cf push get-started-python-flask-shruti -b python_buildpack
 ```
 
-You will be able to view the working of the application from the application's dashboard by visiting the URL that is provided.
+You will then be able to view the tool working from the application's dashboard by visiting the URL displayed there.
 
 ## Working of the tool
 
