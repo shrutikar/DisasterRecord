@@ -176,30 +176,9 @@ def make_map(params):
     return render_template('index.html', **params)
 
 
-# dname = "chennai"
-# geohash_fname = "_Data/"+dname+"_geohashes_8prec.json"
-# geohash_dict = defaultdict(bool)
-# if os.path.isfile(geohash_fname):
-#     print "returning cached file..."
-#     with open(geohash_fname) as f:
-#         geohash_dict = json.load(f)
-#     print len(geohash_dict.keys()), "geohashes"
-# else:
-#     print "Geohash File is not in folder"
-
-
-cos_cred={
-        "apikey": "C-BGVS6j-VncIFkpj6hIVVQCD96__x9cxSJHxFaAymwB",
-        "endpoints": "https://cos-service.bluemix.net/endpoints",
-        "iam_apikey_description": "Auto generated apikey during resource-key operation for Instance - crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "iam_apikey_name": "auto-generated-apikey-7e34a98b-6014-4c1e-bbf3-3e99b48020aa",
-        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/022374f4b8504a0eaa1ce419e7b5e793::serviceid:ServiceId-d14c9908-da0d-43d5-ab25-30a814045c46",
-        "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "BUCKET":"8prec",
-        "FILE":"chennai.geojson",
-        "service_endpoint": "https://s3-api.us-geo.objectstorage.softlayer.net"
-    }
+with open("vcap-local.template.json") as f:
+    VCAP = json.load(f)
+cos_cred = VCAP['chennai_geohashes_8prec']
 
 f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
 geohash_dict = defaultdict(bool)
@@ -479,6 +458,7 @@ def flood_check(cordin,strt):
     else:
         return "route safe"
 
+    
 @application.route("/data", methods=['GET','POST'])
 def get_data():
     with open("OSM_features_icons_dict.json") as f:
@@ -486,35 +466,19 @@ def get_data():
     return OSM_features_icons_dict
 
 
-
-
 @application.route('/test', methods=['GET','POST'])
 def check_selected():
-    cos_cred = {
-        "apikey": "C-BGVS6j-VncIFkpj6hIVVQCD96__x9cxSJHxFaAymwB",
-        "endpoints": "https://cos-service.bluemix.net/endpoints",
-        "iam_apikey_description": "Auto generated apikey during resource-key operation for Instance - crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "iam_apikey_name": "auto-generated-apikey-7e34a98b-6014-4c1e-bbf3-3e99b48020aa",
-        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/022374f4b8504a0eaa1ce419e7b5e793::serviceid:ServiceId-d14c9908-da0d-43d5-ab25-30a814045c46",
-        "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "BUCKET": "8prec",
-        "FILE": "chennai.geojson",
-        "service_endpoint": "https://s3-api.us-geo.objectstorage.softlayer.net"
-    }
+    with open("vcap-local.template.json") as f:
+        VCAP = json.load(f)
+    cos_cred = VCAP['chennai']
 
     f2 = download_file_cos(cos_cred, 'chennai.geojson')
     tweetsList = f2.split("\n")
     for t in tweetsList:
         data = json.loads(t)
     data["features"] = data["features"][0::3]
-
-
-    # with open("chennai.geojson") as f:
-    #     data = json.load(f)
-    # data["features"] = data["features"][0::3]
-
     return json.dumps(data)
+
 
 def read_data(lat, lon, radius, start_date, end_date):
     es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
@@ -796,8 +760,6 @@ def bb_query_count():
 
 
     return jsonify({"shelter_need":raw_shelter_count,"rescue_need":raw_rescue_count,"people":people_count,"vehicles":vehicle_count,"animals":animal_count,"osm_shelter":ph_shelter_count,"osm_rescue":ph_rescue_count})
-
-
 
 
 
