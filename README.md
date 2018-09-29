@@ -5,6 +5,8 @@
 # DisasterRecord
 Pipeline for disaster relief, coordination and response.
 ---
+## Installation of packages and libraries
+
 
 You can clone this repository by:
 ```
@@ -20,7 +22,7 @@ Clone LNEx - Location Name Extractor with the following command:
 ```
 git clone https://github.com/halolimat/LNEx.git
 ```
-Our work LNEx is used to extract location names mentioned from tweet text data. We extract location names and their corresponding geo-coordinates by supplying LNEx with the text in data_prepare.py.
+In our work, LNEx is used to extract location names mentioned from tweet text data. We extract location names and their corresponding geo-coordinates by supplying LNEx with the text in data_prepare.py.
 
 Clone Image objet detenction module with the following command:
 ```
@@ -29,7 +31,7 @@ git clone https://github.com/halolimat/Tensorflow-ImageObjects-Summarizer
 We extract objects from flooded images to process images posted as tweet updates in data_prepare.py.
 
 
-
+---
 
 
 ## IBM Kubernetes Cluster Creation
@@ -130,7 +132,39 @@ Attempt access to this IP and port with curl:
 ```
 curl -X GET "<IP>:<port>"
 ```
-PORT MODIFICATION
+
+---
+## Basic explanation of code
+
+We have two main python files.
+one - data_prepare.py
+two - server.py
+
+###data_prepare.py
+This file is responsible for the backend processing of data. It reads the data present on Object Storage and performs vigourous processing. Which includes:
+classification of text data_prepare.py;333
+classification of images data_prepare.py;232
+object detection from images data_prepare.py;256
+Classification of OSM data data_prepare.py;328
+
+All of these data are then written to indices of ElasticCluster. 
+
+These data is read by flask application server.py, and provides the front-end with all the data required.
+
+Therefore, make sure to run the file: data_prepare.py by:
+```
+python data_prepare.py
+```
+
+This whole process can be made to run for streaming in data with small modifications like, data_prepare.py can read every new data (monitoring the timestamp) from the streaming data provided an endpoint, and keeps broadcasting to a socket. Where simultaneously server.py keeps listening to the socket to get all the data that is available and updates as soon as anything new is updated.
+
+---
+
+We deploy using cloud foundry command line. From within the folder DisasterRecord-CFC, run the following command:
+```
+cf push get-started-python-flask-shruti -b python_buildpack
+```
+PORT MODIFICATION----------> HUSSEIN KINDLY CHANGE THE FILES data_prepare.py AND server.py TO ACCEPT PORT and IP AS CMD LINE ARG AND USE THIS PORT WHEREVER 31169 IS USED AND IP WHEREVER 173.193.79.31 IS USED.
 
 The relevant data from Object Storage and their credentials have been provided in the code. Natural Language classifier has been custon trained and is been used in data_prepare.py. The credential to those have also been provided in the code. No modification is required for these.
 
