@@ -2,8 +2,7 @@
 
 <img src="drecord-logo.png" align="left" alt="LNEx Logo" width="120"/>
 
-# DisasterRecord
-Pipeline for disaster relief, coordination and response.
+# DisasterRecord-Pipeline for disaster relief, coordination and response.
 ---
 ## Installation of packages and libraries
 
