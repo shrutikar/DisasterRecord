@@ -130,7 +130,7 @@ curl -X GET "<IP>:<port>"
 ```
 
 Use this IP and PORT to create an index, named "photon". 
-Follow the instructions provided at [ElasticDump](https://www.npmjs.com/package/elasticdump) to get a dump of the photon index along with its mapping, that was created during the installation of LNEx. Prefferably a geo bounding box query for chennai:
+Follow the instructions provided at [ElasticDump](https://www.npmjs.com/package/elasticdump) to get a dump of the photon index along with its mapping, that was created during the installation of LNEx. Prefferably a geo bounding box query for chennai and create an index "photon" at <IP>:<PORT>
 
 ```
 "filter" : {
@@ -150,6 +150,17 @@ Follow the instructions provided at [ElasticDump](https://www.npmjs.com/package/
 ```
 
 ### Deploy the code
+
+The IP and Port currently used in data_prepare.py and server.py are: 
+```
+{'host': '173.193.79.31', 'port': 31169}
+```
+These need to be changed manually in data_prepare.py and server.py with the exposed IP and port.
+
+Then run the data_prepare.py file :
+```
+python data_prepare.py
+```
 
 We deploy the tool using cloud foundry command line. From within the folder DisasterRecord-CFC, run the following command:
 ```
@@ -177,11 +188,6 @@ All of these data are then written to indices of ElasticCluster.
 ### server.py
 
 The data indexed by data_prepare.py is then read by the front-end flask application in server.py.
-
-Therefore, make sure to run the file: data_prepare.py when you have the kubernetes cluster and ElasticSearch with photon dump working before running the front-end which serves the data to users:
-```
-python data_prepare.py
-```
 
 ##### Note for Stream processing
 
