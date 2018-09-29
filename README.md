@@ -171,30 +171,30 @@ You will be able to view the working of the application from the application's d
 
 # Hussein provide screenshots of the tool
 
-.
-    └── src
-        ├── Aggregate Level  
-        │   ├── Need classification
-        │   │   └── need    : rescue
-        │   │   └── need    : shelter
-        │   ├── Object detection from flooded images
-        │   │   └── object    : animals
-        │   │   └── object    : people
-        │   │   └── object    : vehicles
-        │   ├── Available help location from OpenStreetMap
-        │   │   └── osm    : rescue
-        │   │   └── osm    : shelter
-        │   └── Word cloud concepts
-        │       
-        │
-        └── Individual Level 
-            ├── Need markers
+        .
+        └── src
+            ├── Aggregate Level  
+            │   ├── Need classification
             │   │   └── need    : rescue
             │   │   └── need    : shelter
-            ├── Available Location markers
-            │   │   └── need    : rescue
-            │   │   └── need    : shelter
-            └── Flood Mapping
+            │   ├── Object detection from flooded images
+            │   │   └── object    : animals
+            │   │   └── object    : people
+            │   │   └── object    : vehicles
+            │   ├── Available help location from OpenStreetMap
+            │   │   └── osm    : rescue
+            │   │   └── osm    : shelter
+            │   └── Word cloud concepts
+            │       
+            │
+            └── Individual Level 
+                ├── Need markers
+                │   │   └── need    : rescue
+                │   │   └── need    : shelter
+                ├── Available Location markers
+                │   │   └── need    : rescue
+                │   │   └── need    : shelter
+                └── Flood Mapping
 
 # PORT MODIFICATION----------> HUSSEIN KINDLY CHANGE THE FILES data_prepare.py AND server.py TO ACCEPT PORT and IP AS CMD LINE ARG AND USE THIS PORT WHEREVER 31169 IS USED AND IP WHEREVER 173.193.79.31 IS USED.
 
