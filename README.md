@@ -137,12 +137,12 @@ Follow the instructions provided at [ElasticDump](https://www.npmjs.com/package/
                 "geo_bounding_box" : {
                     "geometry.coordinates" : {
                         "top_left" : {
-                            "lat" : 13.201747645288123,
-                            "lon" : 80.07011480398211
+                            "lat" : 13.2823848224,
+                            "lon" : 80.066986084
                         },
                         "bottom_right" : {
-                            "lat" : 12.91175498502946,
-                            "lon" : 80.43474007410384
+                            "lat" : 12.74,
+                            "lon" : 80.3464508057
                         }
                     }
                 }
