@@ -1,5 +1,7 @@
-import matplotlib as ccc
-ccc.use('TkAgg')
+# import matplotlib as ccc
+# ccc.use('TkAgg')
+import matplotlib
+matplotlib.use('agg')
 
 import flask
 from datetime import datetime
@@ -187,19 +189,9 @@ def make_map(params):
 # else:
 #     print "Geohash File is not in folder"
 
-
-cos_cred={
-        "apikey": "C-BGVS6j-VncIFkpj6hIVVQCD96__x9cxSJHxFaAymwB",
-        "endpoints": "https://cos-service.bluemix.net/endpoints",
-        "iam_apikey_description": "Auto generated apikey during resource-key operation for Instance - crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "iam_apikey_name": "auto-generated-apikey-7e34a98b-6014-4c1e-bbf3-3e99b48020aa",
-        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/022374f4b8504a0eaa1ce419e7b5e793::serviceid:ServiceId-d14c9908-da0d-43d5-ab25-30a814045c46",
-        "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "BUCKET":"8prec",
-        "FILE":"chennai.geojson",
-        "service_endpoint": "https://s3-api.us-geo.objectstorage.softlayer.net"
-    }
+with open("vcap-local.template.json") as f:
+    VCAP = json.load(f)
+cos_cred = VCAP['chennai_geohashes_8prec']
 
 f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
 geohash_dict = defaultdict(bool)
@@ -490,18 +482,9 @@ def get_data():
 
 @application.route('/test', methods=['GET','POST'])
 def check_selected():
-    cos_cred = {
-        "apikey": "C-BGVS6j-VncIFkpj6hIVVQCD96__x9cxSJHxFaAymwB",
-        "endpoints": "https://cos-service.bluemix.net/endpoints",
-        "iam_apikey_description": "Auto generated apikey during resource-key operation for Instance - crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "iam_apikey_name": "auto-generated-apikey-7e34a98b-6014-4c1e-bbf3-3e99b48020aa",
-        "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer",
-        "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/022374f4b8504a0eaa1ce419e7b5e793::serviceid:ServiceId-d14c9908-da0d-43d5-ab25-30a814045c46",
-        "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/022374f4b8504a0eaa1ce419e7b5e793:4ed80b30-6560-4cc4-89ac-0d6c8b276420::",
-        "BUCKET": "8prec",
-        "FILE": "chennai.geojson",
-        "service_endpoint": "https://s3-api.us-geo.objectstorage.softlayer.net"
-    }
+    with open("vcap-local.template.json") as f:
+        VCAP = json.load(f)
+    cos_cred = VCAP['chennai']
 
     f2 = download_file_cos(cos_cred, 'chennai.geojson')
     tweetsList = f2.split("\n")
@@ -930,6 +913,7 @@ def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str):
 
     return need
 
+
 @application.route('/chennai/loc_name', methods=['GET','POST'])
 def loc_name():
     min_lat = request.args.get('min_lat')
@@ -1036,6 +1020,7 @@ def count():
 
     return data
 
+port = int(os.getenv('PORT', 8000))
 
 @application.route("/needs")
 def needs():
@@ -1055,4 +1040,4 @@ def needs():
 
 
 if __name__ == "__main__":
-    application.run(host='127.0.0.1', port=8080)
+    application.run(host='0.0.0.0', port=port)
