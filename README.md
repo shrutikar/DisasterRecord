@@ -8,7 +8,7 @@
 ## Installation of packages and libraries
 
 
-Clone DisasterRecord CRC branch:
+Clone DisasterRecord:
 ```
 git clone https://github.com/shrutikar/DisasterRecord.git
 ```
