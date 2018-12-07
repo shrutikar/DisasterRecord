@@ -62,7 +62,7 @@ DisasterRecord is capable of stream processing and is designed for that purpose.
 
 ## Working of the tool
 
-![screenshot](static/screenshot1.png)
+![screenshot](static/8.png)
 
         .
         └── DisasterRecord
@@ -85,8 +85,8 @@ DisasterRecord is capable of stream processing and is designed for that purpose.
                 │   └── need    : rescue
                 │   └── need    : shelter
                 ├── Available Location markers
-                │   └── need    : rescue
-                │   └── need    : shelter
+                │   └── Available    : rescue
+                │   └── Available    : shelter
                 └── Flood Mapping
 
 
