@@ -62,7 +62,7 @@ DisasterRecord is capable of stream processing and is designed for that purpose.
 
 ## Working of the tool
 
-![screenshot](static/8.png)
+![screenshot](8.png)
 
         .
         └── DisasterRecord
