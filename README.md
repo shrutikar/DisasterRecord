@@ -1,4 +1,4 @@
-<img src="drecord-logo.png" align="left" alt="LNEx Logo" width="120"/>
+<img src="https://github.com/shrutikar/DisasterRecord/blob/master/static/drecord-logo.png" align="left" alt="LNEx Logo" width="120"/>
 
 # DisasterRecord: 
 
