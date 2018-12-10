@@ -1,20 +1,8 @@
 import json, os
 import random
 import string
-from elasticsearch import Elasticsearch
-
-# key generator for 'api-keys' index
-
-# mapping curl -X GET "localhost:9200/api-keys/_mapping/doc" | jq 
-
-'''data  curl -X GET "localhost:9200/api-keys/_search" -H 'Content-Type: application/json' -d'
-{
-    "size" : 10000,
-    "query": {
-        "match_all" : {}
-    }
-}
-' |jq'''
+import hashlib
+#from elasticsearch import Elasticsearch
 
 def generate_key(length):
     char_set = string.ascii_letters              
@@ -42,11 +30,17 @@ def main():
     limits = raw_input('Enter any limits of the requester: ')
     # get other-info
     other_info = raw_input('Enter any other info about the requester: ')
+    # get seed
+    seed = raw_input('Enter seed: ')
+    while not seed:
+        seed = input('Enter non empty seed: ')
+    seed = hashlib.md5(seed).hexdigest()
 
-    genKey = generate_key(40)
-
+    genKey = generate_key(20)
+    genKey = genKey.encode('base64')
+    genKey = genKey[:-3]
+    genKey = seed + '-' + genKey
     print('Generated API key: ' + genKey)
-
     #add the key and info to ES
     body = {
         "record": {
@@ -60,9 +54,6 @@ def main():
     }
     es.index(index='api-keys', doc_type='doc', body=body)
     print("All information has been added to ES database")
-
-
-
 
 
     
