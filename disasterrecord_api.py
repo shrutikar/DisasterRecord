@@ -108,38 +108,43 @@ class DisasterRecordAPI(Resource):
             valid = self.isKeyValid(key, es)
             if not valid:
                 return {"message": 'Authorization Error'}
-            else: 
-                return {
-                        "Matches": [
-                            {
-                                "status": "available",
-                                "OSM_feature": {
-                                    "value": "hospital",
-                                    "key": "amenity",
-                                    "icon": "https://wiki.openstreetmap.org/w/images/thumb/2/22/Hospital-16.svg/32px-Hospital-16.svg.png"
-                                },
-                                "name": "Right Hospitals",
-                                "destination": {
-                                    "type": "Point",
-                                    "coordinates": [
-                                        80.2405731,
-                                        13.0787952
-                                    ]
-                                },
-                                "class": "rescue_match",
-                                "other_info": ""
+            else:
+                if (' ' in key) == True:
+                    return {"message": 'Authorization Error'}
+
+                if key == '8c32d1183251df9828f929b935ae0419':
+                    return {
+                            "Matches": [
+                                {
+                                    "status": "available",
+                                    "OSM_feature": {
+                                        "value": "hospital",
+                                        "key": "amenity",
+                                        "icon": "https://wiki.openstreetmap.org/w/images/hospital.svg"
+                                    },
+                                    "name": "Right Hospitals",
+                                    "destination": {
+                                        "type": "Point",
+                                        "coordinates": [
+                                            70.2406731,
+                                            23.0767952
+                                        ]
+                                    },
+                                    "class": "rescue_match",
+                                    "other_info": ""
+                                }
+                            ],
+                            "request": {
+                                "time_of_the_request": "1471677320000",
+                                "type": "rescue_match",
+                                "user": "individual",
+                                "coordinates": [
+                                    13.0529181,
+                                    80.2039631
+                                ]
                             }
-                        ],
-                        "request": {
-                            "time_of_the_request": "1471677320000",
-                            "type": "rescue_match",
-                            "user": "individual",
-                            "coordinates": [
-                                13.0529181,
-                                80.2039631
-                            ]
                         }
-                    }
+
 
         if tDelta is None:
             tDelta = 120 # default time delta if not provided
@@ -161,17 +166,17 @@ class DisasterRecordAPI(Resource):
         ts = int(timeR) / 1000  
         inputDate = datetime.fromtimestamp(ts)
         targetDate = inputDate - timedelta(hours=0, minutes=int(tDelta))
-        print('start date ' + targetDate.strftime('%Y-%m-%d %H:%M:%S'))
-        print('end date ' + inputDate.strftime('%Y-%m-%d %H:%M:%S'))
+        #print('start date ' + targetDate.strftime('%Y-%m-%d %H:%M:%S'))
+        #print('end date ' + inputDate.strftime('%Y-%m-%d %H:%M:%S'))
         #convert start and end dates to timestamp
         start_date = int(time.mktime(targetDate.timetuple()) * 1000)
         end_date = int(timeR)
-        print('start timestamp' + str(start_date))
-        print('end timestamp ' + str(end_date) )
+        #print('start timestamp' + str(start_date))
+        #print('end timestamp ' + str(end_date) )
         
-        print("")
-        print(es.info())
-        print("")
+        #print("")
+        #print(es.info())
+        #print("")
         # construct a query
         q = {}
         #determine type of request
