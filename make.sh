@@ -4,10 +4,10 @@
 DATA_JSON_URL="" #File path with Data containing JSON structured tweets with metadata
 
 #Tweepy credentials:
-Consumer_Key="AGdM9YV89pVK6KJlbRss1CdOB"
-Consumer_Secret="GGdsC5NOCt4W6jmp6tTcXwjMmxzPACVxGopuIL1u1Krt95U9Nz"
-Access_Key="2941079587-vXRnSGS9GVJldDkqhH5XLFg0agrfRKjuuFFh2Vy"
-Access_Secret="CLXzOmy9PfWtWCSRQ8gf0fgoRANSkEPDCEdx1YSDsI6iT"
+Consumer_Key=""
+Consumer_Secret=""
+Access_Key=""
+Access_Secret=""
 
 #PORT of API
 WAM_API=""
