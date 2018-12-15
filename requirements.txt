@@ -18,6 +18,7 @@ dask==0.19.2
 decorator==4.3.0
 docutils==0.14
 elasticsearch==6.3.1
+elasticsearch_dsl
 Flask==1.0.2
 functools32==3.2.3.post2
 futures==3.2.0
