@@ -35,7 +35,7 @@ jmespath==0.9.3
 kiwisolver==1.0.1
 MarkupSafe==1.0
 matplotlib==2.2.3
-mkl-fft==1.0.4
+mkl-fft==1.0.6
 mkl-random==1.0.1
 networkx==2.2
 nltk==3.3
