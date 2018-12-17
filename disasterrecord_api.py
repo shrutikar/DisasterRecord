@@ -77,7 +77,10 @@ class DisasterRecordAPI(Resource):
                     OSM_features_icons_dict = json.load(f)
                 key = hit['_source']['properties']['key']
                 value = hit['_source']['properties']['value']
-                icon = OSM_features_icons_dict[key][value]
+                try:
+                    icon = OSM_features_icons_dict[key][value]
+                except:
+                    icon = ""
                 match['OSM_feature'] = {'key': key, 'value': value, 'icon': str(icon)}
 
             if not len(match) == 0:
