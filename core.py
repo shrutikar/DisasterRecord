@@ -454,8 +454,8 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
 
 
 class file():
-    def read_from_file(self,bb):
-        with open("structure-of-file-records.json") as f:
+    def read_from_file(self,file_url):
+        with open(file_url) as f:
             data = json.load(f)
         i=0
         for e in data["_source"]:
@@ -483,9 +483,10 @@ if __name__ == "__main__":
     Boundingbox = sys.argv[10].split(" ")
     Satellite_image = sys.argv[9]
     bb = [float(Boundingbox[i]) for i in range(len(Boundingbox))]
+    file_url = sys.argv[11]
     #d=data_process()
     #d.read(dataset,Flood_flag,Objects_flag,Satellite_image,bb)
     #d.prepare_data_events(bb)
     #getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
     f=file()
-    f.read_from_file(bb)
+    f.read_from_file(file_url)
