@@ -453,6 +453,19 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
         raise
 
 
+class file():
+    def read_from_file(self,bb):
+        with open("structure-of-file-records.json") as f:
+            data = json.load(f)
+        i=0
+        for e in data["_source"]:
+            i+=1
+            text=e['record']['text']
+            time=e['record']['time']
+            imageurl=e['record']['imageurl']
+            id=e['record']['id']
+            es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+            es.index(index=dataset+'-file', doc_type='doc', body={"record": {"text":text, "time": time, "imageurl": imageurl, "id": id, "record-id": i}})
 
 
 
@@ -470,7 +483,9 @@ if __name__ == "__main__":
     Boundingbox = sys.argv[10].split(" ")
     Satellite_image = sys.argv[9]
     bb = [float(Boundingbox[i]) for i in range(len(Boundingbox))]
-    d=data_process()
-    d.read(dataset,Flood_flag,Objects_flag,Satellite_image,bb)
-    #prepare_data_events(Boundingbox)
-    getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
+    #d=data_process()
+    #d.read(dataset,Flood_flag,Objects_flag,Satellite_image,bb)
+    #d.prepare_data_events(bb)
+    #getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
+    f=file()
+    f.read_from_file(bb)
