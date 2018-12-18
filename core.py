@@ -484,9 +484,11 @@ if __name__ == "__main__":
     Satellite_image = sys.argv[9]
     bb = [float(Boundingbox[i]) for i in range(len(Boundingbox))]
     file_url = sys.argv[11]
-    #d=data_process()
-    #d.read(dataset,Flood_flag,Objects_flag,Satellite_image,bb)
-    #d.prepare_data_events(bb)
-    #getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
-    f=file()
-    f.read_from_file(file_url)
+    d=data_process()
+    d.read(dataset,Flood_flag,Objects_flag,Satellite_image,bb)
+    d.prepare_data_events(bb)
+    if file_url=="":
+        getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
+    else:
+        f=file()
+        f.read_from_file(file_url)
