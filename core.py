@@ -48,13 +48,10 @@ natural_language_classifier = NaturalLanguageClassifierV1(
 
 ES_SIZE = 1000
 
+class DataProcess(object):
 
-
-
-
-class data_process(object):
-
-    def read(self,dataset,Flood_flag,Objects_flag,Satellite_image,bb):
+    def read(self,dataset,flood_flag,objects_flag,satellite_image,bb):
+        
         start=0
         end=3
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
@@ -85,7 +82,7 @@ class data_process(object):
             imageurl=e['record']['imageurl']
             id=e['record']['id']
             #rec_id.append(e['record']['record-id'])
-            all_geo_points = self.prepare_geo_points(dataset,text,time,id,imageurl,Flood_flag, Objects_flag, Satellite_image, geo_info)
+            all_geo_points = self.prepare_geo_points(dataset,text,time,id,imageurl,flood_flag, objects_flag, satellite_image, geo_info)
           tm.sleep(30)
           #start=max(rec_id)
           #end=start+10
@@ -93,12 +90,15 @@ class data_process(object):
           start=end
           #print(start,end)
 
+
     def clean(self,doc):
+        
         stop_free = " ".join([i for i in doc.lower().split() if i not in stop])
         punc_free = ''.join(ch for ch in stop_free if ch not in exclude)
         normalized = " ".join(lemma.lemmatize(word) for word in punc_free.split())
         normalized = " ".join(stemmer.stem(word) for word in normalized.split())
         return normalized
+
 
     def preprocess_tweet(self,tweet):
         '''Preprocesses the tweet text and break the hashtags'''
@@ -160,6 +160,7 @@ class data_process(object):
 
         return tweet
 
+
     def strip_non_ascii(self,s):
 
         if isinstance(s, str):
@@ -168,13 +169,15 @@ class data_process(object):
         else:
             return s
 
-    def get_all_tweets_and_annotations(self,text,time,id,imageurl,Flood_flag,Objects_flag):
+
+    def get_all_tweets_and_annotations(self,text,time,id,imageurl,flood_flag,objects_flag):
+
         l=list()
         all_tweets_and_annotations=list()
         for img in imageurl:
-            if Flood_flag=="ON":
+            if flood_flag=="ON":
                 r=load_pb.load(img,'flood')
-                if str(r)=='flood' and Objects_flag=="ON":
+                if str(r)=='flood' and objects_flag=="ON":
                     obj = {}
                     url = img
                     water = True
@@ -194,6 +197,7 @@ class data_process(object):
         all_tweets_and_annotations.append((text, k, time, l, e))
         return all_tweets_and_annotations
 
+
     def init_using_elasticindex(self, cache, augmentType, gaz_name, bb, capital_word_shape):
 
         lnex.elasticindex(conn_string='localhost:9200', index_name="photon")
@@ -202,11 +206,13 @@ class data_process(object):
                                     dataset_name=gaz_name,
                                     capital_word_shape=capital_word_shape)
 
-    def prepare_geo_points(self,dataset,text,time,id,imageurl,Flood_flag, Objects_flag, Satellite_image, geo_info):
+
+    def prepare_geo_points(self,dataset,text,time,id,imageurl,flood_flag, objects_flag, satellite_image, geo_info):
+
         os.environ['NO_PROXY'] = '127.0.0.1'
         all_geo_points = list()
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-        for tweet in self.get_all_tweets_and_annotations(text,time,id,imageurl,Flood_flag,Objects_flag):
+        for tweet in self.get_all_tweets_and_annotations(text,time,id,imageurl,flood_flag,objects_flag):
             try:
                 classes = natural_language_classifier.classify('6876e8x557-nlc-635',tweet[0].decode("utf-8")).get_result()
                 #classes = "shelter_matching"
@@ -215,7 +221,6 @@ class data_process(object):
                 print(excp)
                 tm.sleep(30)
                 continue
-
             #print (classes)
             #print (type(classes))
             r = classes['top_class']
@@ -244,7 +249,7 @@ class data_process(object):
                     lat = geopoint["geo_item"]["point"]["lat"]
                     lon = geopoint["geo_item"]["point"]["lon"]
                     try:
-                        if Satellite_image == "ON":
+                        if satellite_image == "ON":
                         #fl = flooded(lat, lon)
                         # print str(fl)
                             if str(fl) == 'True':
@@ -263,7 +268,6 @@ class data_process(object):
             #nn=nn+1
             #if nn==10:
         # break
-
         print(all_geo_points)
         return {"type": "FeatureCollection", "features": all_geo_points}
 
@@ -273,7 +277,6 @@ class data_process(object):
         bounding box'''
 
         connections.create_connection(hosts=["localhost:9200"], timeout=60)
-
         phrase_search = [Q({"bool": {
             "filter": {
                 "geo_bounding_box": {
@@ -294,20 +297,17 @@ class data_process(object):
             }
         }
         })]
-
         #to search with a scroll
         e_search = Search(index="photon").query(Q('bool', must=phrase_search))
-
         try:
             res = e_search.scan()
         except BaseException:
             raise
-
         return res
 
 
-
     def prepare_data_events(self,bb):
+
         #gaz_name=gaz_name.lower()
         #if gaz_name=="chennai":
             # chennai flood bounding box
@@ -319,7 +319,6 @@ class data_process(object):
         h=self.search_index(bb)
         #print (h)
         x = 0
-
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         cnt=0
         for match in h:
@@ -382,7 +381,6 @@ class data_process(object):
         print(p_points)
 
 
-
 def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset):
 
     # Twitter streams a Max of 57 tweets per second [Fact]
@@ -402,18 +400,19 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
     api = API(auth)
 
     class CustomStreamListener(StreamListener):
+        
         def on_data(self, data):
 
             item = json.loads(data)
 
             if 'text' in data:
-                global i
-                i=i+1
+                global REC_NUM
+                REC_NUM = REC_NUM+1
                 print(json.dumps(item, sort_keys=True, indent=4))
                 #print (item)
                 print ("==============================================================")
-                print(i)
-                #prepare_data(item,Boundingbox,Floodflag,Objectsflag,dataset)
+                print(REC_NUM)
+                #prepare_data(item,boundingbox,Floodflag,Objectsflag,dataset)
                 text=item['text']
                 time=item['timestamp_ms']
                 imageurl=[]
@@ -426,12 +425,14 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
                 id=item['id']
                 os.environ['NO_PROXY'] = '127.0.0.1'
                 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-                es.index(index=dataset+'-file', doc_type='doc', body={"record": {"text":text, "time": time, "imageurl": imageurl, "id": id, "record-id": i}})
-                #prepare_data(Boundingbox,Floodflag,Objectsflag,dataset,text,time,id,imageurl,dataset)
+                es.index(index=dataset+'-file', doc_type='doc', body={"record": {"text":text, "time": time, "imageurl": imageurl, "id": id, "record-id": REC_NUM}})
+                #prepare_data(boundingbox,Floodflag,Objectsflag,dataset,text,time,id,imageurl,dataset)
             else:
                 pass # Do nothing
 
+
         def on_error(self, status_code):
+            
             print >> sys.stderr, 'Encountered error with status code:', status_code
             # sleep for 16 minutes
             print ("sleeping for 16 minutes")
@@ -439,13 +440,14 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
 
             return True # Don't kill the stream
 
+
         def on_timeout(self):
+
             print >> sys.stderr, 'Timeout...'
             return True # Don't kill the stream
 
     try:
         sapi = streaming.Stream(auth, CustomStreamListener())
-
         # sapi.filter(languages=["en"], track=[hashtag])
         sapi.filter(track=hashtag, languages=['en'])
     except:
@@ -453,8 +455,10 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
         raise
 
 
-class file():
+class ReadFromFile():
+
     def read_from_file(self,file_url):
+
         with open(file_url) as f:
             data = json.load(f)
         i=0
@@ -468,27 +472,29 @@ class file():
             es.index(index=dataset+'-file', doc_type='doc', body={"record": {"text":text, "time": time, "imageurl": imageurl, "id": id, "record-id": i}})
 
 
-
 if __name__ == "__main__":
-    global i
-    i=0
+    global REC_NUM
+    REC_NUM=0
+
     keywords = sys.argv[1].split(" ")
     consumerkey = sys.argv[2]
     consumersecret = sys.argv[3]
     accesskey = sys.argv[4]
     accesssecret = sys.argv[5]
     dataset = sys.argv[6]
-    Flood_flag = sys.argv[7]
-    Objects_flag = sys.argv[8]
-    Boundingbox = sys.argv[10].split(" ")
-    Satellite_image = sys.argv[9]
-    bb = [float(Boundingbox[i]) for i in range(len(Boundingbox))]
+    flood_flag = sys.argv[7]
+    objects_flag = sys.argv[8]
+    boundingbox = sys.argv[10].split(" ")
+    satellite_image = sys.argv[9]
     file_url = sys.argv[11]
-    d=data_process()
-    d.read(dataset,Flood_flag,Objects_flag,Satellite_image,bb)
+
+    bb = [float(boundingbox[i]) for i in range(len(boundingbox))]
+    d = DataProcess()
+    d.read(dataset,flood_flag,objects_flag,satellite_image,bb)
     d.prepare_data_events(bb)
-    if file_url=="":
+
+    if file_url == "":
         getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
     else:
-        f=file()
+        f = ReadFromFile()
         f.read_from_file(file_url)
