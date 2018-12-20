@@ -42,6 +42,8 @@ natural_language_classifier = NaturalLanguageClassifierV1(
 ES_SIZE = 1000
 
 
+import threading
+
 class DataProcess(object):
     def read(self, dataset, flood_flag, objects_flag, satellite_image, bb):
         
@@ -51,6 +53,7 @@ class DataProcess(object):
         geo_info = self.init_using_elasticindex(cache = False, augmentType = "HP", gaz_name = dataset, bb = bb, capital_word_shape = False)
         
         while 1:
+          print("Sanity")
           #Query to get the maximum id number of the records.
           temp = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"match_all" : {}}})['hits']['hits']
           temp_rec = [s['_source'] for s in temp]
@@ -391,7 +394,7 @@ def getTweets(hashtag, consumerkey, consumersecret, accesskey, accesssecret, dat
             if 'text' in data:
                 global REC_NUM
                 REC_NUM = REC_NUM+1
-                print (json.dumps(item, sort_keys = True, indent = 4))
+                #print (json.dumps(item, sort_keys = True, indent = 4))
                 #print (item)
                 print ("==============================================================")
                 print (REC_NUM)
@@ -468,13 +471,22 @@ if __name__ == "__main__":
     satellite_image = sys.argv[9]
     file_url = sys.argv[11]
 
+    if file_url == "None":
+      thread = threading.Thread(target=getTweets, args=(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset))
+      thread.start()
+    else:
+      f = ReadFromFile()
+      f.read_from_file(file_url)
+
+    tm.sleep(5)
+
     bb = [float(boundingbox[i]) for i in range(len(boundingbox))]
     d = DataProcess()
     d.read(dataset,flood_flag,objects_flag,satellite_image,bb)
     d.prepare_data_events(bb)
 
-    if file_url == "":
-        getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
-    else:
-        f = ReadFromFile()
-        f.read_from_file(file_url)
+    #if file_url == "None":
+    #    getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
+    #else:
+    #    f = ReadFromFile()
+    #    f.read_from_file(file_url)

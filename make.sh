@@ -6,7 +6,7 @@
 #File path with Data containing JSON structured tweets with metadata
 #Can be left empty if you intend to crawl through keywords
 #Example, './_Data/tweets.json'
-DATA_JSON_URL=""
+DATA_JSON_URL="None"
 
 #Tweepy credentials:
 #Can be left empty if you intend to read from file
@@ -51,13 +51,13 @@ Dataset="random"
 #############################Create mappings############################################
 
 #File and tweepy records mapping
-#./file-mapping.sh $Dataset
+./file-mapping.sh $Dataset
 
 #Processed tweets mapping
-#./tweet-mapping.sh $Dataset
+./tweet-mapping.sh $Dataset
 
 #OpenStreetMap content mapping
-#./osm-mapping.sh $Dataset
+./osm-mapping.sh $Dataset
 
 
 #API mapping
