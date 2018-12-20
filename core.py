@@ -43,45 +43,44 @@ ES_SIZE = 1000
 
 
 class DataProcess(object):
-    def read(self,dataset,flood_flag,objects_flag,satellite_image,bb):
+    def read(self, dataset, flood_flag, objects_flag, satellite_image, bb):
         
-        start=0
-        end=3
+        start = 0
+        end = 3
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-        geo_info = self.init_using_elasticindex(cache=False, augmentType="HP",gaz_name=dataset, bb=bb, capital_word_shape=False)
+        geo_info = self.init_using_elasticindex(cache = False, augmentType = "HP", gaz_name = dataset, bb = bb, capital_word_shape = False)
         
         while 1:
           #Query to get the maximum id number of the records.
-          temp = es.search(index=dataset + '-file', body={"size": ES_SIZE, "query": {"match_all":{}}})['hits']['hits']
+          temp = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"match_all" : {}}})['hits']['hits']
           temp_rec = [s['_source'] for s in temp]
-          temp_id=list()
+          temp_id = list()
 
           for e in temp_rec:
             temp_id.append(e['record']['record-id'])
 
           end = max(temp_id)  #set maximum id number as the end of range.
           #Query for the range start to end
-          result = es.search(index=dataset + '-file', body={"size": ES_SIZE, "query": {"bool":{"must":{"range" : {
+          result = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"bool" : {"must" : {"range" : {
                 "record.record-id" : {
                     "gt" : start,
                     "lte" : end
                 }
-            }}}
-                    }})['hits']['hits']
+            }}}}})['hits']['hits']
           rec = [s['_source'] for s in result]
 
           for e in rec:
-            text=e['record']['text']
-            time=e['record']['time']
-            imageurl=e['record']['imageurl']
-            id=e['record']['id']
-            all_geo_points = self.prepare_geo_points(dataset,text,time,id,imageurl,flood_flag, objects_flag, satellite_image, geo_info)
+            text = e['record']['text']
+            time = e['record']['time']
+            imageurl = e['record']['imageurl']
+            id = e['record']['id']
+            all_geo_points = self.prepare_geo_points(dataset, text, time, id, imageurl, flood_flag, objects_flag, satellite_image, geo_info)
 
           tm.sleep(30)  #wait to read next batch
-          start=end  #end becomes the start for the next iteration
+          start = end  #end becomes the start for the next iteration
 
 
-    def clean(self,doc):
+    def clean(self, doc):
         
         stop_free = " ".join([i for i in doc.lower().split() if i not in stop])
         punc_free = ''.join(ch for ch in stop_free if ch not in exclude)
@@ -91,7 +90,7 @@ class DataProcess(object):
         return normalized
 
 
-    def preprocess_tweet(self,tweet):
+    def preprocess_tweet(self, tweet):
         '''Preprocesses the tweet text and break the hashtags'''
 
         tweet = self.strip_non_ascii(tweet)
@@ -137,12 +136,6 @@ class DataProcess(object):
 
         tweet = re.sub("^\d+\s|\s\d+\s|\s\d+$", " NUM ", tweet)
 
-        # # remove consecutive duplicate tokens which causes an explosion in tree
-        # while re.search(r'\b(.+)(\s+\1\b)+', tweet):
-        #     tweet = re.sub(r'\b(.+)(\s+\1\b)+', r'\1', tweet)
-
-        #     tweet = clean(tweet)
-
         tweet = tweet.replace('\n', '. ').replace('\t', ' ').replace(',', ' ').replace('"', ' ').replace("'", " ").replace(
             ";", " ").replace("\n", " ").replace("\r", " ")
 
@@ -161,21 +154,20 @@ class DataProcess(object):
             return s
 
 
-    def get_all_tweets_and_annotations(self,text,time,id,imageurl,flood_flag,objects_flag):
+    def get_all_tweets_and_annotations(self, text, time, id, imageurl, flood_flag, objects_flag):
 
         lst=list()
         all_tweets_and_annotations=list()
 
         for img in imageurl:
-            if flood_flag=="ON":
-                r=load_pb.load(img,'flood')
-                if str(r)=='flood' and objects_flag=="ON":
+            if flood_flag == "ON":
+                r = load_pb.load(img,'flood')
+                if str(r) == 'flood' and objects_flag == "ON":
                     obj = {}
                     url = img
                     water = True
                     img = {}
                     obj = OD.extract(url)
-                    print (obj)
                     img = {"water": water, "objects": obj, "imageURL": url}
                     lst.append(img)
 
@@ -194,28 +186,25 @@ class DataProcess(object):
 
     def init_using_elasticindex(self, cache, augmentType, gaz_name, bb, capital_word_shape):
 
-        lnex.elasticindex(conn_string='localhost:9200', index_name="photon")
+        lnex.elasticindex(conn_string = 'localhost:9200', index_name = "photon")
 
-        return lnex.initialize(bb, augmentType=augmentType,
-                                    cache=cache,
-                                    dataset_name=gaz_name,
-                                    capital_word_shape=capital_word_shape)
+        return lnex.initialize(bb, augmentType = augmentType,
+                                    cache = cache,
+                                    dataset_name = gaz_name,
+                                    capital_word_shape = capital_word_shape)
 
 
-    def prepare_geo_points(self,dataset,text,time,id,imageurl,flood_flag, objects_flag, satellite_image, geo_info):
+    def prepare_geo_points(self, dataset, text, time, id, imageurl, flood_flag, objects_flag, satellite_image, geo_info):
 
         os.environ['NO_PROXY'] = '127.0.0.1'
         all_geo_points = list()
-        es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+        es = Elasticsearch([{'host' : 'localhost', 'port' : 9200}])
 
-        for tweet in self.get_all_tweets_and_annotations(text,time,id,imageurl,flood_flag,objects_flag):
+        for tweet in self.get_all_tweets_and_annotations(text, time, id, imageurl, flood_flag, objects_flag):
 
             try:
                 classes = natural_language_classifier.classify('6876e8x557-nlc-635',tweet[0].decode("utf-8")).get_result()
-                #classes = "shelter_matching"
             except Exception as excp:
-                print('exception occured')
-                print(excp)
                 tm.sleep(30)
                 continue
 
@@ -261,46 +250,44 @@ class DataProcess(object):
                         else:
                             fld = False
 
-                        es.index(index=dataset + '-tweetneeds', doc_type='doc', body={"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"locationMention":{"text": ln[0], "offsets":[ln_offsets[0],ln_offsets[1]]}, "tweetID": tweet[1], "text": tweet[0].decode("utf-8"), "createdAt": tweet[2], "needClass": cl, "flooded": fld, "image":tweet[3]}})
-                        all_geo_points.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"locationMention":{"text": ln[0], "offsets":[ln_offsets[0],ln_offsets[1]]}, "tweetID": tweet[1], "text": tweet[0], "createdAt": tweet[2], "needClass": cl, "flooded": fld, "image":tweet[3]}})
-                        print (all_geo_points)
+                        es.index(index = dataset + '-tweetneeds', doc_type = 'doc', body = {"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"locationMention" : {"text" : ln[0], "offsets" : [ln_offsets[0],ln_offsets[1]]}, "tweetID" : tweet[1], "text" : tweet[0].decode("utf-8"), "createdAt" : tweet[2], "needClass" : cl, "flooded" : fld, "image" : tweet[3]}})
+                        all_geo_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"locationMention" : {"text" : ln[0], "offsets" : [ln_offsets[0],ln_offsets[1]]}, "tweetID" : tweet[1], "text" : tweet[0], "createdAt" : tweet[2], "needClass" : cl, "flooded" : fld, "image" : tweet[3]}})
                     except Exception as e:
-                        print(e)
                         continue
             #nn=nn+1
             #if nn==10:
         # break
 
-        return {"type": "FeatureCollection", "features": all_geo_points}
+        return {"type" : "FeatureCollection", "features" : all_geo_points}
 
 
-    def search_index(self,bb):
+    def search_index(self, bb):
         '''Retrieves the location names from the elastic index using the given
         bounding box'''
 
-        connections.create_connection(hosts=["localhost:9200"], timeout=60)
-        phrase_search = [Q({"bool": {
-            "filter": {
-                "geo_bounding_box": {
-                            "coordinate": {
-                                "bottom_left": {
-                                    "lat": bb[0],
-                                    "lon": bb[1]
+        connections.create_connection(hosts = ["localhost:9200"], timeout = 60)
+        phrase_search = [Q({"bool" : {
+            "filter" : {
+                "geo_bounding_box" : {
+                            "coordinate" : {
+                                "bottom_left" : {
+                                    "lat" : bb[0],
+                                    "lon" : bb[1]
                                 },
-                                "top_right": {
-                                    "lat": bb[2],
-                                    "lon": bb[3]
+                                "top_right" : {
+                                    "lat" : bb[2],
+                                    "lon" : bb[3]
                                 }
                             }
                             }
             },
-            "must": {
-                "match_all": {}
+            "must" : {
+                "match_all" : {}
             }
         }
         })]
         #to search with a scroll
-        e_search = Search(index="photon").query(Q('bool', must=phrase_search))
+        e_search = Search(index = "photon").query(Q('bool', must = phrase_search))
 
         try:
             res = e_search.scan()
@@ -310,10 +297,10 @@ class DataProcess(object):
         return res
 
 
-    def prepare_data_events(self,bb):
+    def prepare_data_events(self, bb):
 
-        p_points=list()
-        h=self.search_index(bb)
+        p_points = list()
+        h = self.search_index(bb)
         x = 0
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
@@ -356,43 +343,41 @@ class DataProcess(object):
             elif ((k == 'man_made' and v == 'pipeline') or (k == 'power' and v == 'line') or (
                     k == 'power' and v == 'plant') or (k == 'man_made' and v == 'communications_tower') or (
                     k == 'building' and v == 'transformer_tower') or (k == 'building' and v == 'service') or (
-                  k == 'power' and v == 'minor_line') or (k == 'power' and v == 'substation') or (
-                  k == 'craft' and v == 'electrician') or (k == 'craft' and v == 'scaffolder')):
+                    k == 'power' and v == 'minor_line') or (k == 'power' and v == 'substation') or (
+                    k == 'craft' and v == 'electrician') or (k == 'craft' and v == 'scaffolder')):
                 cls = "infrastructure_need"
             elif ((v == 'fire_station') or (v == 'police') or (v == 'post_office') or (v == 'rescue_station') or (
-                v == 'hospital') or (v == 'ambulance_station') or (v == 'medical_supply') or (v == 'clinic') or (
-                v == 'doctors') or (v == 'social_facility') or (v == 'blood_donation') or (v == 'pharmacy') or (
-                v == 'nursing_home')):
+                    v == 'hospital') or (v == 'ambulance_station') or (v == 'medical_supply') or (v == 'clinic') or (
+                    v == 'doctors') or (v == 'social_facility') or (v == 'blood_donation') or (v == 'pharmacy') or (
+                    v == 'nursing_home')):
                 cls = "rescue_match"
             else:
                 continue
 
             #fl = flooded(lat, lon)
-            fl=False
+            fl = False
 
             if str(fl) == 'True':
                 fl = True
             else:
                 fl = False
-                p_points.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"name": c, "key": k, "value": v, "needClass": cls, "Flood": fl}})
-                es.index(index=dataset + '-osm', doc_type='doc', body={"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": {"name": c, "key": k, "value": v, "needClass": cls, "Flood": fl}})
-
-        print(p_points)
+                p_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
+                es.index(index = dataset + '-osm', doc_type = 'doc', body = {"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
 
 
-def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset):
+def getTweets(hashtag, consumerkey, consumersecret, accesskey, accesssecret, dataset):
 
     # Twitter streams a Max of 57 tweets per second [Fact]
     #---------------------------------------------------------------------------
-    print("collecting tweets" )
+    print ("collecting tweets" )
     print ("====================================================================")
     reload(sys)
     #sys.setdefaultencoding('utf8')
 
-    consumer_key=consumerkey
-    consumer_secret=consumersecret
-    access_key=accesskey
-    access_secret=accesssecret
+    consumer_key = consumerkey
+    consumer_secret = consumersecret
+    access_key = accesskey
+    access_secret = accesssecret
 
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_key, access_secret)
@@ -406,25 +391,23 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
             if 'text' in data:
                 global REC_NUM
                 REC_NUM = REC_NUM+1
-                print(json.dumps(item, sort_keys=True, indent=4))
+                print (json.dumps(item, sort_keys = True, indent = 4))
                 #print (item)
                 print ("==============================================================")
-                print(REC_NUM)
-                #prepare_data(item,boundingbox,Floodflag,Objectsflag,dataset)
+                print (REC_NUM)
                 text=item['text']
                 time=item['timestamp_ms']
                 imageurl=[]
                 try:
-                  if item['extended_entites']['media']['type']=="photo":
-                      imageurl=item['extended_entites']['media']['media_url']
+                  if item['extended_entites']['media']['type'] == "photo":
+                      imageurl = item['extended_entites']['media']['media_url']
                 #imageurl=['https://pbs.twimg.com/media/DtZFfkIWwAElzhw.jpg','https://pbs.twimg.com/media/DuJqhCgWkAA90gD.jpg','https://pbs.twimg.com/media/CVOoJ6PWcAAntfU.jpg']
                 except:
-                  imageurl=[]
-                id=item['id']
+                  imageurl = []
+                id = item['id']
                 os.environ['NO_PROXY'] = '127.0.0.1'
-                es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-                es.index(index=dataset+'-file', doc_type='doc', body={"record": {"text":text, "time": time, "imageurl": imageurl, "id": id, "record-id": REC_NUM}})
-                #prepare_data(boundingbox,Floodflag,Objectsflag,dataset,text,time,id,imageurl,dataset)
+                es = Elasticsearch([{'host' : 'localhost', 'port' : 9200}])
+                es.index(index = dataset + '-file', doc_type = 'doc', body = {"record" : {"text" :text, "time" : time, "imageurl" : imageurl, "id" : id, "record-id" : REC_NUM}})
             else:
                 pass # Do nothing
 
@@ -432,8 +415,7 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
         def on_error(self, status_code):
             
             print >> sys.stderr, 'Encountered error with status code:', status_code
-            # sleep for 16 minutes
-            print ("sleeping for 16 minutes")
+            print ("sleeping for 16 minutes") # sleep for 16 minutes
             tm.sleep(960)
 
             return True # Don't kill the stream
@@ -446,34 +428,33 @@ def getTweets(hashtag,consumerkey,consumersecret,accesskey,accesssecret,dataset)
 
     try:
         sapi = streaming.Stream(auth, CustomStreamListener())
-        # sapi.filter(languages=["en"], track=[hashtag])
-        sapi.filter(track=hashtag, languages=['en'])
+        sapi.filter(track = hashtag, languages = ['en'])
     except:
         print ("tweepy error") #Don't do anythin
         raise
 
 
 class ReadFromFile():
-    def read_from_file(self,file_url):
+    def read_from_file(self, file_url):
 
         with open(file_url) as f:
             data = json.load(f)
-        i=0
+        i = 0
 
         for e in data["_source"]:
-            i+=1
-            text=e['record']['text']
-            time=e['record']['time']
-            imageurl=e['record']['imageurl']
-            id=e['record']['id']
-            es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-            es.index(index=dataset+'-file', doc_type='doc', body={"record": {"text":text, "time": time, "imageurl": imageurl, "id": id, "record-id": i}})
+            i+= 1
+            text = e['record']['text']
+            time = e['record']['time']
+            imageurl = e['record']['imageurl']
+            id = e['record']['id']
+            es = Elasticsearch([{'host' : 'localhost', 'port' : 9200}])
+            es.index(index = dataset + '-file', doc_type = 'doc', body = {"record" : {"text" : text, "time" : time, "imageurl" : imageurl, "id" : id, "record-id" : i}})
 
 
 if __name__ == "__main__":
 
     global REC_NUM
-    REC_NUM=0
+    REC_NUM = 0
 
     keywords = sys.argv[1].split(" ")
     consumerkey = sys.argv[2]
