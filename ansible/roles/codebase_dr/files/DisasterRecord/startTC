@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /root/workspace/TC_Service/code
+/root/workspace/TC_Service/tcEnv python tc_service.py >> /var/log/DR.log 2>&1 &
+FOO_PID=$!
+echo $FOO_PID > /root/tc.pid

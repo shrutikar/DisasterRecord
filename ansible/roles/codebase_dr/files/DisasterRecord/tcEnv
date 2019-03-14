@@ -1,0 +1,3 @@
+#!/bin/bash
+source /root/workspace/TC_Service/bin/activate
+$@
