@@ -41,7 +41,7 @@ def calcArea():
   print("EST KM^2:",A)
 
 def init_using_elasticindex(bb, cache, augmentType, dataset, capital_word_shape):
-    lnex.elasticindex(conn_string='130.108.86.153:9201', index_name="photon")
+    lnex.elasticindex(conn_string='{{ photonip }}:{{ photonport }}', index_name="photon")
 
     geo_info = lnex.initialize( bb, augmentType=augmentType,
                                     cache=cache,

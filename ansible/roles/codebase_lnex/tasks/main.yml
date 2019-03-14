@@ -61,8 +61,11 @@
 - name: Copy fixed __init__.py file to ~/workspace/LNEx/LNEx
   copy: src=LNEx/__init__.py dest=~/workspace/LNEx/LNEx/__init__.py owner=root group=root mode=0644
 
-- name: Copy cli.py file to ~workspace/LNEx
-  copy: src=LNEx/cli.py dest=~/workspace/LNEx/cli.py owner=root group=root mode=0644
+#- name: Copy cli.py file to ~workspace/LNEx
+#  copy: src=LNEx/cli.py dest=~/workspace/LNEx/cli.py owner=root group=root mode=0644
+
+- name: Generate cli.py
+  template: src=cli.py.j2 dest=~/workspace/LNEx/cli.py owner=root group=root mode=0644
 
 - name: Copy geoInfo.py file to ~workspace/LNEx
   copy: src=LNEx/geoInfo.py dest=~/workspace/LNEx/geoInfo.py owner=root group=root mode=0644
