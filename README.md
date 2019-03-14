@@ -4,10 +4,10 @@ DisasterRecord is a platform for disaster relief, coordination and response. Dis
 
 ### Technology
 
-Please be fimilar with the following technologies.
+Please be familiar with the following technologies.
 
 * [Vagrant](https://www.vagrantup.com/) - Development environments management (Vagrant 2.2.2)
-* [Docker](https://www.docker.com/) - Application containors (Docker version 18.09.0, build 4d60db4)
+* [Docker](https://www.docker.com/) - Application containers (Docker version 18.09.0, build 4d60db4)
 * [Ansible](https://www.ansible.com/) - DevOps automation (ansible 2.7.4)
 * [Redis](https://redis.io/) - In memory data store
 
