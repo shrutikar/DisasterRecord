@@ -36,6 +36,8 @@ from nltk.stem.wordnet import WordNetLemmatizer
 import string
 from nltk import word_tokenize, pos_tag
 from nltk.stem.porter import PorterStemmer
+from DroneData import DroneData
+dronedata=DroneData()
 words = set(nltk.corpus.words.words())
 stop = set(stopwords.words('english'))
 exclude = set(string.punctuation)
@@ -67,9 +69,9 @@ Matching
 Disaster Response
 Social Media
 """
-ESIP="130.108.86.153"
-ESPORT=9201
-DATASET='random'
+ESIP="{{ photonip }}"
+ESPORT={{ photonport }}
+#DATASET='random'
 
 #ESIP="173.193.79.31"
 #ESPORT=31169
@@ -101,8 +103,6 @@ def get_item(bucket_name, item_name, cos):
         print("CLIENT ERROR: {0}\n".format(be))
     except Exception as e:
         print("Unable to retrieve file contents: {0}".format(e))
-
-
 
 
 def strip_non_ascii(s):
@@ -342,6 +342,7 @@ def get_dist(st,fl):
 
 @application.route('/find_match', methods=['GET','POST'])
 def find_match():
+
     # interpolate_try()
 
     min_lat = request.args.get('min_lat')
@@ -352,13 +353,14 @@ def find_match():
     end_t = request.args.get('end_date')
     start_lat = request.args.get('start_1')
     start_lon = request.args.get('start_0')
+    dataset = request.args.get('dataset_name')
     cl = str(request.args.get('cl'))
     if cl=='shelter_matching':
         q_str="osm_shelter"
     if cl =='rescue_match':
         q_str="osm_rescue"
 
-    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str)
+    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset)
     need_req = [s['_source'] for s in need]
     n = str(json.dumps({"type": "FeatureCollection", "features": need_req}))
     d = json.loads(n)
@@ -506,6 +508,7 @@ def check_selected():
     return json.dumps(data)
 
 def read_data(lat, lon, radius, start_date, end_date):
+    print("READ DATA IS CALLED!")
     es = Elasticsearch([{'host': ESIP, 'port': 9201}])
 
     q = {
@@ -554,13 +557,14 @@ def read_data(lat, lon, radius, start_date, end_date):
         "inf": inf
     }
 
-@application.route("/loc", methods=['GET','POST'])
-def query():
-    #loc_name = request.form['query_loc']
-    txt="http://127.0.0.1:2322/api?q=Kerala"
-    r=requests.get(txt)
-    t=json.loads(r.content)
-    print (json.dumps(t, indent=2))
+# Attempt to remove
+# @application.route("/loc", methods=['GET','POST'])
+# def query():
+#     #loc_name = request.form['query_loc']
+#     txt="http://127.0.0.1:2322/api?q=Kerala"
+#     r=requests.get(txt)
+#     t=json.loads(r.content)
+#     print (json.dumps(t, indent=2))
     #for e in t['features']:
 #	cord= e['geometry']['coordinates']
 #	ext= e['properties']['extent']
@@ -571,13 +575,14 @@ ES_SIZE = 1000
 
 @application.route('/chennai/count', methods=['GET','POST'])
 def bb_query_count():
-    dataset=DATASET
+    #dataset=DATASET
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
     max_lat = request.args.get('max_lat')
     max_lng = request.args.get('max_lng')
     start_t = request.args.get('start_date')
     end_t = request.args.get('end_date')
+    dataset = request.args.get('dataset_name')
     # start_t = start_t
     # end_t = end_t
     es = Elasticsearch([{'host': ESIP, 'port': 9201}])
@@ -799,8 +804,9 @@ def bb_query():
     start_t = request.args.get('start_date')
     end_t = request.args.get('end_date')
     q_str = str(request.args.get('q_str'))
+    dataset = request.args.get('dataset_name')
 
-    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str)
+    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset)
     need_req = [s['_source'] for s in need]
     n = str(json.dumps({"type": "FeatureCollection", "features": need_req}))
 
@@ -808,8 +814,8 @@ def bb_query():
     return n
 
 
-def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str):
-    dataset = DATASET
+def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset):
+    #dataset = DATASET
     es = Elasticsearch([{'host': ESIP, 'port': 9201}])
 
     if (q_str == "rescue_need" or q_str == "shelter_need"):
@@ -929,8 +935,9 @@ def loc_name():
     start_t = request.args.get('start_date')
     end_t = request.args.get('end_date')
     q_str = str(request.args.get('q_str'))
+    dataset = request.args.get('dataset_name')
 
-    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str)
+    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset)
     need_req = [s['_source'] for s in need]
     names = defaultdict(list)
     for e in need_req:
@@ -952,12 +959,13 @@ def wc():
     start_t = request.args.get('start_date')
     end_t = request.args.get('end_date')
     q_str = str(request.args.get('q_str'))
+    dataset = request.args.get('dataset_name')
     # if q_str=="shelter_need":
     #     q_str="shelter_matching"
     # elif q_str == "rescue_need":
     #     q_str="rescue_match"
 
-    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str)
+    need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset)
     need_req = [preprocess_tweet(s['_source']['properties']['text']) for s in need]
     myString = ",".join(need_req)
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
@@ -996,112 +1004,34 @@ def campaign(campaignid):
 
     if campaignid=='Dayton':
         centroid=[-84.185785,39.758722]
+        campaign_esname=["dayton"]
+        campaign_date_start=["08/01/2017"]
+        campaign_date_end=["12/29/2017"]
+        campaign_default_zoom=[15]
     elif campaignid=='IRMA':
-        centroid=[-81.524596,28.391981]
+        #centroid=[-81.524596,28.391981]
+        centroid=[-81.069233,26.856820]
         campaign_BB=[24.165,-83.4978,27.7287,-79.7487]
+        drone_data=dronedata.getData("irma")
+        campaign_esname=["irma"]
+        campaign_date_start=["08/01/2017"]
+        campaign_date_end=["12/29/2017"]
+        campaign_default_zoom=[7]
     elif campaignid=='Florance':
-
         centroid=[-77.903326,34.786072]
-        #min_lat,min_lng,max_lat,max_lng
-        #campaignBB=[13.2823848224,80.066986084,12.74,80.3464508057]
         campaign_BB=[33.8117,-78.7625,34.9456,-77.2299]
-
-        drone_data=[
-            {
-                "id": "003",
-                "path_feature": {
-                  "type": "Feature",
-                  "properties": {},
-                  "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                      [-77.909429, 34.781765],
-                      [-77.909838, 34.781679],
-                      [-77.910186, 34.781380],
-                      [-77.910488, 34.781072],
-                      [-77.911066, 34.780527],
-                      [-77.911337, 34.780270],
-                      [-77.911603, 34.779988],
-                      [-77.912021, 34.779515],
-                      [-77.912298, 34.779197],
-                      [-77.912594, 34.778949],
-                      [-77.913201, 34.779174]
-                    ]
-                  }
-                },
-                "video_feature": {
-                  "type": "Feature",
-                  "geometry": {
-                    "type": "Point",
-                    "coordinates": [-77.911337, 34.780270]
-                  },
-                  "properties": {
-                    "videoURL": "http://130.108.86.152/droneVideos/003.mp4"
-                  }
-                },
-                "object_det_features":[
-                  {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "Point",
-                      "coordinates": [-77.910488, 34.781072]
-                    },
-                    "properties": {
-                      "frameURL": "http://130.108.86.152/droneFrames/003/frame360.jpg",
-                      "objectType": "vehicle"
-                    }
-                  }
-                ]
-            },
-            {
-                "id": "013",
-                "path_feature": {
-                  "type": "Feature",
-                  "properties": {},
-                  "geometry": {
-                    "type": "LineString",
-                    "coordinates": [
-                      [-77.907635, 34.784618],
-                      [-77.904276, 34.785258],
-                      [-77.904150, 34.785421],
-                      [-77.903778, 34.785742],
-                      [-77.903326, 34.786072],
-                      [-77.902979, 34.786204],
-                      [-77.902862, 34.786899],
-                      [-77.902320, 34.786815],
-                      [-77.901409, 34.787211],
-                      [-77.900925, 34.787432]
-                    ]
-                  }
-                },
-                "video_feature": {
-                  "type": "Feature",
-                  "geometry": {
-                    "type": "Point",
-                    "coordinates": [-77.902979, 34.786204]
-                  },
-                  "properties": {
-                    "videoURL": "http://130.108.86.152/droneVideos/013.mp4"
-                  }
-                },
-                "object_det_features":[
-                  {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "Point",
-                      "coordinates": [-77.904276, 34.785258]
-                    },
-                    "properties": {
-                      "frameURL": "http://130.108.86.152/droneFrames/013/frame0.jpg",
-                      "objectType": "vehicle"
-                    }
-                  }
-                ]
-            }
-        ]
+        drone_data=dronedata.getData("florance")
+        campaign_esname=["florance"]
+        campaign_date_start=["08/01/2017"]
+        campaign_date_end=["12/29/2017"]
+        campaign_default_zoom=[7]
 
     else:
         centroid=[-77.903326,34.786072]
+        campaign_esname=["random"]
+        campaign_default_zoom=[12]
+        campaign_date_start=["08/01/2017"]
+        campaign_date_end=["12/29/2017"]
     try:
         start_date = request.args.get()
         read_data(gaz_name)
@@ -1110,6 +1040,10 @@ def campaign(campaignid):
     except:
         params = {
             "centroid": centroid, #test
+            "campaign_esname": campaign_esname,
+            "campaign_date_start": campaign_date_start,
+            "campaign_date_end": campaign_date_end,
+            "campaign_default_zoom": campaign_default_zoom,
             "drone_data": drone_data,
             "campaign_BB": campaign_BB,
             "shelter_data": [],
@@ -1134,6 +1068,10 @@ def index():
         params = {
             "centroid": [-77.903326, 34.786072],
             "campaign_BB": [13.2823848224,80.066986084,12.74,80.3464508057],
+            "campaign_esname": ["random"],
+            "campaign_date_start": ["08/01/2017"],
+            "campaign_date_end": ["12/29/2017"],
+            "campaign_default_zoom": [12],
             "drone_data": [],
             "shelter_data": [],
             "rescue_data": [],
