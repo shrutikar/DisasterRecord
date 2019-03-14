@@ -14,6 +14,7 @@
   git:
     repo: https://github.com/halolimat/LNEx.git
     dest: ~/workspace/LNEx
+    version: LNExAPI-Core
   when: LNEx_init.stat.exists == False
 
 - name: Create LNEx virtualenv
@@ -40,7 +41,7 @@
     virtualenv: ~/workspace/LNEx
 
 
-# COPY LNEx REPLACEMENT CODE
+# COPY LNEx REPLACEMENT CODE FOR INTEGRATION
 
 - name: Copy fixed setup.py file to ~/workspace/LNEx
   copy: src=LNEx/setup.py dest=~/workspace/LNEx/setup.py owner=root group=root mode=0644

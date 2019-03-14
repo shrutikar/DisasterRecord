@@ -71,8 +71,11 @@
 - name: Generate views.py
   template: src=api/apiv1/views.py.j2 dest=~/workspace/api/api/apiv1/views.py owner=root group=root mode=0644
 
-- name: Copy DRDB.py file to ~workspace/api/api/apiv1
-  copy: src=DRDB.py dest=~/workspace/api/api/apiv1/DRDB.py owner=root group=root mode=0644
+- name: Generate DRDB.py file to ~workspace/api/api/apiv1
+  template: src=DRDB.py.j2 dest=~/workspace/api/api/apiv1/DRDB.py owner=root group=root mode=0644
+
+#- name: Copy DRDB.py file to ~workspace/api/api/apiv1
+#  copy: src=DRDB.py dest=~/workspace/api/api/apiv1/DRDB.py owner=root group=root mode=0644
 
 - name: Copy JobQueue.py file to ~workspace/api/api/apiv1
   copy: src=JobQueue.py dest=~/workspace/api/api/apiv1/JobQueue.py owner=root group=root mode=0644
@@ -94,8 +97,11 @@
 - name: Copy LNExHC file to /etc/cron.hourly
   copy: src=LNExHC dest=/etc/cron.hourly/LNExHC owner=root group=root mode=755
 
-- name: Copy LNExDB.py file to ~/workspace/LNEx
-  copy: src=LNExDB.py dest=~/workspace/LNEx/LNExDB.py owner=root group=root mode=0755
+#- name: Copy LNExDB.py file to ~/workspace/LNEx
+#  copy: src=LNExDB.py dest=~/workspace/LNEx/LNExDB.py owner=root group=root mode=0755
+
+- name: Generate LNExDB.py file to ~/workspace/LNEx
+  template: src=LNExDB.py.j2 dest=~/workspace/LNEx/LNExDB.py owner=root group=root mode=0644
 
 - name: Copy LNEx/LNExLocal file to ~/workspace/LNEx
   copy: src=LNEx/LNExLocal dest=~/workspace/LNEx/LNExLocal owner=root group=root mode=0755
@@ -103,8 +109,11 @@
 - name: Copy LNExCLI file to ~
   copy: src=LNExCLI dest=~ owner=root group=root mode=0755
 
-- name: Copy safetyChecker.py file to ~/workspace/LNEx
-  copy: src=safetyChecker.py dest=~/workspace/LNEx/safetyChecker.py owner=root group=root mode=0644
+#- name: Copy safetyChecker.py file to ~/workspace/LNEx
+#  copy: src=safetyChecker.py dest=~/workspace/LNEx/safetyChecker.py owner=root group=root mode=0644
+
+- name: Generate safetyChecker.py file to ~/workspace/LNEx
+  template: src=safetyChecker.py.j2 dest=~/workspace/LNEx/safetyChecker.py owner=root group=root mode=0644
 
 - name: Copy startSafetyCheck file to ~
   copy: src=startSafetyCheck dest=~/startSafetyCheck owner=root group=root mode=0755
