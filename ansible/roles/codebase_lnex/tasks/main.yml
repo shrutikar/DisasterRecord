@@ -46,17 +46,29 @@
 - name: Copy fixed setup.py file to ~/workspace/LNEx
   copy: src=LNEx/setup.py dest=~/workspace/LNEx/setup.py owner=root group=root mode=0644
 
-- name: Copy fixed pytest.py file to ~/workspace/LNEx
-  copy: src=LNEx/pytest.py dest=~/workspace/LNEx/pytest.py owner=root group=root mode=0644
+#- name: Copy fixed pytest.py file to ~/workspace/LNEx
+#  copy: src=LNEx/pytest.py dest=~/workspace/LNEx/pytest.py owner=root group=root mode=0644
 
-- name: Copy fixed initLoader.py file to ~/workspace/LNEx
-  copy: src=LNEx/initLoader.py dest=~/workspace/LNEx/initLoader.py owner=root group=root mode=0644
+- name: Generate pytest.py
+  template: src=pytest.py.j2 dest=~/workspace/LNEx/pytest.py owner=root group=root mode=0644
 
-- name: Copy fixed query.py file to ~/workspace/LNEx
-  copy: src=LNEx/query.py dest=~/workspace/LNEx/query.py owner=root group=root mode=0644
+#- name: Copy fixed initLoader.py file to ~/workspace/LNEx
+#  copy: src=LNEx/initLoader.py dest=~/workspace/LNEx/initLoader.py owner=root group=root mode=0644
 
-- name: Copy fixed osm_gazetteer.py file to ~/workspace/LNEx/LNEx
-  copy: src=LNEx/osm_gazetteer.py dest=~/workspace/LNEx/LNEx/osm_gazetteer.py owner=root group=root mode=0644
+- name: Generate initLoader.py
+  template: src=initLoader.py.j2 dest=~/workspace/LNEx/initLoader.py owner=root group=root mode=0644
+
+#- name: Copy fixed query.py file to ~/workspace/LNEx
+#  copy: src=LNEx/query.py dest=~/workspace/LNEx/query.py owner=root group=root mode=0644
+
+- name: Generate query.py
+  template: src=query.py.j2 dest=~/workspace/LNEx/query.py owner=root group=root mode=0644
+
+#- name: Copy fixed osm_gazetteer.py file to ~/workspace/LNEx/LNEx
+#  copy: src=LNEx/osm_gazetteer.py dest=~/workspace/LNEx/LNEx/osm_gazetteer.py owner=root group=root mode=0644
+
+- name: Generate osm_gazetteer.py
+  template: src=osm_gazetteer.py.j2 dest=~/workspace/LNEx/LNEx/osm_gazetteer.py owner=root group=root mode=0644
 
 - name: Copy fixed __init__.py file to ~/workspace/LNEx/LNEx
   copy: src=LNEx/__init__.py dest=~/workspace/LNEx/LNEx/__init__.py owner=root group=root mode=0644
@@ -67,11 +79,20 @@
 - name: Generate cli.py
   template: src=cli.py.j2 dest=~/workspace/LNEx/cli.py owner=root group=root mode=0644
 
-- name: Copy geoInfo.py file to ~workspace/LNEx
-  copy: src=LNEx/geoInfo.py dest=~/workspace/LNEx/geoInfo.py owner=root group=root mode=0644
+#- name: Copy geoInfo.py file to ~workspace/LNEx
+#  copy: src=LNEx/geoInfo.py dest=~/workspace/LNEx/geoInfo.py owner=root group=root mode=0644
 
-- name: Copy queryBulk.py file to ~workspace/LNEx
-  copy: src=LNEx/queryBulk.py dest=~/workspace/LNEx/queryBulk.py owner=root group=root mode=0644
+- name: Generate geoInfo.py
+  template: src=geoInfo.py.j2 dest=~/workspace/LNEx/geoInfo.py owner=root group=root mode=0644
 
-- name: Copy fullQueryBulk.py file to ~workspace/LNEx
-  copy: src=LNEx/fullQueryBulk.py dest=~/workspace/LNEx/fullQueryBulk.py owner=root group=root mode=0644
+#- name: Copy queryBulk.py file to ~workspace/LNEx
+#  copy: src=LNEx/queryBulk.py dest=~/workspace/LNEx/queryBulk.py owner=root group=root mode=0644
+
+- name: Generate queryBulk.py
+  template: src=queryBulk.py.j2 dest=~/workspace/LNEx/queryBulk.py owner=root group=root mode=0644
+
+#- name: Copy fullQueryBulk.py file to ~workspace/LNEx
+#  copy: src=LNEx/fullQueryBulk.py dest=~/workspace/LNEx/fullQueryBulk.py owner=root group=root mode=0644
+
+- name: Generate fullQueryBulk.py
+  template: src=fullQueryBulk.py.j2 dest=~/workspace/LNEx/fullQueryBulk.py owner=root group=root mode=0644

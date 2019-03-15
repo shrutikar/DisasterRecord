@@ -5,13 +5,13 @@ sys.path.append("LNEx")
 import LNEx as lnex
 import redis
 from DRDB import DRDB
-r = redis.Redis(host='DR-redis')
+r = redis.Redis(host='{{ redishost }}')
 print("query init")
 
 from subprocess import Popen, PIPE
 import os
 from JobQueue import JobQueue
-jq=JobQueue("jobqueue",host='DR-redis')
+jq=JobQueue("jobqueue",host='{{ redishost }}')
 
 import traceback as tb
 
@@ -38,7 +38,7 @@ requests=json.loads(text)
 #print(user,name,text)
 
 def HKRset(key,val,db):
-  r=redis.Redis(host='DR-redis')
+  r=redis.Redis(host='{{ redishost }}')
   _pre="LNEx_"
   _key=str(_pre)+str(key)
   r.set(_key, val)
@@ -51,7 +51,7 @@ logit(text)
 
 
 def init_using_elasticindex(bb, cache, augmentType, dataset, capital_word_shape):
-    lnex.elasticindex(conn_string='130.108.86.153:9201', index_name="photon")
+    lnex.elasticindex(conn_string='{{ photonip }}:{{ photonport }}', index_name="photon")
 
     geo_info = lnex.initialize( bb, augmentType=augmentType,
                                     cache=cache,
@@ -119,7 +119,7 @@ else:
     HKRset(str(resultKey)+"_resultReady",1,db)
     print("...done")
 
-    r=redis.Redis(host='DR-redis')
+    r=redis.Redis(host='{{ redishost }}')
     r.set("LNEx_ZONEINIT_ACTIVE", 0)
   except:
     var = tb.format_exc()
