@@ -17,6 +17,9 @@
     version: integration
   when: DisasterRecord_init.stat.exists == False
 
+- name: Ensure "integration" branch
+  command: chdir=/root/workspace/DisasterRecord git checkout -b integration origin/integration
+
 - name: Create DisasterRecord virtualenv
   command: virtualenv -p python3 ~/workspace/DisasterRecord
   when: DisasterRecordVE_init.stat.exists == False
