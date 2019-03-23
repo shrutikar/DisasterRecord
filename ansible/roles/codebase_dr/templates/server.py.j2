@@ -56,7 +56,6 @@ printable = set(string.printable)
 stop.update(('HASH','NUM','USER'))
 
 from DRDB import DRDB
-db=DRDB("/var/local/LNEx.db")
 
 application = Flask(__name__)
 
@@ -1058,6 +1057,8 @@ def createcampaign():
                 params['errormessage']="Problem with your campaign definition"
                 return render_template('error.html', **params)
 
+        db=DRDB("/var/local/LNEx.db")
+
         if db.check_campaign_exists(formateddata['campaignid']):
             params={}
             params['errormessage']="Campaign ID already used"
@@ -1070,6 +1071,7 @@ def createcampaign():
               formateddata['startdate'],
               formateddata['enddate'],
               formateddata['defaultzoom'])
+          db=destroy_connection()
         except:
             params={}
             params['errormessage']="Error creating campaign"
