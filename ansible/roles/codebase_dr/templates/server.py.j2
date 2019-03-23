@@ -996,15 +996,18 @@ def wc():
     return figdata_png.decode('utf8')
     # return send_file(strIO, mimetype='image/png')
 
+@application.route('/managecampaigns')
+def managecampaigns():
+
+    params={}
+    params['passeddata'] = "New Campaign"
+    return render_template('manage.html', **params)
+
 @application.route('/managecampaigns/<campaignid>')
 def managecampaigns(campaignid):
 
-    if not campaignid:
-        params={}
-        params['passeddata'] = "Create Campaign"
-    else:
-        params={}
-        params['passeddata'] = "Edit Campaign"
+    params={}
+    params['passeddata'] = "Edit Campaign"
 
     return render_template('manage.html', **params)
 
