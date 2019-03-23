@@ -12,6 +12,7 @@ from skimage.io import imsave
 import json, os
 import Geohash, json, os
 import collections,operator
+import traceback as tb
 
 import nltk
 nltk.download('words')
@@ -1070,11 +1071,12 @@ def createcampaign():
               formateddata['centroid'],
               formateddata['startdate'],
               formateddata['enddate'],
-              formateddata['defaultzoom'])
+              int(formateddata['defaultzoom']))
           db=destroy_connection()
         except:
+            var = tb.format_exc()
             params={}
-            params['errormessage']="Error creating campaign"
+            params['errormessage']=str(var)
             return render_template('error.html', **params)
 
         params['passeddata'] = "Campaign was created!"
