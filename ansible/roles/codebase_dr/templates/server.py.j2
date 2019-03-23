@@ -998,8 +998,13 @@ def wc():
 
 @application.route('/managecampaigns/<campaignid>')
 def managecampaigns(campaignid):
-    params={}
-    params['passeddata'] = "This works!"
+
+    if not campaignid:
+        params={}
+        params['passeddata'] = "Create Campaign"
+    else:
+        params={}
+        params['passeddata'] = "Edit Campaign"
 
     return render_template('manage.html', **params)
 
