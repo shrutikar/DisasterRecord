@@ -20,6 +20,8 @@ class DRDB:
       5: [9999,9999,9999,9999]
     }
 
+  ## Useful Functions
+
   def genRandKey(self):
     millis = int(round(time.time() * 1000))
     color = "%07x" % random.randint(0, 0xFFFFFFF)
@@ -53,6 +55,80 @@ class DRDB:
     c.execute(cmd)
     f=c.fetchall()
     return f
+
+  ## table init functions
+
+  def create_campaign_table(self):
+    cmd="CREATE TABLE IF NOT EXISTS campaigns (\
+          id integer PRIMARY KEY,\
+          campaignid text NOT NULL,\
+          centroid text NOT NULL,\
+          esname text NOT NULL,\
+          startdate text NOT NULL,\
+          endsdate text NOT NULL,\
+          defaultzoom integer NOT NULL DEFAULT(12),\
+          CONSTRAINT unique_names UNIQUE (campaignid)\
+        );"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def clear_campaigns_table(self):
+    cmd="DELETE FROM campaigns;"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def create_usermedia_table(self):
+    cmd="CREATE TABLE IF NOT EXISTS usermedia (\
+          id integer PRIMARY KEY,\
+          campaignid text NOT NULL,\
+          mediaURL text NOT NULL,\
+          geopoint text NOT NULL,\
+          geopath text,\
+          bb text,\
+          processed boolean NOT NULL\
+        );"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def clear_usermedia_table(self):
+    cmd="DELETE FROM usermedia;"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def create_detectedobjects_table(self):
+    cmd="CREATE TABLE IF NOT EXISTS detectedobjects (\
+          id integer PRIMARY KEY,\
+          campaignid text NOT NULL,\
+          objectType text NOT NULL,\
+          usermediaid integer NOT NULL,\
+          geopoint text NOT NULL,\
+          active boolean NOT NULL\
+        );"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def clear_detectedobjects_table(self):
+    cmd="DELETE FROM detectedobjects;"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
 
   def create_zone_table(self):
     r = redis.Redis(host='{{ redishost }}')
@@ -129,6 +205,8 @@ class DRDB:
       return True
     except:
       return False
+
+  ## normal operation functions
 
   def addRedisKey(self,key):
     millis = int(round(time.time() * 1000))

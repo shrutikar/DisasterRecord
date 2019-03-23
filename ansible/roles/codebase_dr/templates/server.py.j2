@@ -55,6 +55,8 @@ from wordcloud import WordCloud, STOPWORDS
 printable = set(string.printable)
 stop.update(('HASH','NUM','USER'))
 
+from DRDB import DRDB
+db=DRDB("/var/local/LNEx.db")
 
 application = Flask(__name__)
 
@@ -994,6 +996,11 @@ def wc():
     return figdata_png.decode('utf8')
     # return send_file(strIO, mimetype='image/png')
 
+@application.route('/managecampaigns')
+def managecampaigns():
+    params['passeddata'] = "This works!"
+
+    return render_template('manage.html', **params)
 
 #extra slash because of apache bug
 @application.route('/campaign/<campaignid>')
