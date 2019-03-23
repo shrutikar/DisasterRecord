@@ -996,14 +996,14 @@ def wc():
     return figdata_png.decode('utf8')
     # return send_file(strIO, mimetype='image/png')
 
-@application.route('/managecampaigns')
-def newcampaigns():
+@application.route('/createCampaign')
+def createcampaign():
 
     params={}
     params['passeddata'] = "New Campaign"
     return render_template('manage.html', **params)
 
-@application.route('/managecampaigns/<campaignid>')
+@application.route('/manageCampaigns/<campaignid>')
 def managecampaigns(campaignid):
 
     params={}
