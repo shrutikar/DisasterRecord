@@ -583,6 +583,7 @@ class DRDB:
       return False
 
   def check_campaign_exists(self,campaignid):
+    campaignid=campaignid.lower()
     cmd="SELECT campaignid FROM campaigns WHERE campaignid='{}';".format(str(campaignid))
     r=self._exeQuery(cmd)
     if len(r) > 0:
@@ -596,12 +597,15 @@ class DRDB:
     return r
 
   def add_campaign(self,campaignid,centroid,startdate,enddate,defaultzoom):
+    esname=campaignid.lower()
+    campaignid=campaignid.lower()
     cmd="INSERT INTO campaigns\
-          (campaignid, centroid, startdate, enddate, defaultzoom, active)\
+          (campaignid, centroid, esname, startdate, enddate, defaultzoom, active)\
          VALUES\
          ('{}','{}','{}','{}','{}','1');".format(
             str(campaignid),
             str(centroid),
+            str(esname),
             str(startdate),
             str(enddate),
             int(defaultzoom))
