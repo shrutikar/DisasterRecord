@@ -1088,6 +1088,7 @@ def createcampaign():
 
 @application.route('/listCampaigns')
 def listcampaigns():
+    db=DRDB("/var/local/LNEx.db")
     allcampaigns=db.get_active_campaigns()
     params={}
     params['passeddata'] = allcampaigns
