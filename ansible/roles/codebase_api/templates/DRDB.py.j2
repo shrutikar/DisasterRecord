@@ -65,8 +65,9 @@ class DRDB:
           centroid text NOT NULL,\
           esname text NOT NULL,\
           startdate text NOT NULL,\
-          endsdate text NOT NULL,\
+          enddate text NOT NULL,\
           defaultzoom integer NOT NULL DEFAULT(12),\
+          active integer NOT NULL DEFAULT(1),\
           CONSTRAINT unique_names UNIQUE (campaignid)\
         );"
     try:
@@ -579,6 +580,35 @@ class DRDB:
     if len(r) > 0:
       return r
     else:
+      return False
+
+  def check_campaign_exists(self,campaignid):
+    cmd="SELECT campaignid FROM campaigns WHERE campaignid='{}';".format(str(campaignid))
+    r=self._exeQuery(cmd)
+    if len(r) > 0:
+      return True
+    else:
+      return False
+
+  def get_active_campaigns(self):
+    cmd="SELECT * FROM campaigns WHERE active > 0;"
+    r=self._exeQuery(cmd)
+    return r
+
+  def add_campaign(self,campaignid,centroid,startdate,enddate,defaultzoom):
+    cmd="INSERT INTO campaigns\
+          (campaignid, centroid, startdate, enddate, defaultzoom, active)\
+         VALUES\
+         ('{}','{}','{}','{}','{}',1);".format(
+            str(campaignid),
+            str(centroid),
+            str(startdate),
+            str(enddate),
+            int(defaultzoom))
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
       return False
 
 # EXAMPLE USEAGE:

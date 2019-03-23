@@ -185,6 +185,12 @@
 - name: Copy DisasterRecord/templates/create.html file to ~/workspace/DisasterRecord/templates
   copy: src=DisasterRecord/templates/create.html dest=~/workspace/DisasterRecord/templates/create.html owner=root group=root mode=0644
 
+- name: Copy DisasterRecord/templates/list.html file to ~/workspace/DisasterRecord/templates
+  copy: src=DisasterRecord/templates/list.html dest=~/workspace/DisasterRecord/templates/list.html owner=root group=root mode=0644
+
+- name: Copy DisasterRecord/templates/error.html file to ~/workspace/DisasterRecord/templates
+  copy: src=DisasterRecord/templates/error.html dest=~/workspace/DisasterRecord/templates/error.html owner=root group=root mode=0644
+
 - name: Copy DisasterRecord/static/alert.png file to ~/workspace/DisasterRecord/static
   copy: src=DisasterRecord/static/alert.png dest=~/workspace/DisasterRecord/static/alert.png owner=root group=root mode=0644
 

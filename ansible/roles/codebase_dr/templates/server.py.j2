@@ -1008,6 +1008,73 @@ def createcampaign():
         getdata['html_enddate'] = flask.request.values.get('html_enddate')
         getdata['html_defaultzoom'] = flask.request.values.get('html_defaultzoom')
 
+        #check if data is correct and format it
+
+        checks=[]
+
+        formateddata={}
+        formateddata['campaignid'] = getdata['html_campaignid'].replace(" ","_")
+        checks.append(bool(re.match('^[a-zA-Z0-9_]*$',formateddata['campaignid'])))
+
+        try:
+            ct1,ct2=getdata['html_centroid'].split(",")
+            ct1=float(ct1)
+            ct2=float(ct2)
+            checks.append(True)
+            formateddata['centroid'] = getdata['html_centroid']
+        except:
+            checks.append(False)
+
+        try:
+            d1,d2,d3=getdata['html_startdate'].split("/")
+            d1=int(d1)
+            d2=int(d2)
+            d3=int(d3)
+            checks.append(True)
+            formateddata['startdate'] = getdata['html_startdate']
+        except:
+            checks.append(False)
+
+        try:
+            d1,d2,d3=getdata['html_enddate'].split("/")
+            d1=int(d1)
+            d2=int(d2)
+            d3=int(d3)
+            checks.append(True)
+            formateddata['enddate'] = getdata['html_enddate']
+        except:
+            checks.append(False)
+
+        try:
+            dz=int(getdata['html_defaultzoom'])
+            formateddata['defaultzoom'] = getdata['html_defaultzoom']
+            checks.append(True)
+        except:
+            checks.append(False)
+
+        for check in checks:
+            if check == False:
+                params={}
+                params['errormessage']="Problem with your campaign definition"
+                return render_template('error.html', **params)
+
+        if db.check_campaign_exists(formateddata['campaignid']):
+            params={}
+            params['errormessage']="Campaign ID already used"
+            return render_template('error.html', **params)
+
+        try:
+          db.add_campaign(
+              formateddata['campaignid'],
+              formateddata['centroid'],
+              formateddata['startdate'],
+              formateddata['enddate'],
+              formateddata['defaultzoom'])
+        except:
+            params={}
+            params['errormessage']="Error creating campaign"
+            return render_template('error.html', **params)
+
         params['passeddata'] = "Campaign was created!"
         params['getdata'] = getdata
         return render_template('manage.html', **params)
@@ -1015,8 +1082,16 @@ def createcampaign():
         params['passeddata'] = "New Campaign"
         return render_template('create.html', **params)
 
-@application.route('/manageCampaigns/<campaignid>')
-def managecampaigns(campaignid):
+@application.route('/listCampaigns')
+def listcampaigns():
+    allcampaigns=db.get_active_campaigns()
+    params={}
+    params['passeddata'] = allcampaigns
+    return render_template('list.html', **params)
+
+
+@application.route('/manageCampaign/<campaignid>')
+def managecampaign(campaignid):
 
     params={}
     params['passeddata'] = "Edit Campaign"
