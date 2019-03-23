@@ -996,8 +996,8 @@ def wc():
     return figdata_png.decode('utf8')
     # return send_file(strIO, mimetype='image/png')
 
-@application.route('/managecampaigns')
-def managecampaigns():
+@application.route('/managecampaigns/<campaignid>')
+def managecampaigns(campaignid):
     params['passeddata'] = "This works!"
 
     return render_template('manage.html', **params)
