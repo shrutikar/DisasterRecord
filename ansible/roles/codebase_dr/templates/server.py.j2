@@ -1092,6 +1092,7 @@ def listcampaigns():
     allcampaigns=db.get_active_campaigns()
     params={}
     params['passeddata'] = allcampaigns
+    db.destroy_connection()
     return render_template('list.html', **params)
 
 
