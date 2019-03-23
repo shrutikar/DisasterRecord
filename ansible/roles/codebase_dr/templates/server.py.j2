@@ -996,12 +996,24 @@ def wc():
     return figdata_png.decode('utf8')
     # return send_file(strIO, mimetype='image/png')
 
-@application.route('/createCampaign')
+@application.route('/createCampaign', methods=['GET', 'POST'])
 def createcampaign():
-
     params={}
-    params['passeddata'] = "New Campaign"
-    return render_template('manage.html', **params)
+
+    if flask.request.method == 'POST':
+        getdata={}
+        getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
+        getdata['html_centroid'] = flask.request.values.get('html_centroid')
+        getdata['html_startdate'] = flask.request.values.get('html_startdate')
+        getdata['html_enddate'] = flask.request.values.get('html_enddate')
+        getdata['html_defaultzoom'] = flask.request.values.get('html_defaultzoom')
+
+        params['passeddata'] = "Campaign was created!"
+        params['getdata'] = getdata
+        return render_template('manage.html', **params)
+    else:
+        params['passeddata'] = "New Campaign"
+        return render_template('create.html', **params)
 
 @application.route('/manageCampaigns/<campaignid>')
 def managecampaigns(campaignid):
