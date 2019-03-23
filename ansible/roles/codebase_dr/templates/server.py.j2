@@ -1072,7 +1072,7 @@ def createcampaign():
               formateddata['startdate'],
               formateddata['enddate'],
               int(formateddata['defaultzoom']))
-          db=destroy_connection()
+          db.destroy_connection()
         except:
             var = tb.format_exc()
             params={}
