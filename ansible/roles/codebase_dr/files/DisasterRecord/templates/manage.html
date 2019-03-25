@@ -4,7 +4,8 @@
 <head>
 </head>
 <body>
-	<h1>{{ campaignid }}</h1><br><br>
+	<h1>{{ campaignid }}</h1>
+	<h3>Campaign Meta:</h3>
 	<form action="/DR/updateCampaign/{{ campaignid }}" method="post">
 		Campaign Name:<br>
 		<input type="text" name="html_campaignid" value="{{ campaignid }}" readonly="readonly"><br>
@@ -23,7 +24,7 @@
 		{% endif %}
 		<input type="submit" value="Change Meta">
 	</form>
-
+	<h3>Media:</h3>	
 	<form action="/DR/updateCampaignMedia/{{ campaignid }}" method="post">
 	<table>
 	{% for mediaEntry in campaignMedia %}
@@ -42,8 +43,22 @@
 		</tr>
 	{% endfor %}
 	</table>
+	<h3>Register Media:</h3>
+	<form action="/DR/addMedia" method="post">
+		<input type="hidden" name="html_campaignid" value="{{ campaignid }}">
+		Media Name:<br>
+		<input type="text" name="html_mediaid"><br>
+		Media URL:<br>
+		<input type="text" name="html_mediaURL"><br>
+		Media Type:<br>
+		<input type="text" name="html_mediaType"><br>
+		Geo-Point:<br>
+		<input type="text" name="html_geopoint"><br>
+		Geo-Shape:<br>
+		<input type="text" name="html_geoshape"><br>
+		<input type="submit" value="Register Media">
 	</form>
 	<br>
-	<a href="/DR/listCampaigns">List</a>
+	<a href="/DR/listCampaigns">Campaign List</a>
 </body>
 </html>

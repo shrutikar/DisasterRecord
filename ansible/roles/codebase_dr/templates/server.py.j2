@@ -1137,6 +1137,31 @@ def managecampaign(campaignid):
         params['errormessage']="Campaign {} not found!".format(fixedname)
         return render_template('error.html', **params)
 
+@application.route('/addMedia', methods=['POST'])
+def addmedia(campaignid):
+    if flask.request.method == 'POST':
+        getdata={}
+        getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
+        getdata['html_mediaid'] = flask.request.values.get('html_mediaid')
+        getdata['html_mediaURL'] = flask.request.values.get('html_mediaURL')
+        getdata['html_mediaType'] = flask.request.values.get('html_mediaType')
+        getdata['html_geopoint'] = flask.request.values.get('html_geopoint')
+        getdata['html_geoshape'] = flask.request.values.get('html_geoshape')
+
+        db=DRDB("/var/local/LNEx.db")
+        db.add_media(
+            getdata['html_campaignid'],
+            getdata['html_mediaid'],
+            getdata['html_mediaURL'],
+            getdata['html_mediaType'],
+            getdata['html_geopoint'],
+            getdata['html_geoshape'])
+        db.destroy_connection()
+        return redirect("/DR/manageCampaign/{}".format(formateddata['campaignid']))
+    else:
+        params['errormessage']="Error adding media to {}".format(campaignid)
+        return render_template('error.html', **params)
+
 @application.route('/updateCampaign/<campaignid>', methods=['GET', 'POST'])
 def updatecampaign(campaignid):
     if flask.request.method == 'POST':
