@@ -29,15 +29,15 @@
 	{% for mediaEntry in campaignMedia %}
 		<tr>
 			<td>mediaEntry[1]</td>
-			<td><input type="text" name="{{ mediaEntry[1]_mediaURL }}" value="{{ mediaEntry[2] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1]_mediaType }}" value="{{ mediaEntry[3] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1]_geopoint }}" value="{{ mediaEntry[4] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1]_geoshape }}" value="{{ mediaEntry[5] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1]_bb }}" value="{{ mediaEntry[6] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_mediaURL" value="{{ mediaEntry[2] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_mediaType" value="{{ mediaEntry[3] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_geopoint" value="{{ mediaEntry[4] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_geoshape" value="{{ mediaEntry[5] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_bb" value="{{ mediaEntry[6] }}"></td>
 			{% if '1' in mediaEntry[7] %}
-			<td><input type="checkbox" name="{{ mediaEntry[1]_active }}" value="1" checked="checked">Enabled<br></td>
+			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1" checked="checked">Enabled<br></td>
 			{% else %}
-			<td><input type="checkbox" name="{{ mediaEntry[1]_active }}" value="1">Enabled<br></td>
+			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1">Enabled<br></td>
 			{% endif %}
 		</tr>
 	{% endfor %}
