@@ -582,9 +582,12 @@ class DRDB:
     else:
       return False
 
-  def check_campaign_exists(self,campaignid):
-    campaignidlower=campaignid.lower()
-    cmd="SELECT campaignid FROM campaigns WHERE campaignid='{}' OR campaignid='{}';".format(str(campaignid),campaignidlower)
+  def check_campaign_exists(self,campaignid, casesen=False):
+    if casesen:
+      cmd="SELECT campaignid FROM campaigns WHERE campaignid='{}';".format(str(campaignid))
+    else:
+      campaignidlower=campaignid.lower()
+      cmd="SELECT campaignid FROM campaigns WHERE campaignid='{}' OR campaignid='{}';".format(str(campaignid),campaignidlower)
     r=self._exeQuery(cmd)
     if len(r) > 0:
       return True

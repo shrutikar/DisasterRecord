@@ -1100,11 +1100,12 @@ def listcampaigns():
 def managecampaign(campaignid):
     fixedname=str(campaignid).replace(" ","_")
     db=DRDB("/var/local/LNEx.db")
-    exists=db.check_campaign_exists(fixedname)
+    exists=db.check_campaign_exists(fixedname, casesen=True)
     db.destroy_connection()
     if exists:
         db=DRDB("/var/local/LNEx.db")
         results=db.get_campaign(fixedname)
+        db.destroy_connection()
         params={}
         params['passeddata'] = str(results)
         return render_template('manage.html', **params)
