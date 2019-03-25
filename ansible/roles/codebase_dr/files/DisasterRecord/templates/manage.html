@@ -17,7 +17,7 @@
 		<input type="text" name="html_enddate" value="{{ enddate }}"><br>
 		Default Zoom:<br>
 		<input type="text" name="html_defaultzoom" value="{{ defaultzoom }}"><br>
-		{% if '1' in active %}
+		{% if active == '1' %}
 		<input type="checkbox" name="html_active" value="1" checked="checked">Enabled<br>
 		{% else %}
 		<input type="checkbox" name="html_active" value="1">Enabled<br>
@@ -35,7 +35,7 @@
 			<td><input type="text" name="{{ mediaEntry[1] }}_geopoint" value="{{ mediaEntry[4] }}"></td>
 			<td><input type="text" name="{{ mediaEntry[1] }}_geoshape" value="{{ mediaEntry[5] }}"></td>
 			<td><input type="text" name="{{ mediaEntry[1] }}_bb" value="{{ mediaEntry[6] }}"></td>
-			{% if '1' in mediaEntry[7] %}
+			{% if mediaEntry[7] == 1 %}
 			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1" checked="checked">Enabled<br></td>
 			{% else %}
 			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1">Enabled<br></td>
