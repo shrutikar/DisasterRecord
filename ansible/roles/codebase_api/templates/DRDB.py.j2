@@ -618,6 +618,22 @@ class DRDB:
     except:
       return False
 
+  def update_campaign(self,campaignid,centroid,startdate,enddate,defaultzoom,active):
+    #esname=campaignid.lower()
+    #campaignid=campaignid.lower()
+    cmd="UPDATE campaigns SET\
+          centroid='{}',\
+          startdate='{}',\
+          enddate='{}',\
+          defaultzoom='{}',\
+          active='{}'\
+          WHERE campaignid='{}';".format(centroid,startdate,enddate,defaultzoom,active,campaignid)
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
   def get_campaign(self, campaignid):
     cmd="SELECT * FROM campaigns WHERE campaignid='{}';".format(str(campaignid))
     r=self._exeQuery(cmd)

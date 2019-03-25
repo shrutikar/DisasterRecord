@@ -4,6 +4,21 @@
 <head>
 </head>
 <body>
+	{{ campaignid }}<br>
+	<form action="/DR/updateCampaign" method="post">
+		Campaign Name:<br>
+		<input type="text" name="html_campaignid" value="{{ campaignid }}" disabled><br>
+		Centroid:<br>
+		<input type="text" name="html_centroid" value="{{ centroid }}"><br>
+		Start Date:<br>
+		<input type="text" name="html_startdate" value="{{ startdate }}"><br>
+		End Date:<br>
+		<input type="text" name="html_enddate" value="{{ enddate }}"><br>
+		Default Zoom:<br>
+		<input type="text" name="html_defaultzoom" value="{{ defaultzoom }}"><br>
+		<input type="checkbox" name="html_active" value="1" checked="checked">Active<br>
+		<input type="submit" value="Submit form">
+	</form>
 	Testing 123 <br>
 	{{ passeddata }}
 </body>
