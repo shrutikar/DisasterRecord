@@ -5,6 +5,13 @@
 </head>
 <body>
 	Campaign List <br>
-	{{ passeddata }}
+	<table>
+	{% for campaign in campaignInfo %}
+		<tr>
+			<td><a href="/manageCampaign/{{ campaign[1] }}">{{ campaign[1] }}</a></td>
+			<td>{{ campaign[7] }}</td>
+		</tr>
+	{% endfor %}
+	</table>
 </body>
 </html>
