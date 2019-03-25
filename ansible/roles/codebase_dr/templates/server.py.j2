@@ -1095,9 +1095,9 @@ def createcampaign():
             params['errormessage']=str(var)
             return render_template('error.html', **params)
 
-        params['passeddata'] = "Campaign was created!"
-        params['getdata'] = getdata
-        return render_template('manage.html', **params)
+        #params['passeddata'] = "Campaign was created!"
+        #params['getdata'] = getdata
+        return redirect("/DR/listCampaigns")
     else:
         params['passeddata'] = "New Campaign"
         return render_template('create.html', **params)
