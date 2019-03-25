@@ -5,7 +5,7 @@
 </head>
 <body>
 	{{ campaignid }}<br>
-	<form action="/DR/updateCampaign" method="post">
+	<form action="/DR/updateCampaign/{{ campaignid }}" method="post">
 		Campaign Name:<br>
 		<input type="text" name="html_campaignid" value="{{ campaignid }}" disabled><br>
 		Centroid:<br>
@@ -19,7 +19,5 @@
 		<input type="checkbox" name="html_active" value="1" checked="checked">Active<br>
 		<input type="submit" value="Submit form">
 	</form>
-	Testing 123 <br>
-	{{ passeddata }}
 </body>
 </html>
