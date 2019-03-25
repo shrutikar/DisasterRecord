@@ -646,7 +646,7 @@ class DRDB:
     #esname=campaignid.lower()
     #campaignid=campaignid.lower()
     cmd="INSERT INTO usermedia\
-          (campaignid, mediaid, mediaURL, mediaType, geopoint, geoshape, active)\
+          (campaignid, mediaid, mediaURL, mediaType, geopoint, geoshape, active, processed)\
          VALUES\
          ('{}','{}','{}','{}','{}','{}','1','0');".format(
             str(campaignid),
