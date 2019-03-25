@@ -1020,9 +1020,9 @@ def addmedia():
             getdata['html_geopoint'],
             getdata['html_geoshape'])
         db.destroy_connection()
-        return redirect("/DR/manageCampaign/{}".format(getdata['campaignid']))
+        return redirect("/DR/manageCampaign/{}".format(getdata['html_campaignid']))
     else:
-        params['errormessage']="Error adding media to {}".format(getdata['campaignid'])
+        params['errormessage']="Error adding media to {}".format(getdata['html_campaignid'])
         return render_template('error.html', **params)
 
 @application.route('/updateCampaignMedia/<campaignid>')
