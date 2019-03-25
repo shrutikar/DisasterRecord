@@ -1134,7 +1134,7 @@ def managecampaign(campaignid):
         params['errormessage']="Campaign {} not found!".format(fixedname)
         return render_template('error.html', **params)
 
-@application.route('/updateCampaign', methods=['GET', 'POST'])
+@application.route('/updateCampaign/<campaignid>', methods=['GET', 'POST'])
 def updatecampaign(campaignid):
     if flask.request.method == 'POST':
         getdata={}
