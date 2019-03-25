@@ -1121,7 +1121,9 @@ def managecampaign(campaignid):
     if exists:
         db=DRDB("/var/local/LNEx.db")
         results=db.get_campaign(fixedname)
+        mediaResults=db.get_media(fixedname)
         db.destroy_connection()
+
         params={}
         params['campaignid'] = str(results[0][1])
         params['centroid'] = str(results[0][2])
@@ -1129,6 +1131,7 @@ def managecampaign(campaignid):
         params['enddate'] = str(results[0][5])
         params['defaultzoom'] = str(results[0][6])
         params['active'] = str(results[0][7])
+        params['campaignMedia'] = mediaResults
         return render_template('manage.html', **params)
     else:
         params['errormessage']="Campaign {} not found!".format(fixedname)

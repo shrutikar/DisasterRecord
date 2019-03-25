@@ -88,11 +88,15 @@ class DRDB:
     cmd="CREATE TABLE IF NOT EXISTS usermedia (\
           id integer PRIMARY KEY,\
           campaignid text NOT NULL,\
+          mediaid text NOT NULL,\
           mediaURL text NOT NULL,\
-          geopoint text NOT NULL,\
-          geopath text,\
+          mediaType text NOT NULL,\
+          geopoint text,\
+          geoshape text,\
           bb text,\
-          processed boolean NOT NULL\
+          active integer NOT NULL DEFAULT(1),\
+          processed integer NOT NULL DEFAULT(0),\
+          CONSTRAINT unique_names UNIQUE (mediaid)\
         );"
     try:
       self._exeCreate(cmd)
@@ -636,6 +640,32 @@ class DRDB:
 
   def get_campaign(self, campaignid):
     cmd="SELECT * FROM campaigns WHERE campaignid='{}';".format(str(campaignid))
+    r=self._exeQuery(cmd)
+    return r
+
+  def add_media(self,campaignid,mediaid,mediaURL,mediaType,geopoint,geoshape,bb,processed):
+    #esname=campaignid.lower()
+    #campaignid=campaignid.lower()
+    cmd="INSERT INTO usermedia\
+          (campaignid, mediaid, mediaURL, mediaType, geopoint, geoshape, bb, active, processed)\
+         VALUES\
+         ('{}','{}','{}','{}','{}','{}','1','0');".format(
+            str(campaignid),
+            str(mediaid),
+            str(mediaURL),
+            str(mediaType),
+            str(geopoint),
+            str(geoshape),
+            int(bb))
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+
+  def get_media(self, campaignid):
+    cmd="SELECT * FROM usermedia WHERE campaignid='{}';".format(str(campaignid))
     r=self._exeQuery(cmd)
     return r
 
