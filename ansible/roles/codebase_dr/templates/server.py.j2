@@ -1001,7 +1001,7 @@ def managecampaign(campaignid):
         return render_template('error.html', **params)
 
 @application.route('/addMedia', methods=['POST'])
-def addmedia(campaignid):
+def addmedia():
     if flask.request.method == 'POST':
         getdata={}
         getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
@@ -1020,9 +1020,9 @@ def addmedia(campaignid):
             getdata['html_geopoint'],
             getdata['html_geoshape'])
         db.destroy_connection()
-        return redirect("/DR/manageCampaign/{}".format(formateddata['campaignid']))
+        return redirect("/DR/manageCampaign/{}".format(getdata['campaignid']))
     else:
-        params['errormessage']="Error adding media to {}".format(campaignid)
+        params['errormessage']="Error adding media to {}".format(getdata['campaignid'])
         return render_template('error.html', **params)
 
 @application.route('/updateCampaignMedia/<campaignid>')
