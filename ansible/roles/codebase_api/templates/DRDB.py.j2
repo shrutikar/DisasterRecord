@@ -616,7 +616,7 @@ class DRDB:
       return False
 
   def get_campaign(self, campaignid):
-    cmd="SELECT * FROM campaigns WHERE campaignid={};".format(str(campaignid))
+    cmd="SELECT * FROM campaigns WHERE campaignid='{}';".format(str(campaignid))
     r=self._exeQuery(cmd)
     return r
 
