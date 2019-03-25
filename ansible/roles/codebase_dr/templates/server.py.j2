@@ -1161,7 +1161,7 @@ def updatecampaign(campaignid):
             formateddata['defaultzoom'],
             formateddata['active'])
         db.destroy_connection()
-        return redirect("/manageCampaign/{}".format(formateddata['campaignid']))
+        return redirect("/DR/manageCampaign/{}".format(formateddata['campaignid']))
     else:
         params['errormessage']="Could not update campaign {}".format(campaignid)
         return render_template('error.html', **params)
