@@ -1098,11 +1098,19 @@ def listcampaigns():
 
 @application.route('/manageCampaign/<campaignid>')
 def managecampaign(campaignid):
-
-    params={}
-    params['passeddata'] = "Edit Campaign"
-
-    return render_template('manage.html', **params)
+    fixedname=str(campaignid).replace(" ","_")
+    db=DRDB("/var/local/LNEx.db")
+    exists=db.check_campaign_exists(fixedname)
+    db.destroy_connection()
+    if exists:
+        db=DRDB("/var/local/LNEx.db")
+        results=db.get_campaign(fixedname)
+        params={}
+        params['passeddata'] = str(results)
+        return render_template('manage.html', **params)
+    else:
+        params['errormessage']="Campaign {} not found!".format(fixedname)
+        return render_template('error.html', **params)
 
 #extra slash because of apache bug
 @application.route('/campaign/<campaignid>')
