@@ -27,15 +27,23 @@
 	<h3>Media:</h3>	
 	<form action="/DR/updateCampaignMedia/{{ campaignid }}" method="post">
 	<table>
+		<tr>
+			<td>MediaID</td>
+			<td>URL</td>
+			<td>Type</td>
+			<td>Geo-Point</td>
+			<td>Geo-Shape</td>
+			<td>Enabled</td>
+		</tr>
 	{% for mediaEntry in campaignMedia %}
 		<tr>
-			<td>mediaEntry[1]</td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_mediaURL" value="{{ mediaEntry[2] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_mediaType" value="{{ mediaEntry[3] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_geopoint" value="{{ mediaEntry[4] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_geoshape" value="{{ mediaEntry[5] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_bb" value="{{ mediaEntry[6] }}"></td>
-			{% if mediaEntry[7] == 1 %}
+			<td>{{ mediaEntry[2] }}</td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_mediaURL" value="{{ mediaEntry[3] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_mediaType" value="{{ mediaEntry[4] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_geopoint" value="{{ mediaEntry[5] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_geoshape" value="{{ mediaEntry[6] }}"></td>
+			<td><input type="text" name="{{ mediaEntry[1] }}_params" value="{{ mediaEntry[7] }}"></td>
+			{% if mediaEntry[8] == 1 %}
 			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1" checked="checked">Enabled<br></td>
 			{% else %}
 			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1">Enabled<br></td>
@@ -43,17 +51,17 @@
 		</tr>
 	{% endfor %}
 	<tr>
+		<td><input type="submit" value="Update Media"></td>
 		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>
-		<td><input type="submit" value="Register Media"></td>
 	</tr>
 	</table>
 	</form>
-	<h3>Register Media:</h3>
+	<h3>Register Another Media:</h3>
 	<form action="/DR/addMedia" method="post">
 		<input type="hidden" name="html_campaignid" value="{{ campaignid }}">
 		Media Name:<br>

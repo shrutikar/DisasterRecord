@@ -89,10 +89,11 @@ class DRDB:
           id integer PRIMARY KEY,\
           campaignid text NOT NULL,\
           mediaid text NOT NULL,\
-          mediaURL text NOT NULL,\
+          mediaURL text,\
           mediaType text NOT NULL,\
           geopoint text,\
           geoshape text,\
+          params text,\
           active integer NOT NULL DEFAULT(1),\
           processed integer NOT NULL DEFAULT(0),\
           CONSTRAINT unique_names UNIQUE (mediaid)\
@@ -642,19 +643,18 @@ class DRDB:
     r=self._exeQuery(cmd)
     return r
 
-  def add_media(self,campaignid,mediaid,mediaURL,mediaType,geopoint,geoshape):
-    #esname=campaignid.lower()
-    #campaignid=campaignid.lower()
+  def add_media(self,campaignid,mediaid,mediaURL,mediaType,geopoint,geoshape,params):
     cmd="INSERT INTO usermedia\
-          (campaignid, mediaid, mediaURL, mediaType, geopoint, geoshape, active, processed)\
+          (campaignid, mediaid, mediaURL, mediaType, geopoint, geoshape, params, active, processed)\
          VALUES\
-         ('{}','{}','{}','{}','{}','{}','1','0');".format(
+         ('{}','{}','{}','{}','{}','{}','{}','1','0');".format(
             str(campaignid),
             str(mediaid),
             str(mediaURL),
             str(mediaType),
             str(geopoint),
-            str(geoshape))
+            str(geoshape),
+            str(params))
     try:
       self._exeCreate(cmd)
       return True
