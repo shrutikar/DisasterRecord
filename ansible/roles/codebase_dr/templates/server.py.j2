@@ -1010,6 +1010,7 @@ def addmedia():
         getdata['html_mediaType'] = flask.request.values.get('html_mediaType')
         getdata['html_geopoint'] = flask.request.values.get('html_geopoint')
         getdata['html_geoshape'] = flask.request.values.get('html_geoshape')
+        getdata['html_params'] = flask.request.values.get('html_params')
 
         db=DRDB("/var/local/LNEx.db")
         db.add_media(
@@ -1018,7 +1019,8 @@ def addmedia():
             getdata['html_mediaURL'],
             getdata['html_mediaType'],
             getdata['html_geopoint'],
-            getdata['html_geoshape'])
+            getdata['html_geoshape'],
+            getdata['html_params'])
         db.destroy_connection()
         return redirect("/DR/manageCampaign/{}".format(getdata['html_campaignid']))
     else:
