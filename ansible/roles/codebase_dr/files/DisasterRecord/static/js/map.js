@@ -95,54 +95,54 @@ map.on("load", function() {
 
   // Drone Stuff
 
-  var _path_features=[]
-  for(var i=0; i<drone_data.length; i++) {
-      _path_features.push(drone_data[i].path_feature)
+  //var _path_features=[]
+  //for(var i=0; i<drone_data.length; i++) {
+  //    _path_features.push(drone_data[i].path_feature)
+  //}
+
+  var _media_features=[]
+  for(var i=0; i<media_data.length; i++) {
+      _video_features.push(media_data[i].media_feature)
   }
 
-  var _video_features=[]
-  for(var i=0; i<drone_data.length; i++) {
-      _video_features.push(drone_data[i].video_feature)
-  }
-
-  var _object_det_features=[]
-  for(var i=0; i<drone_data.length; i++) {
-    for(var j=0; j<drone_data[i].object_det_features.length; j++) {
-      _object_det_features.push(drone_data[i].object_det_features[j])
+  var _analysis_features=[]
+  for(var i=0; i<media_data.length; i++) {
+    for(var j=0; j<media_data[i].analysis_features.length; j++) {
+      analysis_features.push(media_data[i].object_det_features[j])
     }
   }
 
-  map.addLayer({
-      "id": "droneSegments",
-      "type": "line",
-      "source": {
-          "type": "geojson",
-          "data": {
-            "type": "FeatureCollection",
-            "features": _path_features
-          }
-        },
-      "layout": {
-          "line-join": "round",
-          "line-cap": "round"
-      },
-      "paint": {
-          "line-color": "#CF1F19",
-          "line-width": 2
-      }
-  });
+  // map.addLayer({
+  //     "id": "droneSegments",
+  //     "type": "line",
+  //     "source": {
+  //         "type": "geojson",
+  //         "data": {
+  //           "type": "FeatureCollection",
+  //           "features": _path_features
+  //         }
+  //       },
+  //     "layout": {
+  //         "line-join": "round",
+  //         "line-cap": "round"
+  //     },
+  //     "paint": {
+  //         "line-color": "#CF1F19",
+  //         "line-width": 2
+  //     }
+  // });
 
   map.loadImage("/static/drone.png", function(error, drone) {
     if (error) throw error;
     map.addImage("drone", drone);
     map.addLayer({
-      "id": "droneClips",
+      "id": "media_object",
       "type": "symbol",
       "source": {
         "type": "geojson",
         "data": {
           "type": "FeatureCollection",
-          "features": _video_features
+          "features": _media_features
         }
       },
       "layout": {
@@ -156,13 +156,13 @@ map.on("load", function() {
     if (error) throw error;
     map.addImage("vehicleFound", vehicleFound);
     map.addLayer({
-      "id": "vehiclesDetected",
+      "id": "analysis_result",
       "type": "symbol",
       "source": {
         "type": "geojson",
         "data": {
           "type": "FeatureCollection",
-          "features": _object_det_features
+          "features": _analysis_features
         }
       },
       "layout": {
@@ -172,16 +172,17 @@ map.on("load", function() {
     });
   });
 
-  map.on('click', 'vehiclesDetected', function (e) {
+  map.on('click', 'analysis_result', function (e) {
 
-      var frameURL = e.features[0].properties.frameURL;
-      var objectType = e.features[0].properties.objectType;
+      var mediaURL = e.features[0].properties.mediaURL;
+      var analysisType = e.features[0].properties.analysisType;
+      var analysisResult = e.features[0].properties.analysisResult;
       var coordinates = e.features[0].geometry.coordinates.slice();
 
       var tmpMSG = `
         <div style="min-width:520px;">
-        A ${objectType} was detected in this frame of the drone video<br/><br/>
-        <img src="${frameURL}" width="500">
+        A ${analysisResult} was detected in this frame of the drone video<br/><br/>
+        <img src="${mediaURL}" width="500">
         </div>
       `
 
@@ -191,16 +192,17 @@ map.on("load", function() {
           .addTo(map);
   });
 
-  map.on('click', 'droneClips', function (e) {
+  map.on('click', 'media_object', function (e) {
 
-      var videoURL = e.features[0].properties.videoURL;
+      var mediaURL = e.features[0].properties.mediaURL;
+      var mediaType = e.features[0].properties.mediaType;
       var coordinates = e.features[0].geometry.coordinates.slice();
 
       var tmpMSG = `
         <div style="min-width:520px;">
         Watch the drone video<br/><br/>
         <video controls width="500">
-          <source src="${videoURL}"
+          <source src="${mediaURL}"
                   type="video/mp4">
         </video>
         </div>
@@ -212,19 +214,19 @@ map.on("load", function() {
           .addTo(map);
   });
 
-  map.on('mousemove', "vehiclesDetected", function(e) {
+  map.on('mousemove', "analysis_result", function(e) {
     map.getCanvas().style.cursor = 'pointer';
   });
 
-  map.on('mouseleave', "vehiclesDetected", function(e) {
+  map.on('mouseleave', "analysis_result", function(e) {
     map.getCanvas().style.cursor = '';
   });
 
-  map.on('mousemove', "droneClips", function(e) {
+  map.on('mousemove', "media_object", function(e) {
     map.getCanvas().style.cursor = 'pointer';
   });
 
-  map.on('mouseleave', "droneClips", function(e) {
+  map.on('mouseleave', "media_object", function(e) {
     map.getCanvas().style.cursor = '';
   });
 
