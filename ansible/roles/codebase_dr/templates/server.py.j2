@@ -1095,12 +1095,13 @@ def campaign(campaignid):
         mediaResults=db.get_media(fixedname)
         centroidt1,centroidt2 = results[0][2].split(",")
         centroid=[float(centroidt1),float(centroidt2)]
-        campaign_esname=[results[0][3]]
-        campaign_date_start=[results[0][4]]
-        campaign_date_end=[results[0][5]]
-        campaign_default_zoom=[int(results[0][6])]
+        campaign_BB=[results[0][3]]
+        campaign_esname=[results[0][4]]
+        campaign_date_start=[results[0][5]]
+        campaign_date_end=[results[0][6]]
+        campaign_default_zoom=[int(results[0][7])]
         drone_data=[]
-        campaign_BB=[]
+        
     else:
         pass
     """    
