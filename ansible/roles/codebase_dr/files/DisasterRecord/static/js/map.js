@@ -122,7 +122,7 @@ map.on("load", function() {
     }
   }
 
-  console.log(_media_features);
+  //console.log(_media_features);
 
   // map.addLayer({
   //     "id": "droneSegments",
