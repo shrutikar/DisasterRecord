@@ -1,39 +1,64 @@
+# import matplotlib as ccc
+# ccc.use('TkAgg')
+#import matplotlib
+#matplotlib.use('agg')
+
 import flask
 from datetime import datetime
 from elasticsearch import Elasticsearch
-from flask import Flask, request
-from flask import render_template, jsonify
-from flask import redirect
+from flask import Flask, request, send_from_directory, render_template_string, render_template, jsonify, Response, redirect, url_for, send_file
 import requests
+#from skimage.io import imsave
 import json
 import os
 import Geohash
 import operator
 import traceback as tb
+
 import nltk
 nltk.download('words')
 nltk.download('stopwords')
 from collections import defaultdict
+#import math, decimal
 from geopy.distance import great_circle
+#import numpy as np
 from ibm_botocore.client import Config
 from ibm_botocore.client import ClientError
 import ibm_boto3
 from os import path
+#from PIL import Image
 import base64
 import numpy as np
+#import matplotlib.pyplot as plt
+#import os
 import unicodedata
 import re
 from nltk.corpus import stopwords
+#from nltk.stem.wordnet import WordNetLemmatizer
 import string
+#from nltk import word_tokenize
+#from nltk.stem.porter import PorterStemmer
 from DroneData import DroneData
 dronedata=DroneData()
 words = set(nltk.corpus.words.words())
 stop = set(stopwords.words('english'))
+#exclude = set(string.punctuation)
+#lemma = WordNetLemmatizer()
+#import cStringIO as StringIO
 from io import StringIO
+
+#token_dict = {}
+#stemmer = PorterStemmer()
+
+#printable = set(string.printable)
+#from elasticsearch import Elasticsearch
 from wordcloud import WordCloud, STOPWORDS
+
 printable = set(string.printable)
 stop.update(('HASH','NUM','USER'))
+
 from DRDB import DRDB
+
 application = Flask(__name__)
 
 """
@@ -49,6 +74,10 @@ Social Media
 """
 ESIP="{{ dr_elasticip }}"
 ESPORT={{ dr_elasticport }}
+#DATASET='random'
+
+#ESIP="173.193.79.31"
+#ESPORT=31169
 
 def download_file_cos(cos_credentials,key):
     auth_endpoint = 'https://iam.bluemix.net/oidc/token'
@@ -157,6 +186,18 @@ def make_map(params):
 
     return render_template('index.html', **params)
 
+
+# dname = "chennai"
+# geohash_fname = "_Data/"+dname+"_geohashes_8prec.json"
+# geohash_dict = defaultdict(bool)
+# if os.path.isfile(geohash_fname):
+#     print "returning cached file..."
+#     with open(geohash_fname) as f:
+#         geohash_dict = json.load(f)
+#     print len(geohash_dict.keys()), "geohashes"
+# else:
+#     print "Geohash File is not in folder"
+
 with open("vcap-local.template.json") as f:
     VCAP = json.load(f)
 cos_cred = VCAP['chennai_geohashes_8prec']
@@ -191,7 +232,25 @@ def get_volume(lat, lon, radius, start_date, end_date):
                     "match_all": {}
                 }
                 ],
-                "filter" : []
+                "filter" : [
+                # {
+                #     "geo_distance" : {
+                #         "distance": "{}km".format(radius),
+                #         "geometry.coordinates" : {
+                #             "lat": lat,
+                #             "lon": lon
+                #         }
+                #     }
+                # },
+                # {
+                #     "range": {
+                #         "properties.createdAt": {
+                #             "gte": start_date,
+                #             "lt": end_date
+                #         }
+                #     }
+                # }
+            ]
             }
         },
         "aggs": {
@@ -205,10 +264,12 @@ def get_volume(lat, lon, radius, start_date, end_date):
     }
 
     needs = es.search(index=dataset+'-tweetneeds', body=q)
+    # print(needs['aggregations'])
     volume_data = [{
         'date': generateISO(data['key']),
         'count': data['doc_count']
     } for data in needs['aggregations']['date']['buckets']]
+    # print volume_data
 
     return {
         "volume": volume_data
@@ -247,6 +308,8 @@ def interpolate_try(crds,start):
         ed.append(long2)
         di=great_circle(st, ed).kilometers
         arb=di / 0.02
+        # print "di",di,arb
+
         ass = get_coords(lat1, long1, lat2, long2, arb)
 
         for a in ass:
@@ -274,11 +337,16 @@ def get_dist(st,fl):
         distance=great_circle(s, f).kilometers
         cod.append(e)
         points[i]=distance
+    # od = collections.OrderedDict(sorted(points.items()))
     sorted_x = sorted(points.items(), key=operator.itemgetter(1))
+    # print sorted_x
+    # for k, v in od.iteritems(): print k, v
     return sorted_x,cod
 
 @application.route('/find_match', methods=['GET','POST'])
 def find_match():
+
+    # interpolate_try()
 
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
@@ -309,10 +377,14 @@ def find_match():
     fl=list()
 
     for e in d["features"]:
+        # final_lon=e["geometry"]["coordinates"][0]
+        # final_lat=e["geometry"]["coordinates"][1]
         final=e["geometry"]["coordinates"]
         fl.append(final)
 
+
     dist=get_dist(st,fl)
+    # new_dist=route_dist(st,fl)
     sorted_dist=dist[0]
     new_cord=dist[1]
     final_route=None
@@ -326,6 +398,7 @@ def find_match():
         new_lat= new_cord[index][1]
         response=requests.get("https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+"?geometries=geojson&access_token=pk.eyJ1IjoiaGFsb2xpbWF0IiwiYSI6ImNqZWRrcjM2bTFrcWEzMmxucDQ4N2kxaDMifQ.Buarvvdqz7yJ1O25up2SzA")
         all_data=json.loads(response.content)
+        # print i,all_data
         try:
             for r in range(len(all_data['routes'])):
                 route = all_data['routes'][r]['geometry']
@@ -353,6 +426,7 @@ def find_match():
         for e in d["features"]:
             if e["geometry"]["coordinates"]==end:
                 new_name=e["properties"]["name"]
+                # print new_name
                 break
     if new_name=="":
         j= json.dumps({"end":end,"route_no":route_no,"phone":"not available"});
@@ -377,11 +451,16 @@ def find_match():
     return j
 
 def flood_check(cordin,strt):
+    # print len(cordin)
     cordin = interpolate_try(cordin,strt)
+    # print cordin
+    # print len(cordin)
     f=None
     for e in cordin:
+        # print e
         ln=e[0]
         lt = e[1]
+        # print type(ln),lt
         f=None
         n_end=list()
         n_end.append(lt)
@@ -392,9 +471,12 @@ def flood_check(cordin,strt):
             x=geohash_dict[geohash]
         else:
             x="No Satellite Data!"
+        # print x
         if str(x)=="True" and dis>0.5:
+            # print "entered true"
             f="flooded route"
             break
+    # print f
     if f=="flooded route":
         return f
     else:
@@ -405,6 +487,9 @@ def get_data():
     with open("OSM_features_icons_dict.json") as f:
         OSM_features_icons_dict = json.dumps(json.load(f))
     return OSM_features_icons_dict
+
+
+
 
 @application.route('/test', methods=['GET','POST'])
 def check_selected():
@@ -417,6 +502,11 @@ def check_selected():
     for t in tweetsList:
         data = json.loads(t)
     data["features"] = data["features"][0::3]
+
+
+    # with open("chennai.geojson") as f:
+    #     data = json.load(f)
+    # data["features"] = data["features"][0::3]
 
     return json.dumps(data)
 
@@ -450,6 +540,7 @@ def read_data(lat, lon, radius, start_date, end_date):
         }
     }
 
+
     needs = es.search(index=dataset+'-tweetneeds', body=q)['hits']['hits']
     sh = {"type": "FeatureCollection", "features": []}
     rs = {"type": "FeatureCollection", "features": []}
@@ -469,10 +560,25 @@ def read_data(lat, lon, radius, start_date, end_date):
         "inf": inf
     }
 
+# Attempt to remove
+# @application.route("/loc", methods=['GET','POST'])
+# def query():
+#     #loc_name = request.form['query_loc']
+#     txt="http://127.0.0.1:2322/api?q=Kerala"
+#     r=requests.get(txt)
+#     t=json.loads(r.content)
+#     print (json.dumps(t, indent=2))
+    #for e in t['features']:
+#	cord= e['geometry']['coordinates']
+#	ext= e['properties']['extent']
+#	break
+
 ES_SIZE = 1000
+
 
 @application.route('/chennai/count', methods=['GET','POST'])
 def bb_query_count():
+    #dataset=DATASET
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
     max_lat = request.args.get('max_lat')
@@ -480,6 +586,8 @@ def bb_query_count():
     start_t = request.args.get('start_date')
     end_t = request.args.get('end_date')
     dataset = request.args.get('dataset_name')
+    # start_t = start_t
+    # end_t = end_t
     es = Elasticsearch([{'host': ESIP, 'port': 9201}])
 
     raw_shelter_count = es.search(index=dataset + '-tweetneeds',body={"size": ES_SIZE, "query": {
@@ -627,6 +735,8 @@ def bb_query_count():
         }
     }})['hits']['total']
 
+
+
     ph_shelter_count = es.search(index=dataset + '-osm', body={"size": ES_SIZE, "query": {
     "bool": {
       "must": [
@@ -651,7 +761,8 @@ def bb_query_count():
         }
       }
 
-    }}})['hits']['total']
+    }
+  }})['hits']['total']
     ph_rescue_count = es.search(index=dataset + '-osm', body={"size": ES_SIZE, "query": {
     "bool": {
       "must": [
@@ -676,9 +787,16 @@ def bb_query_count():
         }
       }
 
-    }}})['hits']['total']
+    }
+  }})['hits']['total']
+
+
 
     return jsonify({"shelter_need":raw_shelter_count,"rescue_need":raw_rescue_count,"people":people_count,"vehicles":vehicle_count,"animals":animal_count,"osm_shelter":ph_shelter_count,"osm_rescue":ph_rescue_count})
+
+
+
+
 
 @application.route('/chennai/data', methods=['GET','POST'])
 def bb_query():
@@ -694,10 +812,13 @@ def bb_query():
     need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset)
     need_req = [s['_source'] for s in need]
     n = str(json.dumps({"type": "FeatureCollection", "features": need_req}))
+
+    # data_read = jsonify({"need":n})
     return n
 
 
 def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset):
+    #dataset = DATASET
     es = Elasticsearch([{'host': ESIP, 'port': 9201}])
 
     if (q_str == "rescue_need" or q_str == "shelter_need"):
@@ -807,6 +928,7 @@ def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, datase
 
     return need
 
+
 @application.route('/chennai/loc_name', methods=['GET','POST'])
 def loc_name():
     min_lat = request.args.get('min_lat')
@@ -828,8 +950,11 @@ def loc_name():
     n = str(json.dumps({"type": "FeatureCollection", "features": names}))
     return n
 
+
+
 @application.route('/wc', methods=['GET','POST'])
 def wc():
+    # wc=''
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
     max_lat = request.args.get('max_lat')
@@ -838,13 +963,20 @@ def wc():
     end_t = request.args.get('end_date')
     q_str = str(request.args.get('q_str'))
     dataset = request.args.get('dataset_name')
+    # if q_str=="shelter_need":
+    #     q_str="shelter_matching"
+    # elif q_str == "rescue_need":
+    #     q_str="rescue_match"
 
     need = form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset)
     need_req = [preprocess_tweet(s['_source']['properties']['text']) for s in need]
     myString = ",".join(need_req)
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
+    # alice_mask = np.array(Image.open(path.join(d, "oval.png")))
     stopwords = set(STOPWORDS)
     stopwords.update("said", "NUM", "USER", "HASH")
+    #wc = WordCloud( max_words=2000, stopwords=stop,background_color="black",mode='RGBA')
+    #wordcloud1 = wc.generate(myString)
 
     wordcloud = WordCloud(  max_words=2000,
                             stopwords=stop,
@@ -852,6 +984,8 @@ def wc():
                             height=900,
                             background_color="white").generate(myString)
 
+    #plt.figure(figsize=(160,160))
+    #plt.figure()
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
     plt.tight_layout(pad=0)
@@ -861,6 +995,8 @@ def wc():
     strIO.seek(0)
     figdata_png = base64.b64encode(strIO.getvalue())
     return figdata_png.decode('utf8')
+    # return send_file(strIO, mimetype='image/png')
+
 
 def valFormData(getdata):
     checks=[]
@@ -875,17 +1011,6 @@ def valFormData(getdata):
         ct2=float(ct2)
         checks.append(True)
         formateddata['centroid'] = getdata['html_centroid']
-    except:
-        checks.append(False)
-
-    try:
-        ct1,ct2,ct3,ct4=getdata['html_bb'].split(",")
-        ct1=float(ct1)
-        ct2=float(ct2)
-        ct3=float(ct3)
-        ct4=float(ct4)
-        checks.append(True)
-        formateddata['bb'] = getdata['html_bb']
     except:
         checks.append(False)
 
@@ -936,7 +1061,6 @@ def createcampaign():
         getdata={}
         getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
         getdata['html_centroid'] = flask.request.values.get('html_centroid')
-        getdata['html_bb'] = flask.request.values.get('html_bb')
         getdata['html_startdate'] = flask.request.values.get('html_startdate')
         getdata['html_enddate'] = flask.request.values.get('html_enddate')
         getdata['html_defaultzoom'] = flask.request.values.get('html_defaultzoom')
@@ -961,21 +1085,19 @@ def createcampaign():
           db.add_campaign(
               formateddata['campaignid'],
               formateddata['centroid'],
-              formateddata['bb'],
               formateddata['startdate'],
               formateddata['enddate'],
               int(formateddata['defaultzoom']))
-          
+          db.destroy_connection()
         except:
             var = tb.format_exc()
             params={}
             params['errormessage']=str(var)
             return render_template('error.html', **params)
-        db.destroy_connection()
 
-        #params['passeddata'] = "Campaign was created!"
-        #params['getdata'] = getdata
-        return redirect("/DR/listCampaigns")
+        params['passeddata'] = "Campaign was created!"
+        params['getdata'] = getdata
+        return render_template('manage.html', **params)
     else:
         params['passeddata'] = "New Campaign"
         return render_template('create.html', **params)
@@ -985,9 +1107,10 @@ def listcampaigns():
     db=DRDB("/var/local/LNEx.db")
     allcampaigns=db.get_active_campaigns()
     params={}
-    params['campaignInfo'] = allcampaigns
+    params['passeddata'] = allcampaigns
     db.destroy_connection()
     return render_template('list.html', **params)
+
 
 @application.route('/manageCampaign/<campaignid>')
 def managecampaign(campaignid):
@@ -998,62 +1121,25 @@ def managecampaign(campaignid):
     if exists:
         db=DRDB("/var/local/LNEx.db")
         results=db.get_campaign(fixedname)
-        mediaResults=db.get_media(fixedname)
         db.destroy_connection()
-
         params={}
         params['campaignid'] = str(results[0][1])
         params['centroid'] = str(results[0][2])
-        params['bb'] = str(results[0][3])
-        params['startdate'] = str(results[0][5])
-        params['enddate'] = str(results[0][6])
-        params['defaultzoom'] = str(results[0][7])
-        params['active'] = str(results[0][8])
-        params['campaignMedia'] = mediaResults
+        params['startdate'] = str(results[0][4])
+        params['enddate'] = str(results[0][5])
+        params['defaultzoom'] = str(results[0][6])
+        params['active'] = str(results[0][7])
         return render_template('manage.html', **params)
     else:
         params['errormessage']="Campaign {} not found!".format(fixedname)
         return render_template('error.html', **params)
 
-@application.route('/addMedia', methods=['POST'])
-def addmedia():
-    if flask.request.method == 'POST':
-        getdata={}
-        getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
-        getdata['html_mediaid'] = flask.request.values.get('html_mediaid')
-        getdata['html_mediaURL'] = flask.request.values.get('html_mediaURL')
-        getdata['html_mediaType'] = flask.request.values.get('html_mediaType')
-        getdata['html_geopoint'] = flask.request.values.get('html_geopoint')
-        getdata['html_geoshape'] = flask.request.values.get('html_geoshape')
-        getdata['html_params'] = flask.request.values.get('html_params')
-
-        db=DRDB("/var/local/LNEx.db")
-        db.add_media(
-            getdata['html_campaignid'],
-            getdata['html_mediaid'],
-            getdata['html_mediaURL'],
-            getdata['html_mediaType'],
-            getdata['html_geopoint'],
-            getdata['html_geoshape'],
-            getdata['html_params'])
-        db.destroy_connection()
-        return redirect("/DR/manageCampaign/{}".format(getdata['html_campaignid']))
-    else:
-        params['errormessage']="Error adding media to {}".format(getdata['html_campaignid'])
-        return render_template('error.html', **params)
-
-@application.route('/updateCampaignMedia/<campaignid>')
-def updatecampaignmedia(campaignid):
-    params['errormessage']="Coming Soon"
-    return render_template('error.html', **params)
-
-@application.route('/updateCampaign/<campaignid>', methods=['GET', 'POST'])
+@application.route('/updateCampaign', methods=['GET', 'POST'])
 def updatecampaign(campaignid):
     if flask.request.method == 'POST':
         getdata={}
         getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
         getdata['html_centroid'] = flask.request.values.get('html_centroid')
-        getdata['html_bb'] = flask.request.values.get('html_bb')
         getdata['html_startdate'] = flask.request.values.get('html_startdate')
         getdata['html_enddate'] = flask.request.values.get('html_enddate')
         getdata['html_defaultzoom'] = flask.request.values.get('html_defaultzoom')
@@ -1070,13 +1156,11 @@ def updatecampaign(campaignid):
         db.update_campaign(
             formateddata['campaignid'],
             formateddata['centroid'],
-            formateddata['bb'],
             formateddata['startdate'],
             formateddata['enddate'],
             formateddata['defaultzoom'],
             formateddata['active'])
         db.destroy_connection()
-        return redirect("/DR/manageCampaign/{}".format(formateddata['campaignid']))
     else:
         params['errormessage']="Could not update campaign {}".format(campaignid)
         return render_template('error.html', **params)
@@ -1084,39 +1168,8 @@ def updatecampaign(campaignid):
 #extra slash because of apache bug
 @application.route('/campaign/<campaignid>')
 def campaign(campaignid):
-    fixedname=str(campaignid).replace(" ","_")
-    db=DRDB("/var/local/LNEx.db")
-    exists=db.check_campaign_exists(fixedname, casesen=True)
-    db.destroy_connection()
-
-    if exists:
-        db=DRDB("/var/local/LNEx.db")
-        results=db.get_campaign(fixedname)
-        mediaResults=db.get_media(fixedname)
-        centroidt1,centroidt2 = results[0][2].split(",")
-        centroid=[float(centroidt1),float(centroidt2)]
-        campaign_BB=[results[0][3]]
-        campaign_esname=[results[0][4]]
-        campaign_date_start=[results[0][5]]
-        campaign_date_end=[results[0][6]]
-        campaign_default_zoom=[int(results[0][7])]
-
-        test_media=[]
-        for mr in mediaResults:
-            media_gen=db.generateMedia(mr)
-            test_media.append(media_gen)
-
-        with open("/var/log/DR.log", "a") as fp:
-            fp.write(str(test_media))
-            fp.write("\n")
-
-        drone_data=[]
-        
-    else:
-        return redirect("/DR/listCampaigns")
-    """    
     #defaults
-    
+    drone_data=[]
     campaign_BB=[13.2823848224,80.066986084,12.74,80.3464508057]
 
     if campaignid=='Dayton':
@@ -1152,54 +1205,53 @@ def campaign(campaignid):
     try:
         start_date = request.args.get()
         read_data(gaz_name)
-    """
 
-    params = {
-        "centroid": centroid,
-        "campaign_esname": campaign_esname,
-        "campaign_date_start": campaign_date_start,
-        "campaign_date_end": campaign_date_end,
-        "campaign_default_zoom": campaign_default_zoom,
-        "drone_data": drone_data,
-        "campaign_BB": campaign_BB,
-        "shelter_data": [],
-        "rescue_data": [],
-        "photon_shelter": [],
-        "photon_rescue": [],
-        "other_sh": [],
-        "other_res": []
-    }
+
+    except:
+        params = {
+            "centroid": centroid, #test
+            "campaign_esname": campaign_esname,
+            "campaign_date_start": campaign_date_start,
+            "campaign_date_end": campaign_date_end,
+            "campaign_default_zoom": campaign_default_zoom,
+            "drone_data": drone_data,
+            "campaign_BB": campaign_BB,
+            "shelter_data": [],
+            "rescue_data": [],
+            "photon_shelter": [],
+            "photon_rescue": [],
+            "other_sh": [],
+            "other_res": []
+        }
 
     return make_map(params)
 
 @application.route("/")
 def index():
 
-    return redirect("/DR/listCampaigns")
-
-    # try:
-    #     start_date = request.args.get()
-    #     read_data(gaz_name)
+    try:
+        start_date = request.args.get()
+        read_data(gaz_name)
 
 
-    # except:
-    #     params = {
-    #         "centroid": [-77.903326, 34.786072],
-    #         "campaign_BB": [13.2823848224,80.066986084,12.74,80.3464508057],
-    #         "campaign_esname": ["random"],
-    #         "campaign_date_start": ["08/01/2017"],
-    #         "campaign_date_end": ["12/29/2017"],
-    #         "campaign_default_zoom": [12],
-    #         "drone_data": [],
-    #         "shelter_data": [],
-    #         "rescue_data": [],
-    #         "photon_shelter": [],
-    #         "photon_rescue": [],
-    #         "other_sh": [],
-    #         "other_res": []
-    #     }
+    except:
+        params = {
+            "centroid": [-77.903326, 34.786072],
+            "campaign_BB": [13.2823848224,80.066986084,12.74,80.3464508057],
+            "campaign_esname": ["random"],
+            "campaign_date_start": ["08/01/2017"],
+            "campaign_date_end": ["12/29/2017"],
+            "campaign_default_zoom": [12],
+            "drone_data": [],
+            "shelter_data": [],
+            "rescue_data": [],
+            "photon_shelter": [],
+            "photon_rescue": [],
+            "other_sh": [],
+            "other_res": []
+        }
 
-    # return make_map(params)
+    return make_map(params)
 
 
 @application.route("/heat")

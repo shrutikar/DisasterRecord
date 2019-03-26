@@ -5,6 +5,7 @@ import time
 import traceback as tb
 import redis
 import random
+import json
 
 class DRDB:
 
@@ -113,14 +114,15 @@ class DRDB:
     except:
       return False
 
-  def create_detectedobjects_table(self):
-    cmd="CREATE TABLE IF NOT EXISTS detectedobjects (\
+  def create_analysisresults_table(self):
+    cmd="CREATE TABLE IF NOT EXISTS analysisresults (\
           id integer PRIMARY KEY,\
-          campaignid text NOT NULL,\
-          objectType text NOT NULL,\
-          usermediaid integer NOT NULL,\
-          geopoint text NOT NULL,\
-          active boolean NOT NULL\
+          mediaid text NOT NULL,\
+          analysistype text NOT NULL,\
+          analysiscoordinates text NOT NULL,\
+          analysisresult text NOT NULL,\
+          analysisurl text NOT NULL,\
+          active integer NOT NULL\
         );"
     try:
       self._exeCreate(cmd)
@@ -128,8 +130,8 @@ class DRDB:
     except:
       return False
 
-  def clear_detectedobjects_table(self):
-    cmd="DELETE FROM detectedobjects;"
+  def clear_analysisresults_table(self):
+    cmd="DELETE FROM analysisresults;"
     try:
       self._exeCreate(cmd)
       return True
@@ -669,6 +671,105 @@ class DRDB:
     cmd="SELECT * FROM usermedia WHERE campaignid='{}';".format(str(campaignid))
     r=self._exeQuery(cmd)
     return r
+
+  def grab_media_object(self, mediaid):
+    cmd="SELECT * FROM usermedia WHERE mediaid='{}';".format(str(mediaid))
+    r=self._exeQuery(cmd)
+    return r
+
+  def grab_analysis_objects(self, mediaid):
+    cmd="SELECT * FROM analysisresults WHERE mediaid='{}';".format(str(mediaid))
+    r=self._exeQuery(cmd)
+    return r
+
+  def generateAnalysis(self, ao):
+
+    # 0 id integer
+    # 1 mediaid text
+    # 2 analysistype text
+    # 3 analysiscoordinates text
+    # 4 analysisresult text
+    # 5 analysisurl text
+    # 6 active integer
+
+    gc1,gc2=ao[3].split(",")
+
+    analysis_geotype="Point"
+    analysis_coordinates=[float(gc1),float(gc2)]
+    analysis_mediaurl=ao[5]
+    analysis_type=ao[2]
+    analysis_result=ao[4]
+    output={
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": analysis_coordinates
+              },
+              "properties": {
+                "mediaURL": analysis_mediaurl,
+                "analysisType": analysis_type,
+                "analysisResult": analysis_result
+              }
+            }
+    return output
+
+
+  def generateMedia(self, mo):
+
+    # 0 id integer
+    # 1 campaignid text
+    # 2 mediaid text
+    # 3 mediaURL text
+    # 4 mediaType text
+    # 5 geopoint text
+    # 6 geoshape text
+    # 7 params text
+    # 8 active integer
+    # 9 processed integer
+
+    #geofeature_geotype="Point"
+    #geofeature_coordinates=[float(gc1),float(gc2)]
+
+    gc1,gc2=mo[5].split(",")
+    mediafeature_geotype="Point"
+    mediafeature_coordinates=[float(gc1),float(gc2)]
+    mediafeature_mediatype=str(mo[4])
+    mediafeature_url=str(mo[3])
+
+    analysisobjects=self.grab_analysis_objects(mo[2])
+  
+    analysis_features=[]
+
+    for ao in analysisobjects:
+      self.generateAnalysis(ao)
+
+    
+
+
+
+    output={
+              #"geo_feature": {
+              #  "type": "Feature",
+              #  "properties": {},
+              #  "geometry": {
+              #    "type": geo_type,
+              #    "coordinates": geofeature_coordinates
+              #  }
+              #},
+              "media_feature": {
+                "type": "Feature",
+                "geometry": {
+                  "type": mediafeature_geotype,
+                  "coordinates": mediafeature_coordinates
+                },
+                "properties": {
+                  "mediaType": mediafeature_mediatype
+                  "mediaURL": mediafeature_url
+                }
+              },
+              "analysis_features":analysis_features
+            }
+    return json.dumps(output)
 
 
 # EXAMPLE USEAGE:
