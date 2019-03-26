@@ -1114,45 +1114,6 @@ def campaign(campaignid):
         
     else:
         return redirect("/DR/listCampaigns")
-    """    
-    #defaults
-    
-    campaign_BB=[13.2823848224,80.066986084,12.74,80.3464508057]
-
-    if campaignid=='Dayton':
-        centroid=[-84.185785,39.758722]
-        campaign_esname=["dayton"]
-        campaign_date_start=["08/01/2017"]
-        campaign_date_end=["12/29/2017"]
-        campaign_default_zoom=[15]
-    elif campaignid=='IRMA':
-        #centroid=[-81.524596,28.391981]
-        centroid=[-81.069233,26.856820]
-        campaign_BB=[24.165,-83.4978,27.7287,-79.7487]
-        drone_data=dronedata.getData("irma")
-        campaign_esname=["irma"]
-        campaign_date_start=["08/01/2017"]
-        campaign_date_end=["12/29/2017"]
-        campaign_default_zoom=[7]
-    elif campaignid=='Florance':
-        centroid=[-77.903326,34.786072]
-        campaign_BB=[33.8117,-78.7625,34.9456,-77.2299]
-        drone_data=dronedata.getData("florance")
-        campaign_esname=["florance"]
-        campaign_date_start=["08/01/2017"]
-        campaign_date_end=["12/29/2017"]
-        campaign_default_zoom=[7]
-
-    else:
-        centroid=[-77.903326,34.786072]
-        campaign_esname=["random"]
-        campaign_default_zoom=[12]
-        campaign_date_start=["08/01/2017"]
-        campaign_date_end=["12/29/2017"]
-    try:
-        start_date = request.args.get()
-        read_data(gaz_name)
-    """
 
     params = {
         "centroid": centroid,
@@ -1174,32 +1135,7 @@ def campaign(campaignid):
 
 @application.route("/")
 def index():
-
     return redirect("/DR/listCampaigns")
-
-    # try:
-    #     start_date = request.args.get()
-    #     read_data(gaz_name)
-
-
-    # except:
-    #     params = {
-    #         "centroid": [-77.903326, 34.786072],
-    #         "campaign_BB": [13.2823848224,80.066986084,12.74,80.3464508057],
-    #         "campaign_esname": ["random"],
-    #         "campaign_date_start": ["08/01/2017"],
-    #         "campaign_date_end": ["12/29/2017"],
-    #         "campaign_default_zoom": [12],
-    #         "drone_data": [],
-    #         "shelter_data": [],
-    #         "rescue_data": [],
-    #         "photon_shelter": [],
-    #         "photon_rescue": [],
-    #         "other_sh": [],
-    #         "other_res": []
-    #     }
-
-    # return make_map(params)
 
 
 @application.route("/heat")

@@ -100,16 +100,24 @@ map.on("load", function() {
   //    _path_features.push(drone_data[i].path_feature)
   //}
 
-  var _media_features=[]
+  var _media_features_video=[]
+  var _media_features_image=[]
   for(var i=0; i<media_data.length; i++) {
-      _media_features.push(media_data[i].media_feature)
+    if (media_data[i].media_feature.properties.mediaType == 'Video') {
+      _media_features_video.push(media_data[i].media_feature)
+    }
+    else if (media_data[i].media_feature.properties.mediaType == 'Image') {
+      _media_features_image.push(media_data[i].media_feature)
+    }
   }
 
-  var _analysis_features=[]
+  var _analysis_features_objectdetection=[]
   for(var i=0; i<media_data.length; i++) {
     if (undefined !== media_data[i].analysis_features) {
       for(var j=0; j<media_data[i].analysis_features.length; j++) {
-        _analysis_features.push(media_data[i].object_det_features[j])
+        if (media_data[i].analysis_features[j].properties.analysisType == 'ObjectDetection') {
+          _analysis_features_objectdetection.push(media_data[i].analysis_features[j])
+        }
       }
     }
   }
@@ -136,29 +144,49 @@ map.on("load", function() {
   //     }
   // });
 
-  map.loadImage("/static/drone.png", function(error, drone) {
+  map.loadImage("/static/videoclip.png", function(error, videoclip) {
     if (error) throw error;
-    map.addImage("drone", drone);
+    map.addImage("videoclip", videoclip);
     map.addLayer({
-      "id": "media_object",
+      "id": "media_videos",
       "type": "symbol",
       "source": {
         "type": "geojson",
         "data": {
           "type": "FeatureCollection",
-          "features": _media_features
+          "features": _media_features_video
         }
       },
       "layout": {
-        "icon-image": "drone",
+        "icon-image": "videoclip",
         "icon-size": 0.15
       }
     });
   });
 
-  map.loadImage("/static/car.png", function(error, vehicleFound) {
+  map.loadImage("/static/camera.png", function(error, photo) {
     if (error) throw error;
-    map.addImage("vehicleFound", vehicleFound);
+    map.addImage("photo", photo);
+    map.addLayer({
+      "id": "media_photos",
+      "type": "symbol",
+      "source": {
+        "type": "geojson",
+        "data": {
+          "type": "FeatureCollection",
+          "features": _media_features_image
+        }
+      },
+      "layout": {
+        "icon-image": "photo",
+        "icon-size": 0.15
+      }
+    });
+  });
+
+  map.loadImage("/static/detection.png", function(error, detection) {
+    if (error) throw error;
+    map.addImage("detection", detection);
     map.addLayer({
       "id": "analysis_result",
       "type": "symbol",
@@ -166,11 +194,11 @@ map.on("load", function() {
         "type": "geojson",
         "data": {
           "type": "FeatureCollection",
-          "features": _analysis_features
+          "features": _analysis_features_objectdetection
         }
       },
       "layout": {
-        "icon-image": "vehicleFound",
+        "icon-image": "detection",
         "icon-size": 0.25
       }
     });
@@ -226,11 +254,19 @@ map.on("load", function() {
     map.getCanvas().style.cursor = '';
   });
 
-  map.on('mousemove', "media_object", function(e) {
+  map.on('mousemove', "media_videos", function(e) {
     map.getCanvas().style.cursor = 'pointer';
   });
 
-  map.on('mouseleave', "media_object", function(e) {
+  map.on('mouseleave', "media_videos", function(e) {
+    map.getCanvas().style.cursor = '';
+  });
+
+  map.on('mousemove', "media_photos", function(e) {
+    map.getCanvas().style.cursor = 'pointer';
+  });
+
+  map.on('mouseleave', "media_photos", function(e) {
     map.getCanvas().style.cursor = '';
   });
 

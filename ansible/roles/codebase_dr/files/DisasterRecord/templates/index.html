@@ -87,12 +87,6 @@
                 <img height="60px" src="/static/NSF.png">
 
             </div>
-            <!--<div id='ibm'>
-                <span id="kno">powered by:</span>
-                <br>
-                <img height="30px" src="/static/ibm.png">
-
-            </div>-->
             <a href="https://icons8.com" id="icon_p">Icon pack by Icons8</a>
         </div>
         </div>
@@ -117,11 +111,8 @@
         <img id="loadingGif" src="/static/Spin.gif" style="position:absolute; margin:auto; top:0; left:0; right:0; bottom:0;" width="100"
             alt="Loading">
     </section>
-    <!-- <div id="loader"></div> -->
 
     <script type="text/javascript">
-        //var centroid = [80.21378369330633, 13.018400446841508],
-        //var centroid = [-77.903326, 34.786072],
         var centroid = {{ centroid | tojson | safe }},
         campaign_esname = {{ campaign_esname | tojson | safe }},
         campaign_date_start = {{ campaign_date_start | tojson | safe }},

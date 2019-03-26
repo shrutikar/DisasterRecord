@@ -200,6 +200,15 @@
 - name: Copy DisasterRecord/static/car.png file to ~/workspace/DisasterRecord/static
   copy: src=DisasterRecord/static/car.png dest=~/workspace/DisasterRecord/static/car.png owner=root group=root mode=0644
 
+- name: Copy DisasterRecord/static/detection.png file to ~/workspace/DisasterRecord/static
+  copy: src=DisasterRecord/static/detection.png dest=~/workspace/DisasterRecord/static/detection.png owner=root group=root mode=0644
+
+- name: Copy DisasterRecord/static/videoclip.png file to ~/workspace/DisasterRecord/static
+  copy: src=DisasterRecord/static/videoclip.png dest=~/workspace/DisasterRecord/static/videoclip.png owner=root group=root mode=0644
+
+- name: Copy DisasterRecord/static/camera.png file to ~/workspace/DisasterRecord/static
+  copy: src=DisasterRecord/static/camera.png dest=~/workspace/DisasterRecord/static/camera.png owner=root group=root mode=0644
+
 - name: Install dependencies
   apt:
     name: "{{ packages }}"
