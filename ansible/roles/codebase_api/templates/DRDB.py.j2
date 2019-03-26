@@ -608,7 +608,7 @@ class DRDB:
     esname=campaignid.lower()
     #campaignid=campaignid.lower()
     cmd="INSERT INTO campaigns\
-          (campaignid, centroid, bb, esname, startdate, enddate, defaultzoom, active)\
+          (campaignid, centroid, boundingbox, esname, startdate, enddate, defaultzoom, active)\
          VALUES\
          ('{}','{}','{}','{}','{}','{}','{}','1');".format(
             str(campaignid),
