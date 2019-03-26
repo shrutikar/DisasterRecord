@@ -63,6 +63,7 @@ class DRDB:
           id integer PRIMARY KEY,\
           campaignid text NOT NULL,\
           centroid text NOT NULL,\
+          boundingbox text NOT FULL,\
           esname text NOT NULL,\
           startdate text NOT NULL,\
           enddate text NOT NULL,\
@@ -603,15 +604,16 @@ class DRDB:
     r=self._exeQuery(cmd)
     return r
 
-  def add_campaign(self,campaignid,centroid,startdate,enddate,defaultzoom):
+  def add_campaign(self,campaignid,centroid,bb,startdate,enddate,defaultzoom):
     esname=campaignid.lower()
     #campaignid=campaignid.lower()
     cmd="INSERT INTO campaigns\
-          (campaignid, centroid, esname, startdate, enddate, defaultzoom, active)\
+          (campaignid, centroid, bb, esname, startdate, enddate, defaultzoom, active)\
          VALUES\
-         ('{}','{}','{}','{}','{}','{}','1');".format(
+         ('{}','{}','{}','{}','{}','{}','{}','1');".format(
             str(campaignid),
             str(centroid),
+            str(bb),
             str(esname),
             str(startdate),
             str(enddate),
@@ -622,16 +624,17 @@ class DRDB:
     except:
       return False
 
-  def update_campaign(self,campaignid,centroid,startdate,enddate,defaultzoom,active):
+  def update_campaign(self,campaignid,centroid,bb,startdate,enddate,defaultzoom,active):
     #esname=campaignid.lower()
     #campaignid=campaignid.lower()
     cmd="UPDATE campaigns SET\
           centroid='{}',\
+          bb='{}',\
           startdate='{}',\
           enddate='{}',\
           defaultzoom='{}',\
           active='{}'\
-          WHERE campaignid='{}';".format(centroid,startdate,enddate,defaultzoom,active,campaignid)
+          WHERE campaignid='{}';".format(centroid,bb,startdate,enddate,defaultzoom,active,campaignid)
     try:
       self._exeCreate(cmd)
       return True

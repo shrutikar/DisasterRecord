@@ -879,6 +879,17 @@ def valFormData(getdata):
         checks.append(False)
 
     try:
+        ct1,ct2,ct3,ct4=getdata['html_bb'].split(",")
+        ct1=float(ct1)
+        ct2=float(ct2)
+        ct3=float(ct3)
+        ct4=float(ct4)
+        checks.append(True)
+        formateddata['bb'] = getdata['html_bb']
+    except:
+        checks.append(False)
+
+    try:
         d1,d2,d3=getdata['html_startdate'].split("/")
         d1=int(d1)
         d2=int(d2)
@@ -925,6 +936,7 @@ def createcampaign():
         getdata={}
         getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
         getdata['html_centroid'] = flask.request.values.get('html_centroid')
+        getdata['html_bb'] = flask.request.values.get('html_bb')
         getdata['html_startdate'] = flask.request.values.get('html_startdate')
         getdata['html_enddate'] = flask.request.values.get('html_enddate')
         getdata['html_defaultzoom'] = flask.request.values.get('html_defaultzoom')
@@ -949,6 +961,7 @@ def createcampaign():
           db.add_campaign(
               formateddata['campaignid'],
               formateddata['centroid'],
+              formateddata['bb'],
               formateddata['startdate'],
               formateddata['enddate'],
               int(formateddata['defaultzoom']))
@@ -990,10 +1003,11 @@ def managecampaign(campaignid):
         params={}
         params['campaignid'] = str(results[0][1])
         params['centroid'] = str(results[0][2])
-        params['startdate'] = str(results[0][4])
-        params['enddate'] = str(results[0][5])
-        params['defaultzoom'] = str(results[0][6])
-        params['active'] = str(results[0][7])
+        params['bb'] = str(results[0][3])
+        params['startdate'] = str(results[0][5])
+        params['enddate'] = str(results[0][6])
+        params['defaultzoom'] = str(results[0][7])
+        params['active'] = str(results[0][8])
         params['campaignMedia'] = mediaResults
         return render_template('manage.html', **params)
     else:
@@ -1038,6 +1052,7 @@ def updatecampaign(campaignid):
         getdata={}
         getdata['html_campaignid'] = flask.request.values.get('html_campaignid')
         getdata['html_centroid'] = flask.request.values.get('html_centroid')
+        getdata['html_bb'] = flask.request.values.get('html_bb')
         getdata['html_startdate'] = flask.request.values.get('html_startdate')
         getdata['html_enddate'] = flask.request.values.get('html_enddate')
         getdata['html_defaultzoom'] = flask.request.values.get('html_defaultzoom')
@@ -1054,6 +1069,7 @@ def updatecampaign(campaignid):
         db.update_campaign(
             formateddata['campaignid'],
             formateddata['centroid'],
+            formateddata['bb'],
             formateddata['startdate'],
             formateddata['enddate'],
             formateddata['defaultzoom'],
@@ -1085,7 +1101,7 @@ def campaign(campaignid):
         drone_data=[]
         campaign_BB=[]
     else:
-
+        pass
     """    
     #defaults
     
