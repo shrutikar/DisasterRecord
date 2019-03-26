@@ -206,7 +206,7 @@ map.on("load", function() {
     });
   });
 
-  map.on('click', 'analysis_result', function (e) {
+  map.on('click', 'media_photos', function (e) {
 
       var mediaURL = e.features[0].properties.mediaURL;
       var analysisType = e.features[0].properties.analysisType;
@@ -226,7 +226,7 @@ map.on("load", function() {
           .addTo(map);
   });
 
-  map.on('click', 'media_object', function (e) {
+  map.on('click', 'media_videos', function (e) {
 
       var mediaURL = e.features[0].properties.mediaURL;
       var mediaType = e.features[0].properties.mediaType;
