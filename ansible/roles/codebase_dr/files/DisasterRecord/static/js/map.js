@@ -122,7 +122,9 @@ map.on("load", function() {
     }
   }
 
-  //console.log(_media_features);
+
+
+  console.log(_analysis_features_objectdetection);
 
   // map.addLayer({
   //     "id": "droneSegments",
@@ -159,7 +161,7 @@ map.on("load", function() {
       },
       "layout": {
         "icon-image": "videoclip",
-        "icon-size": 0.15
+        "icon-size": 0.05
       }
     });
   });
@@ -179,7 +181,7 @@ map.on("load", function() {
       },
       "layout": {
         "icon-image": "photo",
-        "icon-size": 0.15
+        "icon-size": 0.05
       }
     });
   });
