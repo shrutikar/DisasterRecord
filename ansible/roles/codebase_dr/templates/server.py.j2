@@ -1067,8 +1067,28 @@ def updatecampaign(campaignid):
 #extra slash because of apache bug
 @application.route('/campaign/<campaignid>')
 def campaign(campaignid):
+
+    db=DRDB("/var/local/LNEx.db")
+    exists=db.check_campaign_exists(fixedname, casesen=True)
+    db.destroy_connection()
+
+    if exists:
+        db=DRDB("/var/local/LNEx.db")
+        results=db.get_campaign(fixedname)
+        mediaResults=db.get_media(fixedname)
+        centroidt1,centroidt2 = results[0][2].split(",")
+        centroid=[float(centroidt1),float(centroidt2)]
+        campaign_esname=[results[0][3]]
+        campaign_date_start=[results[0][4]]
+        campaign_date_end=[results[0][5]]
+        campaign_default_zoom=[int(results[0][6])]
+        drone_data=[]
+        campaign_BB=[]
+    else:
+
+    """    
     #defaults
-    drone_data=[]
+    
     campaign_BB=[13.2823848224,80.066986084,12.74,80.3464508057]
 
     if campaignid=='Dayton':
@@ -1104,24 +1124,23 @@ def campaign(campaignid):
     try:
         start_date = request.args.get()
         read_data(gaz_name)
+    """
 
-
-    except:
-        params = {
-            "centroid": centroid, #test
-            "campaign_esname": campaign_esname,
-            "campaign_date_start": campaign_date_start,
-            "campaign_date_end": campaign_date_end,
-            "campaign_default_zoom": campaign_default_zoom,
-            "drone_data": drone_data,
-            "campaign_BB": campaign_BB,
-            "shelter_data": [],
-            "rescue_data": [],
-            "photon_shelter": [],
-            "photon_rescue": [],
-            "other_sh": [],
-            "other_res": []
-        }
+    params = {
+        "centroid": centroid,
+        "campaign_esname": campaign_esname,
+        "campaign_date_start": campaign_date_start,
+        "campaign_date_end": campaign_date_end,
+        "campaign_default_zoom": campaign_default_zoom,
+        "drone_data": drone_data,
+        "campaign_BB": campaign_BB,
+        "shelter_data": [],
+        "rescue_data": [],
+        "photon_shelter": [],
+        "photon_rescue": [],
+        "other_sh": [],
+        "other_res": []
+    }
 
     return make_map(params)
 
