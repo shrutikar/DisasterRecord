@@ -201,7 +201,7 @@ map.on("load", function() {
       },
       "layout": {
         "icon-image": "detection",
-        "icon-size": 0.25
+        "icon-size": 0.05
       }
     });
   });
@@ -239,6 +239,26 @@ map.on("load", function() {
           <source src="${mediaURL}"
                   type="video/mp4">
         </video>
+        </div>
+      `
+
+      new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(tmpMSG)
+          .addTo(map);
+  });
+
+
+  map.on('click', 'analysis_result', function (e) {
+
+      var mediaURL = e.features[0].properties.mediaURL;
+      var analysisType = e.features[0].properties.analysisType;
+      var analysisResult = e.features[0].properties.analysisResult;
+      var coordinates = e.features[0].geometry.coordinates.slice();
+
+      var tmpMSG = `
+        <div style="min-width:520px;">
+        ${analysisResult} detected in this location.<br/><br/>
         </div>
       `
 
