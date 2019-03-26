@@ -107,8 +107,10 @@ map.on("load", function() {
 
   var _analysis_features=[]
   for(var i=0; i<media_data.length; i++) {
-    for(var j=0; j<media_data[i].analysis_features.length; j++) {
-      _analysis_features.push(media_data[i].object_det_features[j])
+    if (undefined !== media_data[i].analysis_features) {
+      for(var j=0; j<media_data[i].analysis_features.length; j++) {
+        _analysis_features.push(media_data[i].object_det_features[j])
+      }
     }
   }
 
