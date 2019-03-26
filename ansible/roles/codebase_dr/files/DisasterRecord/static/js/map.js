@@ -102,13 +102,13 @@ map.on("load", function() {
 
   var _media_features=[]
   for(var i=0; i<media_data.length; i++) {
-      _video_features.push(media_data[i].media_feature)
+      _media_features.push(media_data[i].media_feature)
   }
 
   var _analysis_features=[]
   for(var i=0; i<media_data.length; i++) {
     for(var j=0; j<media_data[i].analysis_features.length; j++) {
-      analysis_features.push(media_data[i].object_det_features[j])
+      _analysis_features.push(media_data[i].object_det_features[j])
     }
   }
 
