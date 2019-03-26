@@ -1110,7 +1110,7 @@ def campaign(campaignid):
             fp.write(str(test_media))
             fp.write("\n")
 
-        drone_data=[]
+        media_data=test_media
         
     else:
         return redirect("/DR/listCampaigns")
@@ -1160,7 +1160,7 @@ def campaign(campaignid):
         "campaign_date_start": campaign_date_start,
         "campaign_date_end": campaign_date_end,
         "campaign_default_zoom": campaign_default_zoom,
-        "drone_data": drone_data,
+        "media_data": media_data,
         "campaign_BB": campaign_BB,
         "shelter_data": [],
         "rescue_data": [],
