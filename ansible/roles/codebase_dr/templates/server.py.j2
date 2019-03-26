@@ -965,12 +965,13 @@ def createcampaign():
               formateddata['startdate'],
               formateddata['enddate'],
               int(formateddata['defaultzoom']))
-          db.destroy_connection()
+          
         except:
             var = tb.format_exc()
             params={}
             params['errormessage']=str(var)
             return render_template('error.html', **params)
+        db.destroy_connection()
 
         #params['passeddata'] = "Campaign was created!"
         #params['getdata'] = getdata
@@ -1083,7 +1084,7 @@ def updatecampaign(campaignid):
 #extra slash because of apache bug
 @application.route('/campaign/<campaignid>')
 def campaign(campaignid):
-
+    fixedname=str(campaignid).replace(" ","_")
     db=DRDB("/var/local/LNEx.db")
     exists=db.check_campaign_exists(fixedname, casesen=True)
     db.destroy_connection()
