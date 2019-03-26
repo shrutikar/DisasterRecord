@@ -1165,29 +1165,31 @@ def campaign(campaignid):
 @application.route("/")
 def index():
 
-    try:
-        start_date = request.args.get()
-        read_data(gaz_name)
+    return redirect("/DR/listCampaigns")
+
+    # try:
+    #     start_date = request.args.get()
+    #     read_data(gaz_name)
 
 
-    except:
-        params = {
-            "centroid": [-77.903326, 34.786072],
-            "campaign_BB": [13.2823848224,80.066986084,12.74,80.3464508057],
-            "campaign_esname": ["random"],
-            "campaign_date_start": ["08/01/2017"],
-            "campaign_date_end": ["12/29/2017"],
-            "campaign_default_zoom": [12],
-            "drone_data": [],
-            "shelter_data": [],
-            "rescue_data": [],
-            "photon_shelter": [],
-            "photon_rescue": [],
-            "other_sh": [],
-            "other_res": []
-        }
+    # except:
+    #     params = {
+    #         "centroid": [-77.903326, 34.786072],
+    #         "campaign_BB": [13.2823848224,80.066986084,12.74,80.3464508057],
+    #         "campaign_esname": ["random"],
+    #         "campaign_date_start": ["08/01/2017"],
+    #         "campaign_date_end": ["12/29/2017"],
+    #         "campaign_default_zoom": [12],
+    #         "drone_data": [],
+    #         "shelter_data": [],
+    #         "rescue_data": [],
+    #         "photon_shelter": [],
+    #         "photon_rescue": [],
+    #         "other_sh": [],
+    #         "other_res": []
+    #     }
 
-    return make_map(params)
+    # return make_map(params)
 
 
 @application.route("/heat")
