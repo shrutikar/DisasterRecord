@@ -565,6 +565,7 @@ if __name__ == "__main__":
     satellite_image = sys.argv[9]
     file_url = sys.argv[11]
     ptype = sys.argv[12]
+    campaignName = sys.argv[13]
 
     needed=True
     if ptype == "DATASET":
@@ -579,7 +580,7 @@ if __name__ == "__main__":
         tm.sleep(5)
 
         db=DRDB("/var/local/LNEx.db")
-        c_info=db.get_campaign(dataset)
+        c_info=db.get_campaign(campaignName)
         db.destroy_connection()
         bb_s=c_info[0][3].split(",")
         bb = [float(bb_s[i]) for i in range(len(bb_s))]

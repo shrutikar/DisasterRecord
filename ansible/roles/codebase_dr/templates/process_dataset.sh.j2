@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$#" -ne 3 ]; then
-    echo "usage: process_dataset.sh <campaignid> <dataset_url>"
+    echo "usage: process_dataset.sh <campaignid> <esindexbase> <dataset_url>"
     exit 1
 fi
 
@@ -26,4 +26,4 @@ B="X"
 C="X"
 D="X"
 
-python core.py "${Keywords[*]}" $A $B $C $D $DSN $FC $OBJC $SAT "${BB[*]}" $DSURL $TYPE
+python core.py "${Keywords[*]}" $A $B $C $D $DSesN $FC $OBJC $SAT "${BB[*]}" $DSURL $TYPE $DSN
