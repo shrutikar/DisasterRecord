@@ -36,6 +36,9 @@
 - name: Generate make.sh
   template: src=make.sh.j2 dest=~/workspace/DisasterRecord/make.sh owner=root group=root mode=0755
 
+- name: Generate process_dataset.sh
+  template: src=process_dataset.sh.j2 dest=~/workspace/DisasterRecord/process_dataset.sh owner=root group=root mode=0755
+
 #- name: Copy fixed DisasterRecord/core.py file to ~/workspace/DisasterRecord
 #  copy: src=DisasterRecord/core.py dest=~/workspace/DisasterRecord/core.py owner=root group=root mode=0644
 
