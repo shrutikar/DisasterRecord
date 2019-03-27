@@ -535,7 +535,7 @@ class ReadFromFile():
         log_it("  -->INSERTING DATA INTO ES")
         for line in data:
           try:
-            actions.append(json.loads(line))
+            actions.append(json.loads(str(line)))
           except:
             var = tb.format_exc()
             log_it("  -->ERROR ADDING DATA")
