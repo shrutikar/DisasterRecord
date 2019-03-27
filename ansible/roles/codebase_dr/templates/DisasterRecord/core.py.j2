@@ -239,6 +239,7 @@ class DataProcess(object):
                 #classes = natural_language_classifier.classify('6876e8x557-nlc-635',tweet[0].decode("utf-8")).get_result()
                 f = {'text': tweet[0].decode("utf-8")}
                 r = urllib.request.urlopen("http://127.0.0.1:30501/classify?{}".format(urllib.parse.urlencode(f)))
+                r = r.readline().decode("utf-8")
                 log_it("RESULT:")
                 log_it(str(r))
 
