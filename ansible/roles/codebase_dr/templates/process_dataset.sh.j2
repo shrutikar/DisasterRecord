@@ -1,7 +1,8 @@
 #!/bin/bash
 
-if [ "$#" -ne 2 ]; then
+if [ "$#" -ne 3 ]; then
     echo "usage: process_dataset.sh <campaignid> <dataset_url>"
+    exit 1
 fi
 
 API_PORT=""
@@ -10,12 +11,13 @@ OBJC="ON"
 SAT="OFF"
 
 DSN=$1     #name of campaign
-DSURL=$2   #name of dataset
+DSesN=$2   #es index base
+DSURL=$3   #name of dataset
 TYPE="DATASET"
 
-./file-mapping.sh $DSN
-./tweet-mapping.sh $DSN
-./osm-mapping.sh $DSN
+./file-mapping.sh $DSesN
+./tweet-mapping.sh $DSesN
+./osm-mapping.sh $DSesN
 
 BB=("0" "0" "0" "0")
 
