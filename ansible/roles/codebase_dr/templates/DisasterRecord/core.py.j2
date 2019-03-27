@@ -535,7 +535,14 @@ class ReadFromFile():
         log_it("  -->INSERTING DATA INTO ES")
         for line in data:
           try:
-            actions.append(json.loads(str(line)))
+            line_decoded=line.decode("utf-8")
+            o_doc=json.loads(str(line_decoded))
+            a_doc={
+                "_index":dataset+'-file',
+                "_type":'doc',
+                "_source":{"record":o_doc}
+            }
+            actions.append(a_doc)
           except:
             var = tb.format_exc()
             log_it("  -->ERROR ADDING DATA")
