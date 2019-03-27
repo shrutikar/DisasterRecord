@@ -1111,6 +1111,7 @@ def campaign(campaignid):
             fp.write("\n")
 
         media_data=test_media
+        db.destroy_connection()
         
     else:
         return redirect("/DR/listCampaigns")

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+API_PORT=""
+FC="ON"
+OBJC="ON"
+SAT="OFF"
+
+DSN=$1     #name of campaign
+DSURL=$2   #name of dataset
+TYPE="DATASET"
+
+./file-mapping.sh $DSN
+./tweet-mapping.sh $DSN
+./osm-mapping.sh $DSN
+
+BB=("0" "0" "0" "0")
+
+A="X"
+B="X"
+C="X"
+D="X"
+
+python core.py "${Keywords[*]}" $A $B $C $D $DSN $FC $OBJC $SAT "${BB[*]}" $DSURL $TYPE
