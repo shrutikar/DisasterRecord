@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "$#" -ne 2 ]; then
+    echo "usage: process_dataset.sh <campaignid> <dataset_url>"
+fi
+
 API_PORT=""
 FC="ON"
 OBJC="ON"

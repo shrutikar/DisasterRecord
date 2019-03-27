@@ -529,7 +529,7 @@ class ReadFromFile():
         log_it("  -->DONE INSERTING IRMA DATA SET INTO ES [{} RECORDS]".format(i))
     def readDataset(self,file_url):
         i=0
-        data = urllib.request.urlopen(file_url)
+        data = urllib.request.urlopen("{}".format(file_url))
         actions=[]
         es = Elasticsearch([{'host' : '{{ photonip }}', 'port' : {{ photonport }}}])
         log_it("  -->INSERTING DATA INTO ES")
