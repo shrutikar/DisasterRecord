@@ -59,8 +59,10 @@ def download_file_cos(cos_credentials,key):
                             config=Config(signature_version='oauth'),
                             endpoint_url=cos_credentials['service_endpoint'])
     f = get_item(bucket_name=cos_credentials['BUCKET'], item_name=key, cos=_cos)
-    print (f)
-    print ("=====================*********************")
+    #print (f)
+    with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
+        fp.write(f)
+    #print ("=====================*********************")
 
     tweets = f['Body'].read()
     tweetsList = tweets.decode('utf8').split("\n")
@@ -162,6 +164,7 @@ with open("vcap-local.template.json") as f:
 cos_cred = VCAP['chennai_geohashes_8prec']
 
 f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
+
 geohash_dict = defaultdict(bool)
 tweetsList = f2.decode('utf8').split("\n")
 for t in tweetsList:
@@ -180,7 +183,7 @@ def generateISO(d):
     return datetime.fromtimestamp(d / 1e3).isoformat()
 
 def get_volume(lat, lon, radius, start_date, end_date):
-    es = Elasticsearch([{'host': ESIP, 'port': 9201}])
+    es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
     q = {
         "size": 0,
@@ -422,7 +425,7 @@ def check_selected():
 
 def read_data(lat, lon, radius, start_date, end_date):
     print("READ DATA IS CALLED!")
-    es = Elasticsearch([{'host': ESIP, 'port': 9201}])
+    es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
     q = {
         "size": 1000,
@@ -480,7 +483,7 @@ def bb_query_count():
     start_t = request.args.get('start_date')
     end_t = request.args.get('end_date')
     dataset = request.args.get('dataset_name')
-    es = Elasticsearch([{'host': ESIP, 'port': 9201}])
+    es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
     raw_shelter_count = es.search(index=dataset + '-tweetneeds',body={"size": ES_SIZE, "query": {
         "bool" : {
@@ -698,7 +701,7 @@ def bb_query():
 
 
 def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset):
-    es = Elasticsearch([{'host': ESIP, 'port': 9201}])
+    es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
     if (q_str == "rescue_need" or q_str == "shelter_need"):
         print ("entered")
