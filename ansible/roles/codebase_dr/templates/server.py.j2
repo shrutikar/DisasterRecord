@@ -15,9 +15,14 @@ nltk.download('words')
 nltk.download('stopwords')
 from collections import defaultdict
 from geopy.distance import great_circle
-from ibm_botocore.client import Config
-from ibm_botocore.client import ClientError
-import ibm_boto3
+#from ibm_botocore.client import Config
+#from ibm_botocore.client import ClientError
+#import ibm_boto3
+
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+
 from os import path
 import base64
 import numpy as np
@@ -169,9 +174,9 @@ def make_map(params):
 
     return render_template('index.html', **params)
 
-with open("vcap-local.template.json") as f:
-    VCAP = json.load(f)
-cos_cred = VCAP['chennai_geohashes_8prec']
+#with open("vcap-local.template.json") as f:
+#    VCAP = json.load(f)
+#cos_cred = VCAP['chennai_geohashes_8prec']
 
 #f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
 f2 = load_file('chennai_geohashes_8prec.json')
@@ -422,9 +427,9 @@ def get_data():
 
 @application.route('/test', methods=['GET','POST'])
 def check_selected():
-    with open("vcap-local.template.json") as f:
-        VCAP = json.load(f)
-    cos_cred = VCAP['chennai']
+    #with open("vcap-local.template.json") as f:
+    #    VCAP = json.load(f)
+    #cos_cred = VCAP['chennai']
 
     #f2 = download_file_cos(cos_cred, 'chennai.geojson')
     f2 = load_file('chennai.geojson')
