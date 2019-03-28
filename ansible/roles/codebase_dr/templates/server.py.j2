@@ -1172,7 +1172,10 @@ def count():
             request.args.get("radius"))
         data = json.dumps(d)
     except Exception as ex:
-        print(ex)
+        var = tb.format_exc()
+        with open("/var/log/DR.log", "a") as fp:
+            fp.write(str(var))
+            fp.write("\n")
         pass
     # print data
 

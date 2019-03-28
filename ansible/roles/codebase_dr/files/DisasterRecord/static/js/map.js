@@ -86,7 +86,7 @@ map.on("load", function() {
     end_LtLg = e.lngLat;
   });
   map.on("movestart", function(e) {
-    console.log("moveend");
+    //console.log("moveend");
     if (box) {
       box.parentNode.removeChild(box);
       box = null;
@@ -124,7 +124,7 @@ map.on("load", function() {
 
 
 
-  console.log(_analysis_features_objectdetection);
+  //console.log(_analysis_features_objectdetection);
 
   // map.addLayer({
   //     "id": "droneSegments",
@@ -998,8 +998,8 @@ map.on("load", function() {
   function finish(bbox) {
     // map.off('mousemove',mouseMv);
     // console.log(bbox);
-    console.log(start_LtLg);
-    console.log(end_LtLg);
+    //console.log(start_LtLg);
+    //console.log(end_LtLg);
     // Remove these events now that finish has been called.
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("keydown", onKeyDown);
@@ -1024,8 +1024,8 @@ map.on("load", function() {
         $(".list_head").addClass("animated flipInX");
 
         $("#date_holder").text(new Date($.now()));
-        console.log(res);
-        console.log(res.animals);
+        //console.log(res);
+        //console.log(res.animals);
         $(".text_agg_list").empty();
         $(".img_agg_list").empty();
         $(".osm_agg_list").empty();
@@ -1086,7 +1086,7 @@ map.on("load", function() {
   }
 
   $(document).on("click", ".text_agg_list td", function() {
-    console.log("Clicked list. " + this.id);
+    //console.log("Clicked list. " + this.id);
     var txt_name = this.id;
     $(".marker").remove();
     $(".r_marker").remove();
@@ -1125,7 +1125,7 @@ map.on("load", function() {
         q_str: this.id
       },
       success: function(res) {
-        console.log(res);
+        //console.log(res);
 
         // var layers = document.getElementById('picture')
         $("#picture").empty();
@@ -1165,7 +1165,7 @@ map.on("load", function() {
         q_str: this.id
       },
       success: function(res) {
-        console.log(JSON.parse(res));
+        //console.log(JSON.parse(res));
         response = JSON.parse(res);
         // console.log(response.features);
         // if (this.id='shelter_need'){
@@ -1332,7 +1332,7 @@ map.on("load", function() {
         q_str: this.id
       },
       success: function(res) {
-        console.log(JSON.parse(res));
+        //console.log(JSON.parse(res));
         response = JSON.parse(res);
         // console.log(response['features'].length);
 
