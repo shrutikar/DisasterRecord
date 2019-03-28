@@ -6,12 +6,16 @@ var initialHeatmapYear = 1979,
         $.when(
             // // // Fetches the Links & Insert them into the Table
             $.get('/heat', {
-                start_date: "2014-12-01", // (+$('input[name="daterange"]').data('daterangepicker').startDate/1000),
-                end_date: "2017-12-01", // (+$('input[name="daterange"]').data('daterangepicker').endDate/1000),
-                lon: 80.2137836, //ltln.lon,
-                lat: 13.0184004,  // ltln.lat
+                //start_date: "2014-12-01", // (+$('input[name="daterange"]').data('daterangepicker').startDate/1000),
+                start_date: +$('input[name="daterange"]').data("daterangepicker"),
+                //end_date: "2017-12-01", // (+$('input[name="daterange"]').data('daterangepicker').endDate/1000),
+                end_date: +$('input[name="daterange"]').data("daterangepicker"),
+                //lon: 80.2137836, //ltln.lon,
+                //lat: 13.0184004,  // ltln.lat
+                lon: centroid[0],
+                lat: centroid[1],
                 radius: 500,
-                dataset: campaign_esname  // radius
+                dataset: campaign_esname[0]  // radius
             })
             .done(function(data) {
                 if (typeof data === 'string') {
