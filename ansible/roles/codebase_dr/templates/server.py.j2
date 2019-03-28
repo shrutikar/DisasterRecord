@@ -60,11 +60,13 @@ def download_file_cos(cos_credentials,key):
                             endpoint_url=cos_credentials['service_endpoint'])
     f = get_item(bucket_name=cos_credentials['BUCKET'], item_name=key, cos=_cos)
     #print (f)
-    with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
-        fp.write(json.dumps(f))
+    #with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
+    #    fp.write(json.dumps(f))
     #print ("=====================*********************")
 
     tweets = f['Body'].read()
+    with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
+        fp.write(tweets)
     tweetsList = tweets.decode('utf8').split("\n")
     return tweets
 
