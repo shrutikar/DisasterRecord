@@ -61,7 +61,7 @@ def download_file_cos(cos_credentials,key):
     f = get_item(bucket_name=cos_credentials['BUCKET'], item_name=key, cos=_cos)
     #print (f)
     with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
-        fp.write(f)
+        fp.write(json.dumps(f))
     #print ("=====================*********************")
 
     tweets = f['Body'].read()
