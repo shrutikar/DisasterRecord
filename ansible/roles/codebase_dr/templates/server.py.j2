@@ -52,9 +52,9 @@ ESPORT={{ dr_elasticport }}
 
 def load_file(filename):
     a=open(filename, 'rb').read()
-    tweetsList = a.decode('utf8').split("\n")
-    return tweets
-
+    #tweetsList = a.decode('utf8').split("\n")
+    return a
+"""
 def download_file_cos(cos_credentials,key):
     auth_endpoint = 'https://iam.bluemix.net/oidc/token'
     _cos = ibm_boto3.client('s3',
@@ -74,8 +74,9 @@ def download_file_cos(cos_credentials,key):
     #    fp.write(tweets)
     tweetsList = tweets.decode('utf8').split("\n")
     return tweets
+"""
 
-
+"""
 def get_item(bucket_name, item_name, cos):
     print("Retrieving item from bucket: {0}, key: {1}".format(bucket_name, item_name))
     try:
@@ -86,11 +87,13 @@ def get_item(bucket_name, item_name, cos):
         print("CLIENT ERROR: {0}\n".format(be))
     except Exception as e:
         print("Unable to retrieve file contents: {0}".format(e))
+"""
 
 
 def strip_non_ascii(s):
 
-    if isinstance(s, unicode):
+    #if isinstance(s, unicode):
+    if isinstance(s, str):
         nfkd = unicodedata.normalize('NFKD', s)
         return str(nfkd.encode('ASCII', 'ignore').decode('ASCII'))
     else:
