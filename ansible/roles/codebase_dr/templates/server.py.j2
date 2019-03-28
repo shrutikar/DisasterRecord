@@ -493,7 +493,7 @@ def read_data(lat, lon, radius, start_date, end_date):
 
 ES_SIZE = 1000
 
-@application.route('/chennai/count', methods=['GET','POST'])
+@application.route('/count', methods=['GET','POST'])
 def bb_query_count():
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
@@ -702,7 +702,7 @@ def bb_query_count():
 
     return jsonify({"shelter_need":raw_shelter_count,"rescue_need":raw_rescue_count,"people":people_count,"vehicles":vehicle_count,"animals":animal_count,"osm_shelter":ph_shelter_count,"osm_rescue":ph_rescue_count})
 
-@application.route('/chennai/data', methods=['GET','POST'])
+@application.route('/needdata', methods=['GET','POST'])
 def bb_query():
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
@@ -829,7 +829,7 @@ def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, datase
 
     return need
 
-@application.route('/chennai/loc_name', methods=['GET','POST'])
+@application.route('/loc_name', methods=['GET','POST'])
 def loc_name():
     min_lat = request.args.get('min_lat')
     min_lng = request.args.get('min_lng')
@@ -877,11 +877,7 @@ def wc():
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
     plt.tight_layout(pad=0)
-
-    #strIO = StringIO.StringIO()
-    #strIO = StringIO()
     stream = BytesIO()
-    #plt.savefig(strIO, format='png')
     plt.savefig(stream, format='png')
     stream.seek(0)
     figdata_png = base64.b64encode(stream.getvalue())

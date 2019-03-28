@@ -385,7 +385,7 @@ map.on("load", function() {
 
       //NEEDS GENERALIZED
       $.ajax({
-        url: "/chennai/data",
+        url: "/needdata",
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
@@ -427,7 +427,7 @@ map.on("load", function() {
       });
 
       $.ajax({
-        url: "/chennai/data",
+        url: "/needdata",
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
@@ -472,7 +472,7 @@ map.on("load", function() {
       });
 
       $.ajax({
-        url: "/chennai/data",
+        url: "/needdata",
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
@@ -510,7 +510,7 @@ map.on("load", function() {
       });
 
       $.ajax({
-        url: "/chennai/data",
+        url: "/needdata",
         data: {
           start_date: +$('input[name="daterange"]').data("daterangepicker")
             .startDate,
@@ -1007,7 +1007,7 @@ map.on("load", function() {
     map.dragPan.enable();
 
     $.ajax({
-      url: "/chennai/count",
+      url: "/count",
       data: {
         start_date: +$('input[name="daterange"]').data("daterangepicker")
           .startDate,
@@ -1152,7 +1152,7 @@ map.on("load", function() {
     });
 
     $.ajax({
-      url: "/chennai/loc_name",
+      url: "/loc_name",
       data: {
         start_date: +$('input[name="daterange"]').data("daterangepicker")
           .startDate,
@@ -1271,7 +1271,7 @@ map.on("load", function() {
   //   $("#map").css("z-index", "-1");
 
   //   $.ajax({
-  //     url: "/chennai/data",
+  //     url: "/needdata",
   //     data: {
   //       start_date: +$('input[name="daterange"]').data("daterangepicker")
   //         .startDate,
@@ -1319,7 +1319,7 @@ map.on("load", function() {
     );
 
     $.ajax({
-      url: "/chennai/data",
+      url: "/needdata",
       data: {
         start_date: +$('input[name="daterange"]').data("daterangepicker")
           .startDate,
