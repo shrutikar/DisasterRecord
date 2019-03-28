@@ -29,17 +29,19 @@ import numpy as np
 import unicodedata
 import re
 from nltk.corpus import stopwords
-import string
+#import string
 from DroneData import DroneData
 dronedata=DroneData()
 words = set(nltk.corpus.words.words())
 stop = set(stopwords.words('english'))
-from io import StringIO
+#from io import StringIO
 from wordcloud import WordCloud, STOPWORDS
 printable = set(string.printable)
 stop.update(('HASH','NUM','USER'))
 from DRDB import DRDB
 application = Flask(__name__)
+
+from io import BytesIO
 
 """
 Location
@@ -877,8 +879,10 @@ def wc():
     plt.tight_layout(pad=0)
 
     #strIO = StringIO.StringIO()
-    strIO = StringIO()
-    plt.savefig(strIO, format='png')
+    #strIO = StringIO()
+    stream = BytesIO()
+    #plt.savefig(strIO, format='png')
+    plt.savefig(stream, format='png')
     strIO.seek(0)
     figdata_png = base64.b64encode(strIO.getvalue())
     return figdata_png.decode('utf8')
