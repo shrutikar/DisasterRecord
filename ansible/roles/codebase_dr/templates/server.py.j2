@@ -50,6 +50,11 @@ Social Media
 ESIP="{{ dr_elasticip }}"
 ESPORT={{ dr_elasticport }}
 
+def load_file(filename):
+    a=open(filename, 'rb').read()
+    tweetsList = a.decode('utf8').split("\n")
+    return tweets
+
 def download_file_cos(cos_credentials,key):
     auth_endpoint = 'https://iam.bluemix.net/oidc/token'
     _cos = ibm_boto3.client('s3',
@@ -65,8 +70,8 @@ def download_file_cos(cos_credentials,key):
     #print ("=====================*********************")
 
     tweets = f['Body'].read()
-    with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
-        fp.write(tweets)
+    #with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
+    #    fp.write(tweets)
     tweetsList = tweets.decode('utf8').split("\n")
     return tweets
 
@@ -165,7 +170,8 @@ with open("vcap-local.template.json") as f:
     VCAP = json.load(f)
 cos_cred = VCAP['chennai_geohashes_8prec']
 
-f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
+#f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
+f2 = load_file('chennai_geohashes_8prec.json')
 
 geohash_dict = defaultdict(bool)
 tweetsList = f2.decode('utf8').split("\n")
@@ -417,7 +423,8 @@ def check_selected():
         VCAP = json.load(f)
     cos_cred = VCAP['chennai']
 
-    f2 = download_file_cos(cos_cred, 'chennai.geojson')
+    #f2 = download_file_cos(cos_cred, 'chennai.geojson')
+    f2 = load_file('chennai.geojson')
     tweetsList = f2.decode('utf8').split("\n")
     for t in tweetsList:
         data = json.loads(t)

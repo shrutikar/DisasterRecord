@@ -30,6 +30,12 @@
 - name: Copy fixed DisasterRecord/requirements.txt file to ~/workspace/DisasterRecord
   copy: src=DisasterRecord/requirements.txt dest=~/workspace/DisasterRecord/requirements.txt owner=root group=root mode=0644
 
+- name: Copy fixed DisasterRecord/chennai.geojson file to ~/workspace/DisasterRecord
+  copy: src=DisasterRecord/chennai.geojson dest=~/workspace/DisasterRecord/chennai.geojson owner=root group=root mode=0644
+
+- name: Copy fixed DisasterRecord/chennai_geohashes_8prec.json file to ~/workspace/DisasterRecord
+  copy: src=DisasterRecord/chennai_geohashes_8prec.json dest=~/workspace/DisasterRecord/chennai_geohashes_8prec.json owner=root group=root mode=0644
+
 #- name: Copy fixed DisasterRecord/make.sh file to ~/workspace/DisasterRecord
 #  copy: src=DisasterRecord/make.sh dest=~/workspace/DisasterRecord/make.sh owner=root group=root mode=0755
 
