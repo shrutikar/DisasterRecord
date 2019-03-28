@@ -876,7 +876,8 @@ def wc():
     plt.axis("off")
     plt.tight_layout(pad=0)
 
-    strIO = StringIO.StringIO()
+    #strIO = StringIO.StringIO()
+    strIO = StringIO()
     plt.savefig(strIO, format='png')
     strIO.seek(0)
     figdata_png = base64.b64encode(strIO.getvalue())
