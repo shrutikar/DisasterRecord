@@ -883,8 +883,8 @@ def wc():
     stream = BytesIO()
     #plt.savefig(strIO, format='png')
     plt.savefig(stream, format='png')
-    strIO.seek(0)
-    figdata_png = base64.b64encode(strIO.getvalue())
+    stream.seek(0)
+    figdata_png = base64.b64encode(stream.getvalue())
     return figdata_png.decode('utf8')
 
 def valFormData(getdata):
