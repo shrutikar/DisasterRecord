@@ -200,7 +200,7 @@ def flooded(lat, lon):
 def generateISO(d):
     return datetime.fromtimestamp(d / 1e3).isoformat()
 
-def get_volume(lat, lon, radius, start_date, end_date):
+def get_volume(lat, lon, radius, start_date, end_date, dataset):
     es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
     q = {
@@ -1169,7 +1169,8 @@ def count():
             request.args.get("end_date"),
             request.args.get("lat"),
             request.args.get("lon"),
-            request.args.get("radius"))
+            request.args.get("radius"),
+            request.args.get("dataset"))
         data = json.dumps(d)
     except Exception as ex:
         var = tb.format_exc()
