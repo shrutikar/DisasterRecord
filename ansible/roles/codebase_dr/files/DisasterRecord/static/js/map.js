@@ -1020,9 +1020,9 @@ map.on("load", function() {
         start_date: +$('input[name="daterange"]').data("daterangepicker")
           .startDate,
         end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
-        min_lat: start_LtLg.lat,
+        max_lat: start_LtLg.lat,
         min_lng: start_LtLg.lng,
-        max_lat: end_LtLg.lat,
+        min_lat: end_LtLg.lat,
         max_lng: end_LtLg.lng,
         dataset_name: campaign_esname[0],
       },
@@ -1125,9 +1125,9 @@ map.on("load", function() {
         start_date: +$('input[name="daterange"]').data("daterangepicker")
           .startDate,
         end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
-        min_lat: start_LtLg.lat,
+        max_lat: start_LtLg.lat,
         min_lng: start_LtLg.lng,
-        max_lat: end_LtLg.lat,
+        min_lat: end_LtLg.lat,
         max_lng: end_LtLg.lng,
         dataset_name: campaign_esname[0],
         q_str: this.id
@@ -1165,15 +1165,19 @@ map.on("load", function() {
         start_date: +$('input[name="daterange"]').data("daterangepicker")
           .startDate,
         end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
-        min_lat: start_LtLg.lat,
+        max_lat: start_LtLg.lat,
         min_lng: start_LtLg.lng,
-        max_lat: end_LtLg.lat,
+        min_lat: end_LtLg.lat,
         max_lng: end_LtLg.lng,
         dataset_name: campaign_esname[0],
         q_str: this.id
       },
       success: function(res) {
         //console.log(JSON.parse(res));
+        console.log(start_LtLg.lat);
+        console.log(start_LtLg.lng);
+        console.log(end_LtLg.lat);
+        console.log(end_LtLg.lng);
         response = JSON.parse(res);
         // console.log(response.features);
         // if (this.id='shelter_need'){
@@ -1331,9 +1335,9 @@ map.on("load", function() {
       data: {
         start_date: +$('input[name="daterange"]').data("daterangepicker").startDate,
         end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
-        min_lat: start_LtLg.lat,
+        max_lat: start_LtLg.lat,
         min_lng: start_LtLg.lng,
-        max_lat: end_LtLg.lat,
+        min_lat: end_LtLg.lat,
         max_lng: end_LtLg.lng,
         dataset_name: campaign_esname[0],
         q_str: this.id
