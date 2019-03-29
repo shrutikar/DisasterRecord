@@ -596,11 +596,11 @@ if __name__ == "__main__":
         bb = [float(bb_s[i]) for i in range(len(bb_s))]
         log_it("STARTING DATA PROCESSING...")
         d = DataProcess()
-        d.read(dataset,flood_flag,objects_flag,satellite_image,bb)
-        log_it("  -->DONE READ")
         log_it("  -->BEGIN PREPARE")
         d.prepare_data_events(bb)
         log_it("  -->DONE PREPARE")
+        d.read(dataset,flood_flag,objects_flag,satellite_image,bb)
+        log_it("  -->DONE READ")
         log_it("REACHED END OF PROCESSING")
 
     elif file_url == "None":
