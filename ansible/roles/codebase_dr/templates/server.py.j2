@@ -53,6 +53,11 @@ Social Media
 ESIP="{{ dr_elasticip }}"
 ESPORT={{ dr_elasticport }}
 
+def log_it(debugdata):
+    with open("/var/log/DR.log", "a") as fp:
+        fp.write(str(debugdata))
+        fp.write("\n")
+
 def load_file(filename):
     a=open(filename, 'rb').read()
     return a
@@ -625,7 +630,7 @@ def bb_query():
 
 def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset):
 
-    print("min_lat:{},min_lng:{},max_lat:{},max_lng:{}".format(min_lat, min_lng, max_lat, max_lng))
+    log_it("min_lat:{},min_lng:{},max_lat:{},max_lng:{}".format(min_lat, min_lng, max_lat, max_lng))
     es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
     if (q_str == "rescue_need" or q_str == "shelter_need"):
@@ -650,12 +655,12 @@ def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, datase
                     "geo_bounding_box": {
                         "geometry.coordinates": {
                             "top_left": {
-                                "lat": min_lat,
-                                "lon": max_lng
-                            },
-                            "bottom_right": {
                                 "lat": max_lat,
                                 "lon": min_lng
+                            },
+                            "bottom_right": {
+                                "lat": min_lat,
+                                "lon": max_lng
                             }
                         }
                     }
@@ -688,12 +693,12 @@ def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, datase
                     "geo_bounding_box": {
                         "geometry.coordinates": {
                             "top_left": {
-                                "lat": min_lat,
-                                "lon": max_lng
-                            },
-                            "bottom_right": {
                                 "lat": max_lat,
                                 "lon": min_lng
+                            },
+                            "bottom_right": {
+                                "lat": min_lat,
+                                "lon": max_lng
                             }
                         }
                     }
@@ -719,12 +724,12 @@ def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, datase
                     "geo_bounding_box": {
                         "geometry.coordinates": {
                             "top_left": {
-                                "lat": min_lat,
-                                "lon": max_lng
-                            },
-                            "bottom_right": {
                                 "lat": max_lat,
                                 "lon": min_lng
+                            },
+                            "bottom_right": {
+                                "lat": min_lat,
+                                "lon": max_lng
                             }
                         }
                     }
