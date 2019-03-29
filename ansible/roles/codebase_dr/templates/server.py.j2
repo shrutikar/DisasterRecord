@@ -281,9 +281,9 @@ def find_match():
                  sb2xpbWF0IiwiYSI6ImNqZWRrcjM2bTFrcWEzMmxucDQ4N2\
                  kxaDMifQ.Buarvvdqz7yJ1O25up2SzA"
         response=requests.get(_mburl1+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+_mburl2)
-        print(_mburl1+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+_mburl2)
-        print(response.content)
-        all_data=json.loads(response.content)
+        log_it(_mburl1+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+_mburl2)
+        log_it(response.content)
+        all_data=json.loads(response.content.decode())
         try:
             for r in range(len(all_data['routes'])):
                 route = all_data['routes'][r]['geometry']
