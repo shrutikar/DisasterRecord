@@ -62,7 +62,7 @@ map.on("load", function() {
 
   // debug variables
   console.log(campaign_BB);
-  var campaign_BB = campaign_BB[0].split(',');
+  campaign_BB = campaign_BB[0].split(',');
   console.log(campaign_BB);
 
   // Set `true` to dispatch the event before other functions
