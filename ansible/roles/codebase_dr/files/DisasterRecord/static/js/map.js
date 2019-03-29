@@ -60,6 +60,9 @@ map.on("load", function() {
   var start_LtLg;
   var end_LtLg;
 
+  // debug variables
+  console.log(campaign_BB);
+
   // Set `true` to dispatch the event before other functions
   // call it. This is necessary for disabling the default map
   // dragging behaviour.
