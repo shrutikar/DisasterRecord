@@ -670,7 +670,8 @@ map.on("load", function() {
       function getRoute(cordd, cl) {
         $("#loadingGif").show();
         var start = cordd;
-        var end = [80.255722, 13.079104]; //random point. To be matched.
+        //var end = [80.255722, 13.079104]; //random point. To be matched.
+        var end = centroid; //THIS NEEDS UPDATED (TEST ONLY)
 
         $.ajax({
           url: "/find_match",

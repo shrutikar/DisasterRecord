@@ -15,9 +15,6 @@ nltk.download('words')
 nltk.download('stopwords')
 from collections import defaultdict
 from geopy.distance import great_circle
-#from ibm_botocore.client import Config
-#from ibm_botocore.client import ClientError
-#import ibm_boto3
 
 import matplotlib
 matplotlib.use('agg')
@@ -34,7 +31,6 @@ from DroneData import DroneData
 dronedata=DroneData()
 words = set(nltk.corpus.words.words())
 stop = set(stopwords.words('english'))
-#from io import StringIO
 from wordcloud import WordCloud, STOPWORDS
 printable = set(string.printable)
 stop.update(('HASH','NUM','USER'))
@@ -59,47 +55,11 @@ ESPORT={{ dr_elasticport }}
 
 def load_file(filename):
     a=open(filename, 'rb').read()
-    #tweetsList = a.decode('utf8').split("\n")
     return a
-"""
-def download_file_cos(cos_credentials,key):
-    auth_endpoint = 'https://iam.bluemix.net/oidc/token'
-    _cos = ibm_boto3.client('s3',
-                            ibm_api_key_id=cos_credentials['apikey'],
-                            ibm_service_instance_id=cos_credentials['resource_instance_id'],
-                            ibm_auth_endpoint=auth_endpoint,
-                            config=Config(signature_version='oauth'),
-                            endpoint_url=cos_credentials['service_endpoint'])
-    f = get_item(bucket_name=cos_credentials['BUCKET'], item_name=key, cos=_cos)
-    #print (f)
-    #with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
-    #    fp.write(json.dumps(f))
-    #print ("=====================*********************")
-
-    tweets = f['Body'].read()
-    #with open("/tmp/chennai_geohashes_8prec.json", "w") as fp:
-    #    fp.write(tweets)
-    tweetsList = tweets.decode('utf8').split("\n")
-    return tweets
-"""
-
-"""
-def get_item(bucket_name, item_name, cos):
-    print("Retrieving item from bucket: {0}, key: {1}".format(bucket_name, item_name))
-    try:
-        tweets = cos.get_object(Bucket=bucket_name, Key=item_name)
-        return tweets
-        # print("File Contents: {0}".format(file["Body"].read()))
-    except ClientError as be:
-        print("CLIENT ERROR: {0}\n".format(be))
-    except Exception as e:
-        print("Unable to retrieve file contents: {0}".format(e))
-"""
 
 
 def strip_non_ascii(s):
 
-    #if isinstance(s, unicode):
     if isinstance(s, str):
         nfkd = unicodedata.normalize('NFKD', s)
         return str(nfkd.encode('ASCII', 'ignore').decode('ASCII'))
@@ -143,22 +103,12 @@ def preprocess_tweet(tweet):
 
     # padding punctuations
     tweet = re.sub('([,!?():])', r' \1 ', tweet)
-
     tweet = tweet.replace(". ", " . ").replace("-", " ")
 
     # shrink blank spaces in preprocessed tweet text to only one space
     tweet = re.sub('\s{2,}', ' ', tweet)
-
     tweet = " ".join(w for w in nltk.wordpunct_tokenize(tweet) if w.lower() in words or not w.isalpha())
-
     tweet = re.sub("^\d+\s|\s\d+\s|\s\d+$", " NUM ", tweet)
-
-    # # remove consecutive duplicate tokens which causes an explosion in tree
-    # while re.search(r'\b(.+)(\s+\1\b)+', tweet):
-    #     tweet = re.sub(r'\b(.+)(\s+\1\b)+', r'\1', tweet)
-
-    #     tweet = clean(tweet)
-
     tweet = tweet.replace('\n', '. ').replace('\t', ' ').replace(',', ' ').replace('"', ' ').replace("'", " ").replace(
         ";", " ").replace("\n", " ").replace("\r", " ")
 
@@ -173,14 +123,8 @@ def make_map(params):
     with open("OSM_features_icons_dict.json") as f:
         OSM_features_icons_dict = json.dumps(json.load(f))
     params['OSM_features_icons_dict'] = OSM_features_icons_dict
-
     return render_template('index.html', **params)
 
-#with open("vcap-local.template.json") as f:
-#    VCAP = json.load(f)
-#cos_cred = VCAP['chennai_geohashes_8prec']
-
-#f2 = download_file_cos(cos_cred, 'chennai_geohashes_8prec.json')
 f2 = load_file('chennai_geohashes_8prec.json')
 
 geohash_dict = defaultdict(bool)
@@ -203,29 +147,11 @@ def generateISO(d):
 def get_volume(lat, lon, radius, start_date, end_date, dataset):
     es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
-    q = {
-        "size": 0,
-        "query": {
-            "bool" : {
-                "must": [
-                {
-                    "match_all": {}
-                }
-                ],
-                "filter" : []
-            }
-        },
-        "aggs": {
-            "date": {
-                "date_histogram": {
-                    "field": "properties.createdAt",
-                    "interval": "1d"
-                }
-            }
-        }
-    }
+    q = {"size":0,"query":{"bool":{"must":[{"match_all": {}}],
+        "filter":[]}},"aggs":{"date":{"date_histogram":{"field":
+        "properties.createdAt","interval":"1d"}}}}
 
-    needs = es.search(index=dataset+'-tweetneeds', body=q)
+    needs = es.search(index=dataset+'-tweetneeds',body=q)
     volume_data = [{
         'date': generateISO(data['key']),
         'count': data['doc_count']
@@ -345,7 +271,11 @@ def find_match():
         index=sorted_dist[i][0]
         new_lon= new_cord[index][0]
         new_lat= new_cord[index][1]
-        response=requests.get("https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+"?geometries=geojson&access_token=pk.eyJ1IjoiaGFsb2xpbWF0IiwiYSI6ImNqZWRrcjM2bTFrcWEzMmxucDQ4N2kxaDMifQ.Buarvvdqz7yJ1O25up2SzA")
+        _mburl1="https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"
+        _mburl2="?geometries=geojson&access_token=pk.eyJ1IjoiaGF\
+                 sb2xpbWF0IiwiYSI6ImNqZWRrcjM2bTFrcWEzMmxucDQ4N2\
+                 kxaDMifQ.Buarvvdqz7yJ1O25up2SzA"
+        response=requests.get(_mburl1+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+_mburl2)
         all_data=json.loads(response.content)
         try:
             for r in range(len(all_data['routes'])):
@@ -429,11 +359,6 @@ def get_data():
 
 @application.route('/test', methods=['GET','POST'])
 def check_selected():
-    #with open("vcap-local.template.json") as f:
-    #    VCAP = json.load(f)
-    #cos_cred = VCAP['chennai']
-
-    #f2 = download_file_cos(cos_cred, 'chennai.geojson')
     f2 = load_file('chennai.geojson')
     tweetsList = f2.decode('utf8').split("\n")
     for t in tweetsList:
@@ -446,31 +371,10 @@ def read_data(lat, lon, radius, start_date, end_date):
     print("READ DATA IS CALLED!")
     es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
-    q = {
-        "size": 1000,
-        "query": {
-            "bool" : {
-                "must" : {
-                    "match_all" : {}
-                },
-                "filter" : {
-                    "geo_distance" : {
-                        "distance": str(radius),
-                        "pin.location" : {
-                            "lat": lat,
-                            "lon": lon
-                        }
-                    },
-                    'range': {
-                        "date": {
-                            'gte': start_date,
-                            'lt': end_date
-                        }
-                    }
-                }
-            }
-        }
-    }
+    q = {"size":1000,"query":{"bool":{"must":{"match_all":{}},
+        "filter":{"geo_distance":{"distance":str(radius),
+        "pin.location":{"lat":lat,"lon":lon}},'range':{
+        "date":{'gte':start_date,'lt':end_date}}}}}}
 
     needs = es.search(index=dataset+'-tweetneeds', body=q)['hits']['hits']
     sh = {"type": "FeatureCollection", "features": []}
