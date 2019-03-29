@@ -348,65 +348,69 @@ class DataProcess(object):
 
         for match in h:
 
-            if 'name' in match:
+            try:
+                if 'name' in match:
 
-                if 'default' in match["name"]:
-                    x = 1
-                    c = match["name"]['default']
-                elif 'en' in match["name"]:
-                    x = 2
-                    c = match["name"]['en']
-                elif 'fr' in match["name"]:
-                    x = 3
-                    c = match["name"]['fr']
-                elif 'alt' in match["name"]:
-                    x = 4
-                    c = match["name"]['alt']
-                elif 'old' in match["name"]:
-                    x = 5
-                    c = match["name"]['old']
+                    if 'default' in match["name"]:
+                        x = 1
+                        c = match["name"]['default']
+                    elif 'en' in match["name"]:
+                        x = 2
+                        c = match["name"]['en']
+                    elif 'fr' in match["name"]:
+                        x = 3
+                        c = match["name"]['fr']
+                    elif 'alt' in match["name"]:
+                        x = 4
+                        c = match["name"]['alt']
+                    elif 'old' in match["name"]:
+                        x = 5
+                        c = match["name"]['old']
+                    else:
+                        x = 6
+                        c = match["name"]['loc']
+                elif 'city' in match:
+                    x = 7
+                    c = match["city"]['default']
                 else:
-                    x = 6
-                    c = match["name"]['loc']
-            elif 'city' in match:
-                x = 7
-                c = match["city"]['default']
-            else:
-                x = 8
-                c = match["country"]['default']
+                    x = 8
+                    c = match["country"]['default']
 
-            lat = match["coordinate"]["lat"]
-            lon = match["coordinate"]["lon"]
-            k = match["osm_key"]
-            v = match["osm_value"]
+                lat = match["coordinate"]["lat"]
+                lon = match["coordinate"]["lon"]
+                k = match["osm_key"]
+                v = match["osm_value"]
 
-            if ((v == 'animal_shelter') or (v == 'bus_station') or (v == 'shelter') or (k == 'shop')):
-                cls = "shelter_matching"
-            elif ((k == 'man_made' and v == 'pipeline') or (k == 'power' and v == 'line') or (
-                    k == 'power' and v == 'plant') or (k == 'man_made' and v == 'communications_tower') or (
-                    k == 'building' and v == 'transformer_tower') or (k == 'building' and v == 'service') or (
-                    k == 'power' and v == 'minor_line') or (k == 'power' and v == 'substation') or (
-                    k == 'craft' and v == 'electrician') or (k == 'craft' and v == 'scaffolder')):
-                cls = "infrastructure_need"
-            elif ((v == 'fire_station') or (v == 'police') or (v == 'post_office') or (v == 'rescue_station') or (
-                    v == 'hospital') or (v == 'ambulance_station') or (v == 'medical_supply') or (v == 'clinic') or (
-                    v == 'doctors') or (v == 'social_facility') or (v == 'blood_donation') or (v == 'pharmacy') or (
-                    v == 'nursing_home')):
-                cls = "rescue_match"
-            else:
-                continue
+                if ((v == 'animal_shelter') or (v == 'bus_station') or (v == 'shelter') or (k == 'shop')):
+                    cls = "shelter_matching"
+                elif ((k == 'man_made' and v == 'pipeline') or (k == 'power' and v == 'line') or (
+                        k == 'power' and v == 'plant') or (k == 'man_made' and v == 'communications_tower') or (
+                        k == 'building' and v == 'transformer_tower') or (k == 'building' and v == 'service') or (
+                        k == 'power' and v == 'minor_line') or (k == 'power' and v == 'substation') or (
+                        k == 'craft' and v == 'electrician') or (k == 'craft' and v == 'scaffolder')):
+                    cls = "infrastructure_need"
+                elif ((v == 'fire_station') or (v == 'police') or (v == 'post_office') or (v == 'rescue_station') or (
+                        v == 'hospital') or (v == 'ambulance_station') or (v == 'medical_supply') or (v == 'clinic') or (
+                        v == 'doctors') or (v == 'social_facility') or (v == 'blood_donation') or (v == 'pharmacy') or (
+                        v == 'nursing_home')):
+                    cls = "rescue_match"
+                else:
+                    continue
 
-            #fl = flooded(lat, lon)
-            fl = False
-
-            if str(fl) == 'True':
-                fl = True
-            else:
-                log_it("prepare_data_events ES index action taken for {}\n".format(dataset))
-
+                #fl = flooded(lat, lon)
                 fl = False
-                p_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
-                es.index(index = dataset + '-osm', doc_type = 'doc', body = {"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
+
+                if str(fl) == 'True':
+                    fl = True
+                else:
+                    log_it("prepare_data_events ES index action taken for {}\n".format(dataset))
+
+                    fl = False
+                    p_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
+                    es.index(index = dataset + '-osm', doc_type = 'doc', body = {"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
+                    log_it("INSERTED A DATA EVENT...")
+            except:
+                log_it("something went wrong with that event...")
         log_it("DONE PREPARE DATA EVENTS...")
 
 
