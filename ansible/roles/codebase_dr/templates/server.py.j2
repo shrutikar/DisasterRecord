@@ -277,9 +277,7 @@ def find_match():
         new_lon= new_cord[index][0]
         new_lat= new_cord[index][1]
         _mburl1="https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"
-        _mburl2="?geometries=geojson&access_token=pk.eyJ1IjoiaGF\
-                 sb2xpbWF0IiwiYSI6ImNqZWRrcjM2bTFrcWEzMmxucDQ4N2\
-                 kxaDMifQ.Buarvvdqz7yJ1O25up2SzA"
+        _mburl2="?geometries=geojson&access_token=pk.eyJ1IjoiaGFsb2xpbWF0IiwiYSI6ImNqZWRrcjM2bTFrcWEzMmxucDQ4N2kxaDMifQ.Buarvvdqz7yJ1O25up2SzA"
         response=requests.get(_mburl1+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+_mburl2)
         log_it(_mburl1+str(start_lon)+","+str(start_lat)+";"+str(new_lon)+","+str(new_lat)+_mburl2)
         log_it(response.content)
