@@ -624,6 +624,8 @@ def bb_query():
 
 
 def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str, dataset):
+
+    print("min_lat:{},min_lng:{},max_lat:{},max_lng:{}".format(min_lat, min_lng, max_lat, max_lng))
     es = Elasticsearch([{'host': ESIP, 'port': ESPORT}])
 
     if (q_str == "rescue_need" or q_str == "shelter_need"):
