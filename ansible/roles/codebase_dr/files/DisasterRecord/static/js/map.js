@@ -628,6 +628,7 @@ map.on("load", function() {
       });
 
       map.on("click", function(e) {
+
         var features = map.queryRenderedFeatures(e.point, {
           layers: ["Shelter/Food/Supplies Need", "Medical/Rescue Help Need"]
         });
@@ -668,6 +669,7 @@ map.on("load", function() {
       }
 
       function getRoute(cordd, cl) {
+
         $("#loadingGif").show();
         var start = cordd;
         //var end = [80.255722, 13.079104]; //random point. To be matched.
@@ -1322,8 +1324,7 @@ map.on("load", function() {
     $.ajax({
       url: "/needdata",
       data: {
-        start_date: +$('input[name="daterange"]').data("daterangepicker")
-          .startDate,
+        start_date: +$('input[name="daterange"]').data("daterangepicker").startDate,
         end_date: +$('input[name="daterange"]').data("daterangepicker").endDate,
         min_lat: start_LtLg.lat,
         min_lng: start_LtLg.lng,
