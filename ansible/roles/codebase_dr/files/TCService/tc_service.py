@@ -175,13 +175,19 @@ def bgw(x):
     cvm = cvm.toarray()
     return cvm
 
+res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model = (None,None,None,None,None,None,None,None,None)
+def initClassifier():
+    global res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model
+    filename = 'finalized_model.sav'
+    res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model = pickle.load(open(filename, 'rb'))
+
 
 @application.route('/classify')
 def classify():
-
+    global res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model
     new_text = request.args.get('text')
-    filename = 'finalized_model.sav'
-    res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model = pickle.load(open(filename, 'rb'))
+    #filename = 'finalized_model.sav'
+    #res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model = pickle.load(open(filename, 'rb'))
     #new_text = "images of the ruins"
     # print new_text
     # new_text = strip_non_ascii(new_text)
