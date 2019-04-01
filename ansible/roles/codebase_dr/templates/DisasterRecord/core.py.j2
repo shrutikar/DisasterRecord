@@ -175,7 +175,8 @@ class DataProcess(object):
         for img in imageurl:
             if flood_flag == "ON" and img != "null" and "http" in img:
                 #r = load_pb.load(img,'flood')
-                f = {'url': img.decode("utf-8")}
+                #f = {'url': img.decode("utf-8")}
+                f = {'url': img}
                 r = urllib.request.urlopen("http://127.0.0.1:30502/classify?{}".format(urllib.parse.urlencode(f)))
                 r = r.readline().decode("utf-8")
                 log_it("image inference made...")
@@ -349,6 +350,7 @@ class DataProcess(object):
         x = 0
         es = Elasticsearch([{'host': '{{ photonip }}', 'port': {{ photonport }} }])
 
+        actions=[]
         for match in h:
 
             try:
@@ -410,10 +412,18 @@ class DataProcess(object):
 
                     fl = False
                     p_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
-                    es.index(index = dataset + '-osm', doc_type = 'doc', body = {"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
-                    log_it("INSERTED A DATA EVENT...")
+                    doc_body={"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}}
+                    action={
+                        "_index":dataset+'-osm',
+                        "_type":'doc',
+                        "_source":doc_body}
+                    actions.append(action)
+                    #es.index(index = dataset + '-osm', doc_type = 'doc', body = {"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
+                    #log_it("INSERTED A DATA EVENT...")
             except:
                 log_it("something went wrong with that event...")
+        helpers.bulk(es, actions)
+        actions=[]
         log_it("DONE PREPARE DATA EVENTS...")
 
 
