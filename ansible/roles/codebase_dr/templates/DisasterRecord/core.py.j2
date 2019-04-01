@@ -147,11 +147,8 @@ class DataProcess(object):
 
         # shrink blank spaces in preprocessed tweet text to only one space
         tweet = re.sub('\s{2,}', ' ', tweet)
-
         tweet = " ".join(w for w in nltk.wordpunct_tokenize(tweet) if w.lower() in words or not w.isalpha())
-
         tweet = re.sub("^\d+\s|\s\d+\s|\s\d+$", " NUM ", tweet)
-
         tweet = tweet.replace('\n', '. ').replace('\t', ' ').replace(',', ' ').replace('"', ' ').replace("'", " ").replace(
             ";", " ").replace("\n", " ").replace("\r", " ")
 
@@ -177,7 +174,13 @@ class DataProcess(object):
 
         for img in imageurl:
             if flood_flag == "ON" and img != "null" and "http" in img:
-                r = load_pb.load(img,'flood')
+                #r = load_pb.load(img,'flood')
+                f = {'url': img.decode("utf-8")}
+                r = urllib.request.urlopen("http://127.0.0.1:30502/classify?{}".format(urllib.parse.urlencode(f)))
+                r = r.readline().decode("utf-8")
+                log_it("image inference made...")
+                log_it(str(r))
+
                 if str(r) == 'flood' and objects_flag == "ON":
                     obj = {}
                     url = img

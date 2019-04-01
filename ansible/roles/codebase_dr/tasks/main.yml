@@ -81,6 +81,9 @@
 - name: Copy fixed DisasterRecord/load_pb.py file to ~/workspace/DisasterRecord/mike_img
   copy: src=DisasterRecord/load_pb.py dest=~/workspace/DisasterRecord/mike_img/load_pb.py owner=root group=root mode=0644
 
+- name: Copy fixed DisasterRecord/inf_service.py file to ~/workspace/DisasterRecord/mike_img
+  copy: src=DisasterRecord/inf_service.py dest=~/workspace/DisasterRecord/mike_img/inf_service.py owner=root group=root mode=0644
+
 #- name: Copy fixed DisasterRecord/server.py file to ~/workspace/DisasterRecord
 #  copy: src=DisasterRecord/server.py dest=~/workspace/DisasterRecord/server.py owner=root group=root mode=0644
 
@@ -276,3 +279,9 @@
 
 - name: Copy killTC file to ~
   copy: src=DisasterRecord/killTC dest=~ owner=root group=root mode=0755
+
+- name: Copy startINF file to ~
+  copy: src=DisasterRecord/startINF dest=~ owner=root group=root mode=0755
+
+- name: Copy killINF file to ~
+  copy: src=DisasterRecord/killINF dest=~ owner=root group=root mode=0755
