@@ -10,6 +10,8 @@ import traceback as tb
 
 application = Flask(__name__, static_url_path='')
 
+url_cache={}
+
 def graph_check(graph):
   ops = graph.get_operations()
   for op in ops:
@@ -47,6 +49,9 @@ def load(mdl='flood'):
   )
 
 def inf(url):
+  url=str(url)
+  if url in url_cache:
+    return url_cache[url]
   global sess, model
   classesFile='./models/'+model+'/classes.txt'
   with open(classesFile, "r") as fp:
@@ -54,7 +59,7 @@ def inf(url):
     content = [x.strip() for x in content]
     classes=[a.split(":")[1] for a in content]
   global sess
-  url=str(url)
+  
   y = sess.graph.get_tensor_by_name('InceptionV3/Predictions/Reshape_1:0')
   x = sess.graph.get_tensor_by_name('Placeholder:0')
   try:
@@ -81,6 +86,7 @@ def inf(url):
     var = tb.format_exc()
     print(var)
     p_class=["nonflood"]
+  url_cache[url] = p_class[0]
   return p_class[0]
 
 

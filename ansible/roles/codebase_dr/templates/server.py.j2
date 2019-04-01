@@ -300,6 +300,8 @@ def find_match():
             else:
                 break
         except:
+            var=tb.format_exc()
+            log_it(var)
             end.append(start_lon)
             end.append(start_lat)
             route_no="not available"
@@ -337,13 +339,13 @@ def flood_check(cordin,strt):
     f=None
     for e in cordin:
         ln=e[0]
-        lt = e[1]
+        lt=e[1]
         f=None
         n_end=list()
         n_end.append(lt)
         n_end.append(ln)
         dis=great_circle(strt, n_end).kilometers
-        geohash = Geohash.encode(ln,lt, precision=8)
+        geohash = Geohash.encode(lt,ln, precision=8)
         if geohash_dict.get(geohash) is not None:
             x=geohash_dict[geohash]
         else:

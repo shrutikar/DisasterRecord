@@ -546,6 +546,7 @@ class ReadFromFile():
           i+=1
 
         helpers.bulk(es, actions)
+        actions=[]
         log_it("  -->DONE INSERTING IRMA DATA SET INTO ES [{} RECORDS]".format(i))
     def readDataset(self,file_url):
         i=0
