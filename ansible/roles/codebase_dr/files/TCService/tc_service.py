@@ -181,7 +181,6 @@ def initClassifier():
     filename = 'finalized_model.sav'
     res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model = pickle.load(open(filename, 'rb'))
 
-
 @application.route('/classify')
 def classify():
     global res_ind,she_ind,inf_ind,rescue,shelter,infra,ts,gbc,w2v_model
@@ -253,4 +252,5 @@ def classify():
     return cls
 
 if __name__ == "__main__":
+    initClassifier()
     application.run(port=30501)

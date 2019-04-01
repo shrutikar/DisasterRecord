@@ -83,7 +83,7 @@ def inf(url):
     p_class=["nonflood"]
   return p_class[0]
 
-load()
+
 
 @application.route('/classify')
 def classify():
@@ -91,4 +91,5 @@ def classify():
   return inf(urlText)
 
 if __name__ == "__main__":
+    load()
     application.run(port=30502)
