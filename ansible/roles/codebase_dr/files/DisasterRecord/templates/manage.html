@@ -26,7 +26,7 @@
 		{% endif %}
 		<input type="submit" value="Change Meta">
 	</form>
-	<h3>Media:</h3>	
+	<h3>Data Sources:</h3>	
 	<form action="/DR/updateCampaignMedia/{{ campaignid }}" method="post">
 	<table>
 		<tr>
@@ -75,7 +75,7 @@
 	</tr>
 	</table>
 	</form>
-	<h3>Register Another Media:</h3>
+	<h3>Register Data Source:</h3>
 	<form action="/DR/addMedia" method="post">
 		<input type="hidden" name="html_campaignid" value="{{ campaignid }}">
 		Media Name:<br>
@@ -83,7 +83,14 @@
 		Media URL:<br>
 		<input type="text" name="html_mediaURL"><br>
 		Media Type:<br>
-		<input type="text" name="html_mediaType"><br>
+		<!--<input type="text" name="html_mediaType"><br>-->
+		<select name="html_mediaType">
+			<option value="dataset">Data Set</option>
+			<option value="twitterstream">Twitter Stream</option>
+			<option value="floodmap">Flood Map</option>
+			<option value="image">Image</option>
+			<option value="video">Video</option>
+		</select><br>
 		Geo-Point:<br>
 		<input type="text" name="html_geopoint"><br>
 		Geo-Shape:<br>
