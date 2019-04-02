@@ -206,23 +206,37 @@
 - name: Copy DisasterRecord/templates/error.html file to ~/workspace/DisasterRecord/templates
   copy: src=DisasterRecord/templates/error.html dest=~/workspace/DisasterRecord/templates/error.html owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/static/alert.png file to ~/workspace/DisasterRecord/static
-  copy: src=DisasterRecord/static/alert.png dest=~/workspace/DisasterRecord/static/alert.png owner=root group=root mode=0644
+# - name: Copy DisasterRecord/static/alert.png file to ~/workspace/DisasterRecord/static
+#   copy: src=DisasterRecord/static/alert.png dest=~/workspace/DisasterRecord/static/alert.png owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/static/drone.png file to ~/workspace/DisasterRecord/static
-  copy: src=DisasterRecord/static/drone.png dest=~/workspace/DisasterRecord/static/drone.png owner=root group=root mode=0644
+# - name: Copy DisasterRecord/static/drone.png file to ~/workspace/DisasterRecord/static
+#   copy: src=DisasterRecord/static/drone.png dest=~/workspace/DisasterRecord/static/drone.png owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/static/car.png file to ~/workspace/DisasterRecord/static
-  copy: src=DisasterRecord/static/car.png dest=~/workspace/DisasterRecord/static/car.png owner=root group=root mode=0644
+# - name: Copy DisasterRecord/static/car.png file to ~/workspace/DisasterRecord/static
+#   copy: src=DisasterRecord/static/car.png dest=~/workspace/DisasterRecord/static/car.png owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/static/detection.png file to ~/workspace/DisasterRecord/static
-  copy: src=DisasterRecord/static/detection.png dest=~/workspace/DisasterRecord/static/detection.png owner=root group=root mode=0644
+# - name: Copy DisasterRecord/static/detection.png file to ~/workspace/DisasterRecord/static
+#   copy: src=DisasterRecord/static/detection.png dest=~/workspace/DisasterRecord/static/detection.png owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/static/videoclip.png file to ~/workspace/DisasterRecord/static
-  copy: src=DisasterRecord/static/videoclip.png dest=~/workspace/DisasterRecord/static/videoclip.png owner=root group=root mode=0644
+# - name: Copy DisasterRecord/static/videoclip.png file to ~/workspace/DisasterRecord/static
+#   copy: src=DisasterRecord/static/videoclip.png dest=~/workspace/DisasterRecord/static/videoclip.png owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/static/camera.png file to ~/workspace/DisasterRecord/static
-  copy: src=DisasterRecord/static/camera.png dest=~/workspace/DisasterRecord/static/camera.png owner=root group=root mode=0644
+# - name: Copy DisasterRecord/static/camera.png file to ~/workspace/DisasterRecord/static
+#   copy: src=DisasterRecord/static/camera.png dest=~/workspace/DisasterRecord/static/camera.png owner=root group=root mode=0644
+
+- name: Copy icons
+  copy: src=DisasterRecord/static/{{ item }} dest=~/workspace/DisasterRecord/static/{{ item }}
+  with_items:
+    - camera.png
+    - videoclip.png
+    - detection.png
+    - car.png
+    - drone.png
+    - alert.png
+    - error.png
+    - finished.png
+    - pending.png
+    - processing.png
 
 - name: Install dependencies
   apt:
