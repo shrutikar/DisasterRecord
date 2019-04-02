@@ -59,6 +59,28 @@ class DRDB:
 
   ## table init functions
 
+  def create_drworkers_table(self):
+    cmd="CREATE TABLE IF NOT EXISTS drworkers (\
+          id integer PRIMARY KEY,\
+          campaignid text NOT NULL,\
+          mediaid text NOT NULL,\
+          pid text NOT NULL,\
+          startts integer NOT NULL,\
+        );"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def clear_drworkers_table(self):
+    cmd="DELETE FROM drworkers;"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
   def create_campaign_table(self):
     cmd="CREATE TABLE IF NOT EXISTS campaigns (\
           id integer PRIMARY KEY,\
@@ -664,6 +686,10 @@ class DRDB:
       self._exeCreate(cmd)
       return True
     except:
+      var = tb.format_exc()
+      with open("/var/log/LNEx.log", "a") as fp:
+        fp.write("::DRDB ERROR::")
+        fp.write(str(var))
       return False
 
 
@@ -686,6 +712,27 @@ class DRDB:
     cmd="SELECT * FROM analysisresults WHERE mediaid='{}';".format(str(mediaid))
     r=self._exeQuery(cmd)
     return r
+
+  def add_drworker(self, campaignid, mediaid, pid):
+    ctime=int(time.time())
+    cmd="INSERT INTO drworkers\
+      (campaignid, mediaid, pid, startts)\
+      VALUES\
+      ('{}','{}','{}','{}');".format(
+        str(campaignid),
+        str(mediaid),
+        str(pid),
+        ctime)
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def remove_drworker(self, campaignid, mediaid):
+    cmd="DELETE FROM drworkers WHERE campaignid='{}' AND mediaid='{}';".format(str(campaignid), str(mediaid))
+    r=self._exeCreate(cmd)
+    return r   
 
   def generateAnalysis(self, ao):
 
@@ -730,7 +777,7 @@ class DRDB:
     # 6 geoshape text
     # 7 params text
     # 8 active integer
-    # 9 processed integer (-1=failed, 0=not processed, 1=processing, 2=finished)
+    # 9 processed integer (-1=failed, 0=not processed, 1=processing, 2=finished, 3=kill)
 
     #geofeature_geotype="Point"
     #geofeature_coordinates=[float(gc1),float(gc2)]
