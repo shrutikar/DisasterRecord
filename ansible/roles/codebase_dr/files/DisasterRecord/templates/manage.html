@@ -47,9 +47,20 @@
 			<td><input type="text" name="{{ mediaEntry[1] }}_geoshape" value="{{ mediaEntry[6] }}"></td>
 			<td><input type="text" name="{{ mediaEntry[1] }}_params" value="{{ mediaEntry[7] }}"></td>
 			{% if mediaEntry[8] == 1 %}
-			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1" checked="checked">Enabled<br></td>
+			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1" checked="checked">Enabled</td>
 			{% else %}
-			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1">Enabled<br></td>
+			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1">Enabled</td>
+			{% endif %}
+			{% if mediaEntry[9] == 0 %}
+			<td><img height="32px" src="/static/pending.png"></td>
+			{% elif mediaEntry[9] == -1 %}
+			<td><img height="32px" src="/static/error.png"></td>
+			{% elif mediaEntry[9] == 1 %}
+			<td><img height="32px" src="/static/processing.png"></td>
+			{% elif mediaEntry[9] == 2 %}
+			<td><img height="32px" src="/static/finished.png"></td>
+			{% else %}
+			<td><img height="32px" src="/static/error.png"></td>
 			{% endif %}
 		</tr>
 	{% endfor %}
