@@ -62,6 +62,7 @@
 			{% else %}
 			<td><img height="32px" src="/static/error.png"></td>
 			{% endif %}
+			<td><a href="/DR/deleteMedia?campaign={{ mediaEntry[1] }}&mediaid={{ mediaEntry[2] }}"><img height="32px" src="/static/remove.png"></a></td>
 		</tr>
 	{% endfor %}
 	<tr>

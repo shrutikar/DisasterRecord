@@ -17,10 +17,6 @@
     version: integration
   when: DisasterRecord_init.stat.exists == False
 
-#- name: Ensure "integration" branch
-#  command: chdir=/root/workspace/DisasterRecord git checkout -b integration origin/integration
-#  ignore_errors: yes
-
 - name: Create DisasterRecord virtualenv
   command: virtualenv -p python3 ~/workspace/DisasterRecord
   when: DisasterRecordVE_init.stat.exists == False
@@ -36,17 +32,11 @@
 - name: Copy fixed DisasterRecord/chennai_geohashes_8prec.json file to ~/workspace/DisasterRecord
   copy: src=DisasterRecord/chennai_geohashes_8prec.json dest=~/workspace/DisasterRecord/chennai_geohashes_8prec.json owner=root group=root mode=0644
 
-#- name: Copy fixed DisasterRecord/make.sh file to ~/workspace/DisasterRecord
-#  copy: src=DisasterRecord/make.sh dest=~/workspace/DisasterRecord/make.sh owner=root group=root mode=0755
-
 - name: Generate make.sh
   template: src=make.sh.j2 dest=~/workspace/DisasterRecord/make.sh owner=root group=root mode=0755
 
 - name: Generate process_dataset.sh
   template: src=process_dataset.sh.j2 dest=~/workspace/DisasterRecord/process_dataset.sh owner=root group=root mode=0755
-
-#- name: Copy fixed DisasterRecord/core.py file to ~/workspace/DisasterRecord
-#  copy: src=DisasterRecord/core.py dest=~/workspace/DisasterRecord/core.py owner=root group=root mode=0644
 
 - name: Generate core.py
   template: src=DisasterRecord/core.py.j2 dest=~/workspace/DisasterRecord/core.py owner=root group=root mode=0644
@@ -83,9 +73,6 @@
 
 - name: Copy fixed DisasterRecord/inf_service.py file to ~/workspace/DisasterRecord/mike_img
   copy: src=DisasterRecord/inf_service.py dest=~/workspace/DisasterRecord/mike_img/inf_service.py owner=root group=root mode=0644
-
-#- name: Copy fixed DisasterRecord/server.py file to ~/workspace/DisasterRecord
-#  copy: src=DisasterRecord/server.py dest=~/workspace/DisasterRecord/server.py owner=root group=root mode=0644
 
 - name: Generate server.py
   template: src=server.py.j2 dest=~/workspace/DisasterRecord/server.py owner=root group=root mode=0644
@@ -191,41 +178,33 @@
 - name: Copy DisasterRecord/static/js/main.js file to ~/workspace/DisasterRecord/static/js
   copy: src=DisasterRecord/static/js/main.js dest=~/workspace/DisasterRecord/static/js/main.js owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/templates/index.html file to ~/workspace/DisasterRecord/templates
-  copy: src=DisasterRecord/templates/index.html dest=~/workspace/DisasterRecord/templates/index.html owner=root group=root mode=0644
+# - name: Copy DisasterRecord/templates/index.html file to ~/workspace/DisasterRecord/templates
+#   copy: src=DisasterRecord/templates/index.html dest=~/workspace/DisasterRecord/templates/index.html owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/templates/manage.html file to ~/workspace/DisasterRecord/templates
-  copy: src=DisasterRecord/templates/manage.html dest=~/workspace/DisasterRecord/templates/manage.html owner=root group=root mode=0644
+# - name: Copy DisasterRecord/templates/manage.html file to ~/workspace/DisasterRecord/templates
+#   copy: src=DisasterRecord/templates/manage.html dest=~/workspace/DisasterRecord/templates/manage.html owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/templates/create.html file to ~/workspace/DisasterRecord/templates
-  copy: src=DisasterRecord/templates/create.html dest=~/workspace/DisasterRecord/templates/create.html owner=root group=root mode=0644
+# - name: Copy DisasterRecord/templates/create.html file to ~/workspace/DisasterRecord/templates
+#   copy: src=DisasterRecord/templates/create.html dest=~/workspace/DisasterRecord/templates/create.html owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/templates/list.html file to ~/workspace/DisasterRecord/templates
-  copy: src=DisasterRecord/templates/list.html dest=~/workspace/DisasterRecord/templates/list.html owner=root group=root mode=0644
+# - name: Copy DisasterRecord/templates/list.html file to ~/workspace/DisasterRecord/templates
+#   copy: src=DisasterRecord/templates/list.html dest=~/workspace/DisasterRecord/templates/list.html owner=root group=root mode=0644
 
-- name: Copy DisasterRecord/templates/error.html file to ~/workspace/DisasterRecord/templates
-  copy: src=DisasterRecord/templates/error.html dest=~/workspace/DisasterRecord/templates/error.html owner=root group=root mode=0644
+# - name: Copy DisasterRecord/templates/error.html file to ~/workspace/DisasterRecord/templates
+#   copy: src=DisasterRecord/templates/error.html dest=~/workspace/DisasterRecord/templates/error.html owner=root group=root mode=0644
 
-# - name: Copy DisasterRecord/static/alert.png file to ~/workspace/DisasterRecord/static
-#   copy: src=DisasterRecord/static/alert.png dest=~/workspace/DisasterRecord/static/alert.png owner=root group=root mode=0644
+- name: Copy html templates
+  copy: src=DisasterRecord/templates/{{ item }} dest=~/workspace/DisasterRecord/templates/{{ item }} owner=root group=root mode=0644
+  with_items:
+    -error.html
+    -list.html
+    -create.html
+    -manage.html
+    -index.html
 
-# - name: Copy DisasterRecord/static/drone.png file to ~/workspace/DisasterRecord/static
-#   copy: src=DisasterRecord/static/drone.png dest=~/workspace/DisasterRecord/static/drone.png owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/static/car.png file to ~/workspace/DisasterRecord/static
-#   copy: src=DisasterRecord/static/car.png dest=~/workspace/DisasterRecord/static/car.png owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/static/detection.png file to ~/workspace/DisasterRecord/static
-#   copy: src=DisasterRecord/static/detection.png dest=~/workspace/DisasterRecord/static/detection.png owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/static/videoclip.png file to ~/workspace/DisasterRecord/static
-#   copy: src=DisasterRecord/static/videoclip.png dest=~/workspace/DisasterRecord/static/videoclip.png owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/static/camera.png file to ~/workspace/DisasterRecord/static
-#   copy: src=DisasterRecord/static/camera.png dest=~/workspace/DisasterRecord/static/camera.png owner=root group=root mode=0644
 
 - name: Copy icons
-  copy: src=DisasterRecord/static/{{ item }} dest=~/workspace/DisasterRecord/static/{{ item }}
+  copy: src=DisasterRecord/static/{{ item }} dest=~/workspace/DisasterRecord/static/{{ item }} owner=root group=root mode=0644
   with_items:
     - camera.png
     - videoclip.png
@@ -237,6 +216,7 @@
     - finished.png
     - pending.png
     - processing.png
+    - remove.png
 
 - name: Install dependencies
   apt:

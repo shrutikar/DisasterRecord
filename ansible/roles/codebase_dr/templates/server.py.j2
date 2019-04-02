@@ -976,6 +976,14 @@ def addmedia():
         params['errormessage']="Error adding media to {}".format(getdata['html_campaignid'])
         return render_template('error.html', **params)
 
+@application.route('/deleteMedia')
+def deleteMedia():
+    campaign = request.args.get('campaign')
+    mediaid = request.args.get('mediaid')
+    db=DRDB("/var/local/LNEx.db")
+    db.delete_media_object(campaign,mediaid)
+    return redirect("/DR/manageCampaign/{}".format(campaign))
+
 @application.route('/updateCampaignMedia/<campaignid>')
 def updatecampaignmedia(campaignid):
     params['errormessage']="Coming Soon"
