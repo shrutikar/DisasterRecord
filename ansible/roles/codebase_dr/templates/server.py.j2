@@ -1045,8 +1045,11 @@ def campaign(campaignid):
 
         test_media=[]
         for mr in mediaResults:
-            media_gen=db.generateMedia(mr)
-            test_media.append(media_gen)
+            try:
+                media_gen=db.generateMedia(mr)
+                test_media.append(media_gen)
+            except:
+                pass
 
         with open("/var/log/DR.log", "a") as fp:
             fp.write(str(test_media))

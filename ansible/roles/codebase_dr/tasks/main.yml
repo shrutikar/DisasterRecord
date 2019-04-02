@@ -178,21 +178,6 @@
 - name: Copy DisasterRecord/static/js/main.js file to ~/workspace/DisasterRecord/static/js
   copy: src=DisasterRecord/static/js/main.js dest=~/workspace/DisasterRecord/static/js/main.js owner=root group=root mode=0644
 
-# - name: Copy DisasterRecord/templates/index.html file to ~/workspace/DisasterRecord/templates
-#   copy: src=DisasterRecord/templates/index.html dest=~/workspace/DisasterRecord/templates/index.html owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/templates/manage.html file to ~/workspace/DisasterRecord/templates
-#   copy: src=DisasterRecord/templates/manage.html dest=~/workspace/DisasterRecord/templates/manage.html owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/templates/create.html file to ~/workspace/DisasterRecord/templates
-#   copy: src=DisasterRecord/templates/create.html dest=~/workspace/DisasterRecord/templates/create.html owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/templates/list.html file to ~/workspace/DisasterRecord/templates
-#   copy: src=DisasterRecord/templates/list.html dest=~/workspace/DisasterRecord/templates/list.html owner=root group=root mode=0644
-
-# - name: Copy DisasterRecord/templates/error.html file to ~/workspace/DisasterRecord/templates
-#   copy: src=DisasterRecord/templates/error.html dest=~/workspace/DisasterRecord/templates/error.html owner=root group=root mode=0644
-
 - name: Copy html templates
   copy: src=DisasterRecord/templates/{{ item }} dest=~/workspace/DisasterRecord/templates/{{ item }} owner=root group=root mode=0644
   with_items:
@@ -201,7 +186,6 @@
     - create.html
     - manage.html
     - index.html
-
 
 - name: Copy icons
   copy: src=DisasterRecord/static/{{ item }} dest=~/workspace/DisasterRecord/static/{{ item }} owner=root group=root mode=0644
