@@ -196,11 +196,11 @@
 - name: Copy html templates
   copy: src=DisasterRecord/templates/{{ item }} dest=~/workspace/DisasterRecord/templates/{{ item }} owner=root group=root mode=0644
   with_items:
-    -error.html
-    -list.html
-    -create.html
-    -manage.html
-    -index.html
+    - error.html
+    - list.html
+    - create.html
+    - manage.html
+    - index.html
 
 
 - name: Copy icons
