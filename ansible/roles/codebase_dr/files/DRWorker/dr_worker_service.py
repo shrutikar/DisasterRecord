@@ -7,10 +7,13 @@ from subprocess import STDOUT
 
 def launchCore(campaign,campaign_datasource):
   if campaign_datasource[4] == 'dataset':
-    _cmd = ['process_dataset.sh',campaign[1],campaign[4],campaign_datasource[3]]
+    _cmd = ['./process_dataset.sh',campaign[1],campaign[4],campaign_datasource[3]]
     pid = Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
     db=DRDB("/var/local/LNEx.db")
     db.add_drworker(campaign[1],campaign_datasource[2],pid)
+    db.update_media_object_status(campaign_datasource[2],1)
+    db.destroy_connection()
+
   elif campaign_datasource[4] == 'twitterstream':
     pass
   elif campaign_datasource[4] == 'video':
