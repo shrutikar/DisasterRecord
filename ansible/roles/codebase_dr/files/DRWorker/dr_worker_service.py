@@ -7,7 +7,7 @@ from subprocess import PIPE
 from subprocess import STDOUT
 import traceback as tb
 
-failedCount=[0,0,0]
+failedCount=[-1,-1,-1]
 services=['tc_service.py','inf_service.py','server.py']
 serviceStarters=['/root/startTC','/root/startINF','/root/startDR-Frontend']
 
@@ -43,7 +43,10 @@ def ensureServices():
   for j in len(failedCount):
     if not checkifrunning(services[j]):
       failedCount[j]+=1
-      print(services[j],"has failed",failedCount[j],"times.")
+      if failedCount[j] == 0:
+        print(services[j],"has been started")
+      else:
+        print(services[j],"has failed",failedCount[j],"times.")
       _cmd = [serviceStarters[j]]
       Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
 
