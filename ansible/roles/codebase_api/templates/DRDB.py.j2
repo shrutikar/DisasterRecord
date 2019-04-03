@@ -704,6 +704,7 @@ class DRDB:
     return r
 
   def delete_media_object(self, campaignid, mediaid):
+    self.remove_drworker(campaignid,mediaid)
     cmd="DELETE FROM usermedia WHERE campaignid='{}' AND mediaid='{}';".format(str(campaignid), str(mediaid))
     r=self._exeCreate(cmd)
     return r
