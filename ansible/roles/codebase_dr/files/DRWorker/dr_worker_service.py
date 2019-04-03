@@ -1,10 +1,22 @@
 from DRDB import DRDB
 import os
 import time
+import psutil
 from subprocess import Popen
 from subprocess import PIPE
 from subprocess import STDOUT
 import traceback as tb
+
+failedCount=[0,0,0]
+services=['tc_service.py','inf_service.py','server.py']
+serviceStarters=['/root/startTC','/root/startINF','/root/startDR-Frontend']
+
+def checkifrunning(name)
+  for proc in psutil.process_iter():
+    cmdline=" ".join(proc.cmdline())
+    if name.lower() in cmdline.lower():
+      return True
+  return False
 
 def launchCore(campaign,campaign_datasource):
   if campaign_datasource[4] == 'dataset':
@@ -26,6 +38,15 @@ def launchCore(campaign,campaign_datasource):
   else:
     pass
 
+def ensureServices():
+  global failedCount
+  for j in len(failedCount):
+    if not checkifrunning(services[j]):
+      failedCount[j]+=1
+      print(services[j],"has failed",failedCount[j],"times.")
+      _cmd = [serviceStarters[j]]
+      Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
+
 def checkStatus(campaign_datasource):
   db=DRDB("/var/local/LNEx.db")
   print(campaign_datasource[1], campaign_datasource[2])
@@ -42,6 +63,9 @@ def checkStatus(campaign_datasource):
       db.destroy_connection()
 
 while True:
+  print("checking services...")
+  ensureServices()
+  print("checking for new data sources...")
   db=DRDB("/var/local/LNEx.db")
   campaigns=db.get_active_campaigns()
   db.destroy_connection()
@@ -54,5 +78,5 @@ while True:
         launchCore(campaign,campaign_datasource)
       elif campaign_datasource[9] == 1:
         checkStatus(campaign_datasource)
-
+  print("sleeping...")
   time.sleep(30)
