@@ -11,7 +11,7 @@ failedCount=[-1,-1,-1]
 services=['tc_service.py','inf_service.py','server.py']
 serviceStarters=['/root/startTC','/root/startINF','/root/startDR-Frontend']
 
-def checkifrunning(name)
+def checkifrunning(name):
   for proc in psutil.process_iter():
     cmdline=" ".join(proc.cmdline())
     if name.lower() in cmdline.lower():
@@ -40,7 +40,7 @@ def launchCore(campaign,campaign_datasource):
 
 def ensureServices():
   global failedCount
-  for j in len(failedCount):
+  for j in range(len(failedCount)):
     if not checkifrunning(services[j]):
       failedCount[j]+=1
       if failedCount[j] == 0:

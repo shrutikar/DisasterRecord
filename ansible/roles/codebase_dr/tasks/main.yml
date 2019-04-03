@@ -204,6 +204,7 @@
     - pending.png
     - processing.png
     - remove.png
+    - settings.png
 
 - name: Install dependencies
   apt:
