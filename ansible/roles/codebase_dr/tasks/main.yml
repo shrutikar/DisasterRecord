@@ -169,6 +169,9 @@
 - name: Copy killDR-Frontend file to ~
   copy: src=DisasterRecord/killDR-Frontend dest=~ owner=root group=root mode=0755
 
+- name: Copy DR Worker Service
+  copy: src=DisasterRecord/DRWorker/dr_worker_service.py dest=~/workspace/DisasterRecord/dr_worker_service.py
+
 - name: Copy DisasterRecord/static/js/map.js file to ~/workspace/DisasterRecord/static/js
   copy: src=DisasterRecord/static/js/map.js dest=~/workspace/DisasterRecord/static/js/map.js owner=root group=root mode=0644
 

@@ -713,6 +713,13 @@ class DRDB:
     r=self._exeQuery(cmd)
     return r
 
+  def update_media_object_status(self, mediaid, newStatus):
+    cmd="UPDATE usermedia SET processed = '{}' WHERE mediaid = '{}';".format(newStatus, mediaid)
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
   def add_drworker(self, campaignid, mediaid, pid):
     ctime=int(time.time())
     cmd="INSERT INTO drworkers\
@@ -732,7 +739,12 @@ class DRDB:
   def remove_drworker(self, campaignid, mediaid):
     cmd="DELETE FROM drworkers WHERE campaignid='{}' AND mediaid='{}';".format(str(campaignid), str(mediaid))
     r=self._exeCreate(cmd)
-    return r   
+    return r
+
+  def grab_drworker(self, campaignid, mediaid):
+    cmd="SELECT * FROM drworkers WHERE campaignid='{}' AND mediaid='{}';".format(str(campaignid),str(mediaid))
+    r=self._exeQuery(cmd)
+    return r
 
   def generateAnalysis(self, ao):
 
