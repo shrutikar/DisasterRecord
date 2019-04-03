@@ -564,6 +564,7 @@ if __name__ == "__main__":
     file_url = sys.argv[11]
     ptype = sys.argv[12]
     campaignName = sys.argv[13]
+    mediaid = sys.argv[14]
 
     needed=True
     if ptype == "DATASET":
@@ -588,6 +589,9 @@ if __name__ == "__main__":
         d.read(dataset,flood_flag,objects_flag,satellite_image,bb,loopForever=False)
         log_it("  -->DONE READ")
         log_it("REACHED END OF PROCESSING")
+        db=DRDB("/var/local/LNEx.db")
+        db.update_media_object_status(mediaid,2)
+        db.destroy_connection()
 
     elif ptype == "TWITTERSTREAM":
         needed=False
