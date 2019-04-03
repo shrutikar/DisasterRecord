@@ -746,6 +746,14 @@ class DRDB:
     r=self._exeQuery(cmd)
     return r
 
+  def update_drworker_pid(self, campaignid, mediaid, pid):
+    cmd="UPDATE drworkers SET pid = '{}' WHERE campaignid='{}' AND mediaid='{}';".format(pid,str(campaignid),str(mediaid))
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
   def generateAnalysis(self, ao):
 
     # 0 id integer

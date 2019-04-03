@@ -568,6 +568,10 @@ if __name__ == "__main__":
 
     needed=True
     if ptype == "DATASET":
+        pid=os.getpid()
+        db=DRDB("/var/local/LNEx.db")
+        update_drworker_pid(campaignName,mediaid,pid)
+        db.destroy_connection()
         needed=False
         log_it("LOADING DATASET...")
         log_it("DATASET LOCATION: {}".format(file_url))
