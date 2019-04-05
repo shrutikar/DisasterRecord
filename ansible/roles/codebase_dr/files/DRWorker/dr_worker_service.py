@@ -34,7 +34,7 @@ def launchCore(campaign,campaign_datasource):
     db=DRDB("/var/local/LNEx.db")
     pendingterms=json.loads(campaign_datasource[7])['terms']
     termscnt=len(db.get_twitterstream_allterms())
-    if termscnt + len(pendingterms) > TERMSLIMIT:
+    if termscnt + len(pendingterms) <= TERMSLIMIT:
       if db.exists_twitterstream(campaign[1]):
         db.update_twitterstream_terms(campaign[1],",".join(pendingterms))
         db.activate_twitterstream(campaign[1])
