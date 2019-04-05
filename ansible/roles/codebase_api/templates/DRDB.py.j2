@@ -834,9 +834,9 @@ class DRDB:
       c_terms_raw=self.grab_twitterstream_terms(campaign[1])
       if len(c_terms_raw) > 0:
         c_terms=c_terms_raw[0][2].split(",")
-      for term in c_terms:
-        if term not in allterms:
-          allterms.append(term)
+        for term in c_terms:
+          if term not in allterms:
+            allterms.append(term)
     return allterms
 
   def generateAnalysis(self, ao):
