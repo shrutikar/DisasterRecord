@@ -65,6 +65,7 @@
 			<td><a href="/DR/deleteMedia?campaign={{ mediaEntry[1] }}&mediaid={{ mediaEntry[2] }}"><img height="32px" src="/static/remove.png"></a></td>
 		</tr>
 	{% endfor %}
+	<!--
 	<tr>
 		<td><input type="submit" value="Update Media"></td>
 		<td></td>
@@ -74,19 +75,20 @@
 		<td></td>
 		<td></td>
 	</tr>
+	-->
 	</table>
 	</form>
 	<h3>Register Data Source:</h3>
 	<form action="/DR/addMedia" method="post">
 		<input type="hidden" name="html_campaignid" value="{{ campaignid }}">
-		Media Name:<br>
+		Data Source Name:<br>
 		<input type="text" name="html_mediaid"><br>
-		Media URL:<br>
+		Data Source URL:<br>
 		<input type="text" name="html_mediaURL"><br>
-		Media Type:<br>
+		Data Type:<br>
 		<!--<input type="text" name="html_mediaType"><br>-->
 		<select name="html_mediaType">
-			<option value="dataset">Data Set</option>
+			<option value="dataset">DRecord Data Set</option>
 			<option value="twitterstream">Twitter Stream</option>
 			<option value="floodmap">Flood Map</option>
 			<option value="image">Image</option>
@@ -98,7 +100,7 @@
 		<input type="text" name="html_geoshape"><br>
 		Params:<br>
 		<input type="text" name="html_params"><br>
-		<input type="submit" value="Register Media">
+		<input type="submit" value="Register Data Source">
 	</form>
 	<br>
 	<a href="/DR/listCampaigns">Campaign List</a>

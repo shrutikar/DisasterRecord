@@ -1,0 +1,58 @@
+from subprocess import Popen
+from subprocess import PIPE
+from subprocess import STDOUT
+import traceback as tb
+import time
+import psutil
+from DRDB import DRDB
+
+lastTerms=[]
+pid=None
+failedCount=0
+
+def startstream():
+  global pid
+  _cmd = ['python', 'tstream.py']
+  pid=Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
+
+def killstream():
+  global pid
+  pid.kill()
+
+def checkifrunning(name):
+  for proc in psutil.process_iter():
+    cmdline=" ".join(proc.cmdline())
+    if name.lower() in cmdline.lower():
+      return True
+  return False
+
+def termsChanged():
+  db=DRDB("/var/local/LNEx.db")
+  currentTerms=db.get_twitterstream_allterms()
+  db.destroy_connection()
+  for term in currentTerms:
+    if term not in lastTerms:
+      return True
+  for term in lastTerms:
+    if term not in currentTerms:
+      return True
+  return False
+
+def updateLastTerms():
+  global lastTerms
+  db=DRDB("/var/local/LNEx.db")
+  currentTerms=db.get_twitterstream_allterms()
+  db.destroy_connection()
+  lastTerms=currentTerms
+
+while True:
+  if not checkifrunning("tstream.py"):
+    startstream()
+  elif termsChanged():
+    killstream()
+    updateTerms()
+    time.sleep(10)
+    startstream()
+  else:
+    pass
+  sleep(15)

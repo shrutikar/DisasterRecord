@@ -77,6 +77,9 @@
 - name: Generate server.py
   template: src=server.py.j2 dest=~/workspace/DisasterRecord/server.py owner=root group=root mode=0644
 
+- name: Generate tstream.py
+  template: src=TStreamService/tstream.py.j2 dest=~/workspace/DisasterRecord/tstream.py owner=root group=root mode=0644
+
 - name: Copy fixed DisasterRecord/DroneData.py file to ~/workspace/DisasterRecord
   copy: src=DisasterRecord/DroneData.py dest=~/workspace/DisasterRecord/DroneData.py owner=root group=root mode=0644
 
@@ -169,8 +172,14 @@
 - name: Copy killDR-Frontend file to ~
   copy: src=DisasterRecord/killDR-Frontend dest=~ owner=root group=root mode=0755
 
+- name: Copy startTStreamMan file to ~
+  copy: src=DisasterRecord/startTStreamMan dest=~ owner=root group=root mode=0755
+
 - name: Copy DR Worker Service
   copy: src=DRWorker/dr_worker_service.py dest=~/workspace/DisasterRecord/dr_worker_service.py
+
+- name: Copy TStreamMan Service
+  copy: src=TStreamService/tstream_man.py dest=~/workspace/DisasterRecord/tstream_man.py
 
 - name: Copy DisasterRecord/static/js/map.js file to ~/workspace/DisasterRecord/static/js
   copy: src=DisasterRecord/static/js/map.js dest=~/workspace/DisasterRecord/static/js/map.js owner=root group=root mode=0644

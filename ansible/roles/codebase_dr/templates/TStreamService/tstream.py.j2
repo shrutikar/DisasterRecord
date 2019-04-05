@@ -1,0 +1,69 @@
+import tweepy
+from tweepy.streaming import StreamListener
+from tweepy import OAuthHandler
+from tweepy import Stream
+from DRDB import DRDB
+import time
+from threading import Thread
+
+terms=[]
+terms_dict={}
+
+class MyStreamListener(StreamListener):
+
+  def on_status(self, status):
+    if "…" in status.text and status.text[0] == 'R' and status.text[1] == 'T':
+      try:
+        fullText = status.retweeted_status.extended_tweet['full_text']
+      except:
+        try:
+          fullText = status.retweeted_status.text
+        except:
+          fullText = status.text
+    elif status.truncated:
+      fullText = status.extended_tweet['full_text']
+    else:
+      fullText = status.text
+
+    for campaign in terms_dict:
+      for term in terms_dict[campaign]:
+        if term in fullText:
+          #print("TO:", campaign, " - ", fullText)
+          with open("output.out", "a") as fp:
+            fp.write(campaign)
+            fp.write("\n")
+            fp.write(fullText)
+            fp.write("\n")
+
+"""
+CUS_KEY="{{ Consumer_Key }}"
+CUS_SEC="{{ Consumer_Secret }}"
+ACC_TOK="{{ Access_Key }}"
+ACC_SEC="{{ Access_Secret }}"
+"""
+
+CUS_KEY="5tUrRY4P2WjTY1nqiy8iADE33"
+CUS_SEC="9gNEcIGdpP5QUih85gLlMVqmeRRZ1OYeZo0BAJ5CRMIiK5emmu"
+ACC_TOK="1085622632169521152-bth7E7rLs3K2jnxM2uhBngr6PDllWS"
+ACC_SEC="4ioojyp6Cx2eS4sgjmnRrBOHI7F9iDX5Lt9qE1s8VmH9n"
+
+
+db=DRDB("/var/local/LNEx.db")
+campaigns=db.get_active_campaigns()
+for campaign in campaigns:
+  c_terms=db.grab_twitterstream_terms(campaign[1])[0][2].split(",")
+  terms_dict[campaign[1]]=c_terms
+  for term in c_terms:
+    if term not in terms:
+      terms.append(term)
+db.destroy_connection()
+
+
+auth = OAuthHandler(CUS_KEY, CUS_SEC)
+auth.set_access_token(ACC_TOK, ACC_SEC)
+
+myStreamListener = MyStreamListener()
+myStream = tweepy.Stream(auth=auth, listener=myStreamListener)
+
+if len(terms) > 0:
+  myStream.filter(track=terms)

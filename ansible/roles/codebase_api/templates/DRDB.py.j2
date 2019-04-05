@@ -59,6 +59,27 @@ class DRDB:
 
   ## table init functions
 
+  def create_twitterstreams_table(self):
+    cmd="CREATE TABLE IF NOT EXISTS twitterstreams (\
+          id integer PRIMARY KEY,\
+          campaignid text NOT NULL,\
+          terms text,\
+          active integer NOT NULL\
+        );"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def clear_twitterstreams_table(self):
+    cmd="DELETE FROM twitterstreams;"
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
   def create_drworkers_table(self):
     cmd="CREATE TABLE IF NOT EXISTS drworkers (\
           id integer PRIMARY KEY,\
@@ -754,6 +775,67 @@ class DRDB:
       return True
     except:
       return False
+
+  def exists_twitterstream(self, campaignid):
+    cmd="SELECT * FROM twitterstreams WHERE campaignid='{}'".format(campaignid)
+    r=self._exeQuery(cmd)
+    if len(r) > 0:
+      return True
+    else:
+      return False
+
+  def init_twitterstream_terms(self, campaignid, terms):
+    cmd="INSERT INTO twitterstreams\
+      (campaignid, terms, active)\
+      VALUES\
+      ('{}','{}','{}');".format(
+        str(campaignid),
+        str(terms),
+        1)
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def update_twitterstream_terms(self, campaignid, terms):
+    cmd="UPDATE twitterstreams SET terms = '{}' WHERE campaignid='{}'".format(terms,campaignid)
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def deactivate_twitterstream(self, campaignid):
+    cmd="UPDATE twitterstreams SET active = '{}' WHERE campaignid='{}'".format(0,campaignid)
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def activate_twitterstream(self, campaignid):
+    cmd="UPDATE twitterstreams SET active = '{}' WHERE campaignid='{}'".format(1,campaignid)
+    try:
+      self._exeCreate(cmd)
+      return True
+    except:
+      return False
+
+  def grab_twitterstream_terms(self, campaignid):
+    cmd="SELECT * FROM twitterstreams WHERE campaignid='{}';".format(str(campaignid))
+    r=self._exeQuery(cmd)
+    return r
+
+  def get_twitterstream_allterms(self):
+    allterms=[]
+    campaigns=self.get_active_campaigns()
+    for campaign in campaigns:
+      c_terms=db.grab_twitterstream_terms(campaign[1])[0][2].split(",")
+      for term in c_terms:
+        if term not in allterms:
+          allterms.append(term)
+    return allterms
 
   def generateAnalysis(self, ao):
 
