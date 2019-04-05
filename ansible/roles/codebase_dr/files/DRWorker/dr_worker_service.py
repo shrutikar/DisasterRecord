@@ -38,10 +38,13 @@ def launchCore(campaign,campaign_datasource):
       if db.exists_twitterstream(campaign[1]):
         db.update_twitterstream_terms(campaign[1],",".join(pendingterms))
         db.activate_twitterstream(campaign[1])
+        db.update_media_object_status(campaign_datasource[2],2)
       else:
         db.init_twitterstream_terms(campaign[1],",".join(pendingterms))
+        db.update_media_object_status(campaign_datasource[2],2)
     else:
       print("Can not add terms, limit reached!")
+    db.destroy_connection()
 
   elif campaign_datasource[4] == 'video':
     pass
@@ -51,6 +54,7 @@ def launchCore(campaign,campaign_datasource):
     pass
   else:
     pass
+
 
 def ensureServices():
   global failedCount
