@@ -822,6 +822,11 @@ class DRDB:
     except:
       return False
 
+  def delete_twitterstream(self, campaignid):
+    cmd="DELETE FROM twitterstreams WHERE campaignid='{}';".format(str(campaignid))
+    r=self._exeCreate(cmd)
+    return r
+
   def grab_twitterstream_terms(self, campaignid):
     cmd="SELECT * FROM twitterstreams WHERE campaignid='{}';".format(str(campaignid))
     r=self._exeQuery(cmd)

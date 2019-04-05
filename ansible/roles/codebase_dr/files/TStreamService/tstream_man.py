@@ -54,6 +54,20 @@ def checkIfEmpty():
   else:
     return False
 
+def checkIfDeleted():
+  db=DRDB("/var/local/LNEx.db")
+  campaigns=db.get_active_campaigns()
+  for campaign in campaigns:
+    c_terms=db.grab_twitterstream_terms(campaign[1])
+    mediaObjects=db.get_media(campaign[1])
+    hasTS=False
+    for mediaObject in mediaObjects:
+      if mediaObject[4] == 'twitterstream':
+        hasTS=True
+    if not hasTS and len(c_terms) > 0:
+      db.delete_twitterstream(campaign)
+  db.destroy_connection()
+
 while True:
   if checkIfEmpty():
     try:
@@ -71,4 +85,5 @@ while True:
     startstream()
   else:
     pass
+  checkIfDeleted()
   time.sleep(15)
