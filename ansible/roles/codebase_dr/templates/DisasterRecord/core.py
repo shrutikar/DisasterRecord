@@ -8,13 +8,8 @@ from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.connections import connections
-#from ibm_botocore.client import Config, ClientError
-#import ibm_boto3
 import LNEx as lnex
 from collections import defaultdict
-#from watson_developer_cloud import NaturalLanguageClassifierV1, DiscoveryV1
-
-from mike_img import load_pb
 import object_detection
 from object_detection.ObjectDetector import ObjectDetector
 OD = ObjectDetector()
@@ -31,17 +26,13 @@ words = set(nltk.corpus.words.words())
 stop = set(stopwords.words('english'))
 exclude = set(string.punctuation)
 lemma = WordNetLemmatizer()
-
 token_dict = {}
 stemmer = PorterStemmer()
 printable = set(string.printable)
 
 import traceback as tb
 import urllib.request
-
-#natural_language_classifier = NaturalLanguageClassifierV1(
-#  username='99eb081e-2c0c-4080-960e-4a3a0183c8b0',
-#  password='uPNV4Saj0pLO')
+from DRDB import DRDB
 
 ES_SIZE = 1000
 
@@ -55,7 +46,7 @@ def log_it(data):
 
 class DataProcess(object):
 
-    def read(self, dataset, flood_flag, objects_flag, satellite_image, bb, shouldSleep=False):
+    def read(self, dataset, flood_flag, objects_flag, satellite_image, bb, shouldSleep=False, loopForever=False):
         
         start = 0
         end = 3
@@ -63,8 +54,6 @@ class DataProcess(object):
         geo_info = self.init_using_elasticindex(cache = False, augmentType = "HP", gaz_name = dataset, bb = bb, capital_word_shape = False)
         
         while 1:
-          #print("Sanity")
-          #Query to get the maximum id number of the records.
           temp = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"match_all" : {}}})['hits']['hits']
           temp_rec = [s['_source'] for s in temp]
           temp_id = list()
@@ -73,7 +62,6 @@ class DataProcess(object):
             temp_id.append(e['record']['record-id'])
 
           end = max(temp_id)  #set maximum id number as the end of range.
-          #Query for the range start to end
           result = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"bool" : {"must" : {"range" : {
                 "record.record-id" : {
                     "gt" : start,
@@ -81,6 +69,10 @@ class DataProcess(object):
                 }
             }}}}})['hits']['hits']
           rec = [s['_source'] for s in result]
+
+          if not loopForever and len(rec) == 0:
+            log_it("FINISHED PROCESSING DATASET!")
+            break
 
           for e in rec:
             text = e['record']['text']
@@ -108,8 +100,6 @@ class DataProcess(object):
         '''Preprocesses the tweet text and break the hashtags'''
 
         tweet = self.strip_non_ascii(tweet)
-
-        #     print tweet
         tweet = str(tweet.lower())
 
         if tweet[:1] == "\n":
@@ -125,31 +115,21 @@ class DataProcess(object):
 
         # remove url from tweet
         tweet = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', 'URL', tweet)
-
         # remove non-ascii characters
         tweet = "".join([x for x in tweet if x in printable])
-
         # additional preprocessing
         tweet = tweet.replace("\n", " ").replace(" https", "").replace("http", "")
-
         # remove all mentions
         tweet = re.sub(r"@\w+", "@USER", tweet)
-
         # remove all mentions
         tweet = re.sub(r"#\w+", "#HASH", tweet)
-
         # padding punctuations
         tweet = re.sub('([,!?():])', r' \1 ', tweet)
-
         tweet = tweet.replace(". ", " . ").replace("-", " ")
-
         # shrink blank spaces in preprocessed tweet text to only one space
         tweet = re.sub('\s{2,}', ' ', tweet)
-
         tweet = " ".join(w for w in nltk.wordpunct_tokenize(tweet) if w.lower() in words or not w.isalpha())
-
         tweet = re.sub("^\d+\s|\s\d+\s|\s\d+$", " NUM ", tweet)
-
         tweet = tweet.replace('\n', '. ').replace('\t', ' ').replace(',', ' ').replace('"', ' ').replace("'", " ").replace(
             ";", " ").replace("\n", " ").replace("\r", " ")
 
@@ -175,7 +155,12 @@ class DataProcess(object):
 
         for img in imageurl:
             if flood_flag == "ON" and img != "null" and "http" in img:
-                r = load_pb.load(img,'flood')
+                f = {'url': img}
+                r = urllib.request.urlopen("http://127.0.0.1:30502/classify?{}".format(urllib.parse.urlencode(f)))
+                r = r.readline().decode("utf-8")
+                log_it("image inference made...")
+                log_it(str(r))
+
                 if str(r) == 'flood' and objects_flag == "ON":
                     obj = {}
                     url = img
@@ -237,6 +222,9 @@ class DataProcess(object):
                 #classes = natural_language_classifier.classify('6876e8x557-nlc-635',tweet[0].decode("utf-8")).get_result()
                 f = {'text': tweet[0].decode("utf-8")}
                 r = urllib.request.urlopen("http://127.0.0.1:30501/classify?{}".format(urllib.parse.urlencode(f)))
+                r = r.readline().decode("utf-8")
+                log_it("RESULT:")
+                log_it(str(r))
 
             except Exception as excp:
                 var = tb.format_exc()
@@ -277,8 +265,6 @@ class DataProcess(object):
 
                     try:
                         if satellite_image == "ON":
-                        #fl = flooded(lat, lon)
-                        # print str(fl)
 
                             if str(fl) == 'True':
                                 fld = True
@@ -292,9 +278,7 @@ class DataProcess(object):
                     except Exception as e:
                         log_it("**ERROR TRYING TO INDEX TWEETNEED...")
                         continue
-            #nn=nn+1
-            #if nn==10:
-        # break
+
         log_it("DONE PREPARE GEOPOINTS")
 
         return {"type" : "FeatureCollection", "features" : all_geo_points}
@@ -341,67 +325,78 @@ class DataProcess(object):
         x = 0
         es = Elasticsearch([{'host': '{{ photonip }}', 'port': {{ photonport }} }])
 
+        actions=[]
         for match in h:
 
-            if 'name' in match:
+            try:
+                if 'name' in match:
 
-                if 'default' in match["name"]:
-                    x = 1
-                    c = match["name"]['default']
-                elif 'en' in match["name"]:
-                    x = 2
-                    c = match["name"]['en']
-                elif 'fr' in match["name"]:
-                    x = 3
-                    c = match["name"]['fr']
-                elif 'alt' in match["name"]:
-                    x = 4
-                    c = match["name"]['alt']
-                elif 'old' in match["name"]:
-                    x = 5
-                    c = match["name"]['old']
+                    if 'default' in match["name"]:
+                        x = 1
+                        c = match["name"]['default']
+                    elif 'en' in match["name"]:
+                        x = 2
+                        c = match["name"]['en']
+                    elif 'fr' in match["name"]:
+                        x = 3
+                        c = match["name"]['fr']
+                    elif 'alt' in match["name"]:
+                        x = 4
+                        c = match["name"]['alt']
+                    elif 'old' in match["name"]:
+                        x = 5
+                        c = match["name"]['old']
+                    else:
+                        x = 6
+                        c = match["name"]['loc']
+                elif 'city' in match:
+                    x = 7
+                    c = match["city"]['default']
                 else:
-                    x = 6
-                    c = match["name"]['loc']
-            elif 'city' in match:
-                x = 7
-                c = match["city"]['default']
-            else:
-                x = 8
-                c = match["country"]['default']
+                    x = 8
+                    c = match["country"]['default']
 
-            lat = match["coordinate"]["lat"]
-            lon = match["coordinate"]["lon"]
-            k = match["osm_key"]
-            v = match["osm_value"]
+                lat = match["coordinate"]["lat"]
+                lon = match["coordinate"]["lon"]
+                k = match["osm_key"]
+                v = match["osm_value"]
 
-            if ((v == 'animal_shelter') or (v == 'bus_station') or (v == 'shelter') or (k == 'shop')):
-                cls = "shelter_matching"
-            elif ((k == 'man_made' and v == 'pipeline') or (k == 'power' and v == 'line') or (
-                    k == 'power' and v == 'plant') or (k == 'man_made' and v == 'communications_tower') or (
-                    k == 'building' and v == 'transformer_tower') or (k == 'building' and v == 'service') or (
-                    k == 'power' and v == 'minor_line') or (k == 'power' and v == 'substation') or (
-                    k == 'craft' and v == 'electrician') or (k == 'craft' and v == 'scaffolder')):
-                cls = "infrastructure_need"
-            elif ((v == 'fire_station') or (v == 'police') or (v == 'post_office') or (v == 'rescue_station') or (
-                    v == 'hospital') or (v == 'ambulance_station') or (v == 'medical_supply') or (v == 'clinic') or (
-                    v == 'doctors') or (v == 'social_facility') or (v == 'blood_donation') or (v == 'pharmacy') or (
-                    v == 'nursing_home')):
-                cls = "rescue_match"
-            else:
-                continue
+                if ((v == 'animal_shelter') or (v == 'bus_station') or (v == 'shelter') or (k == 'shop')):
+                    cls = "shelter_matching"
+                elif ((k == 'man_made' and v == 'pipeline') or (k == 'power' and v == 'line') or (
+                        k == 'power' and v == 'plant') or (k == 'man_made' and v == 'communications_tower') or (
+                        k == 'building' and v == 'transformer_tower') or (k == 'building' and v == 'service') or (
+                        k == 'power' and v == 'minor_line') or (k == 'power' and v == 'substation') or (
+                        k == 'craft' and v == 'electrician') or (k == 'craft' and v == 'scaffolder')):
+                    cls = "infrastructure_need"
+                elif ((v == 'fire_station') or (v == 'police') or (v == 'post_office') or (v == 'rescue_station') or (
+                        v == 'hospital') or (v == 'ambulance_station') or (v == 'medical_supply') or (v == 'clinic') or (
+                        v == 'doctors') or (v == 'social_facility') or (v == 'blood_donation') or (v == 'pharmacy') or (
+                        v == 'nursing_home')):
+                    cls = "rescue_match"
+                else:
+                    continue
 
-            #fl = flooded(lat, lon)
-            fl = False
-
-            if str(fl) == 'True':
-                fl = True
-            else:
-                log_it("prepare_data_events ES index action taken for {}\n".format(dataset))
-
+                #fl = flooded(lat, lon)
                 fl = False
-                p_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
-                es.index(index = dataset + '-osm', doc_type = 'doc', body = {"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
+
+                if str(fl) == 'True':
+                    fl = True
+                else:
+                    log_it("prepare_data_events ES index action taken for {}\n".format(dataset))
+
+                    fl = False
+                    p_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
+                    doc_body={"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}}
+                    action={
+                        "_index":dataset+'-osm',
+                        "_type":'doc',
+                        "_source":doc_body}
+                    actions.append(action)
+            except:
+                log_it("something went wrong with that event...")
+        helpers.bulk(es, actions)
+        actions=[]
         log_it("DONE PREPARE DATA EVENTS...")
 
 
@@ -431,8 +426,6 @@ def getTweets(hashtag, consumerkey, consumersecret, accesskey, accesssecret, dat
             if 'text' in data:
                 global REC_NUM
                 REC_NUM = REC_NUM+1
-                #print (json.dumps(item, sort_keys = True, indent = 4))
-                #print (item)
                 print ("==============================================================")
                 print (REC_NUM)
                 text=item['text']
@@ -441,7 +434,6 @@ def getTweets(hashtag, consumerkey, consumersecret, accesskey, accesssecret, dat
                 try:
                   if item['extended_entites']['media']['type'] == "photo":
                       imageurl = item['extended_entites']['media']['media_url']
-                #imageurl=['https://pbs.twimg.com/media/DtZFfkIWwAElzhw.jpg','https://pbs.twimg.com/media/DuJqhCgWkAA90gD.jpg','https://pbs.twimg.com/media/CVOoJ6PWcAAntfU.jpg']
                 except:
                   imageurl = []
                 id = item['id']
@@ -524,7 +516,32 @@ class ReadFromFile():
           i+=1
 
         helpers.bulk(es, actions)
+        actions=[]
         log_it("  -->DONE INSERTING IRMA DATA SET INTO ES [{} RECORDS]".format(i))
+    def readDataset(self,file_url):
+        i=0
+        data = urllib.request.urlopen("{}".format(file_url))
+        actions=[]
+        es = Elasticsearch([{'host' : '{{ photonip }}', 'port' : {{ photonport }}}])
+        log_it("  -->INSERTING DATA INTO ES")
+        for line in data:
+          try:
+            line_decoded=line.decode("utf-8")
+            o_doc=json.loads(str(line_decoded))
+            a_doc={
+                "_index":dataset+'-file',
+                "_type":'doc',
+                "_source":{"record":o_doc}
+            }
+            actions.append(a_doc)
+          except:
+            var = tb.format_exc()
+            log_it("  -->ERROR ADDING DATA")
+            log_it(str(var))
+          i+=1
+
+        helpers.bulk(es, actions)
+        log_it("  -->DONE INSERTING DATA SET INTO ES [{} RECORDS]".format(i))
           
 
 
@@ -545,8 +562,67 @@ if __name__ == "__main__":
     boundingbox = sys.argv[10].split(" ")
     satellite_image = sys.argv[9]
     file_url = sys.argv[11]
+    ptype = sys.argv[12]
+    campaignName = sys.argv[13]
+    mediaid = sys.argv[14]
 
-    if file_url == "None":
+    needed=True
+    if ptype == "DATASET":
+        pid=os.getpid()
+        db=DRDB("/var/local/LNEx.db")
+        db.update_drworker_pid(campaignName,mediaid,pid)
+        db.destroy_connection()
+        needed=False
+        log_it("LOADING DATASET...")
+        log_it("DATASET LOCATION: {}".format(file_url))
+        f = ReadFromFile()
+        f.readDataset(file_url)
+        log_it("DONE LOADING DATASET")
+        log_it("WAITING 5 SECONDS")
+        tm.sleep(5)
+        db=DRDB("/var/local/LNEx.db")
+        c_info=db.get_campaign(campaignName)
+        db.destroy_connection()
+        bb_s=c_info[0][3].split(",")
+        bb = [float(bb_s[i]) for i in range(len(bb_s))]
+        log_it("STARTING DATA PROCESSING...")
+        d = DataProcess()
+        log_it("  -->BEGIN PREPARE")
+        d.prepare_data_events(bb)
+        log_it("  -->DONE PREPARE")
+        d.read(dataset,flood_flag,objects_flag,satellite_image,bb,loopForever=False)
+        log_it("  -->DONE READ")
+        log_it("REACHED END OF PROCESSING")
+        db=DRDB("/var/local/LNEx.db")
+        db.update_media_object_status(mediaid,2)
+        db.destroy_connection()
+
+    elif ptype == "TWITTERSTREAM":
+        needed=False
+        #log_it("LOADING DATASET...")
+        #log_it("DATASET LOCATION: {}".format(file_url))
+        #f = ReadFromFile()
+        #f.readDataset(file_url)
+        #log_it("DONE LOADING DATASET")
+        thread = threading.Thread(target=getTweets, args=(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset))
+        thread.start()
+        log_it("WAITING 5 SECONDS")
+        tm.sleep(5)
+        db=DRDB("/var/local/LNEx.db")
+        c_info=db.get_campaign(campaignName)
+        db.destroy_connection()
+        bb_s=c_info[0][3].split(",")
+        bb = [float(bb_s[i]) for i in range(len(bb_s))]
+        log_it("STARTING DATA PROCESSING...")
+        d = DataProcess()
+        log_it("  -->BEGIN PREPARE")
+        d.prepare_data_events(bb)
+        log_it("  -->DONE PREPARE")
+        d.read(dataset,flood_flag,objects_flag,satellite_image,bb,loopForever=True)
+        log_it("  -->DONE READ")
+        log_it("REACHED END OF PROCESSING")
+
+    elif file_url == "None":
       log_it("STARTING TWEET STREAM")
       thread = threading.Thread(target=getTweets, args=(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset))
       thread.start()
@@ -559,23 +635,16 @@ if __name__ == "__main__":
       f = ReadFromFile()
       f.read_from_file(file_url)
 
-    log_it("WAITING 5 SECONDS")
-    tm.sleep(5)
-
-    bb = [float(boundingbox[i]) for i in range(len(boundingbox))]
-    log_it("STARTING DATA PROCESSING...")
-    d = DataProcess()
-    log_it("  -->BEGIN READ")
-    d.read(dataset,flood_flag,objects_flag,satellite_image,bb)
-    log_it("  -->DONE READ")
-    log_it("  -->BEGIN PREPARE")
-    d.prepare_data_events(bb)
-    log_it("  -->DONE PREPARE")
-
-    log_it("REACHED END OF PROCESSING")
-
-    #if file_url == "None":
-    #    getTweets(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset)
-    #else:
-    #    f = ReadFromFile()
-    #    f.read_from_file(file_url)
+    if needed:
+        log_it("WAITING 5 SECONDS")
+        tm.sleep(5)
+        bb = [float(boundingbox[i]) for i in range(len(boundingbox))]
+        log_it("STARTING DATA PROCESSING...")
+        d = DataProcess()
+        log_it("  -->BEGIN READ")
+        d.read(dataset,flood_flag,objects_flag,satellite_image,bb)
+        log_it("  -->DONE READ")
+        log_it("  -->BEGIN PREPARE")
+        d.prepare_data_events(bb)
+        log_it("  -->DONE PREPARE")
+        log_it("REACHED END OF PROCESSING")
