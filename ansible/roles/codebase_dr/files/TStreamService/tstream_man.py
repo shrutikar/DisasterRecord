@@ -65,7 +65,7 @@ def checkIfDeleted():
       if mediaObject[4] == 'twitterstream':
         hasTS=True
     if not hasTS and len(c_terms) > 0:
-      db.delete_twitterstream(campaign)
+      db.delete_twitterstream(campaign[1])
   db.destroy_connection()
 
 while True:
