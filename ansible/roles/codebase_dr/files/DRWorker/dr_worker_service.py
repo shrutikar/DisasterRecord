@@ -44,6 +44,7 @@ def launchCore(campaign,campaign_datasource):
         db.update_media_object_status(campaign_datasource[2],2)
     else:
       print("Can not add terms, limit reached!")
+      db.update_media_object_status(campaign_datasource[2],-1)
     db.destroy_connection()
 
   elif campaign_datasource[4] == 'video':
@@ -98,6 +99,7 @@ while True:
       if campaign_datasource[9] == 0:
         launchCore(campaign,campaign_datasource)
       elif campaign_datasource[9] == 1:
-        checkStatus(campaign_datasource)
+        if campaign_datasource[4] != 'twitterstream':
+          checkStatus(campaign_datasource)
   print("sleeping...")
   time.sleep(30)
