@@ -59,7 +59,7 @@ class MyStreamListener(StreamListener):
             collections[campaign].append(action)
 
     for campaign in collections:
-      if len(collections[campaign] >= bufferSize):
+      if len(collections[campaign]) >= bufferSize:
         helpers.bulk(es, collections[campaign]) # may need to be threaded
         collections[campaign]=[]
             #fp.write(campaign)
