@@ -9,7 +9,7 @@ import json
 
 class DRDB:
 
-  def log_it(data):
+  def log_it(self,data):
     with open("/var/log/DR.log", "a") as fp:
       fp.write("-->DRDB")
       fp.write(str(data))
