@@ -48,9 +48,10 @@ def updateLastTerms():
 while True:
   if not checkifrunning("tstream.py"):
     startstream()
+    updateLastTerms()
   elif termsChanged():
     killstream()
-    updateTerms()
+    updateLastTerms()
     time.sleep(10)
     startstream()
   else:
