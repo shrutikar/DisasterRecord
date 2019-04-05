@@ -9,6 +9,12 @@ import json
 
 class DRDB:
 
+  def log_it(data):
+    with open("/var/log/DR.log", "a") as fp:
+      fp.write("-->DRDB")
+      fp.write(str(data))
+      fp.write("\n")
+
   def __init__(self, db_file):
     self.db_file = db_file
     self._create_connection()
@@ -824,6 +830,8 @@ class DRDB:
 
   def delete_twitterstream(self, campaignid):
     cmd="DELETE FROM twitterstreams WHERE campaignid='{}';".format(str(campaignid))
+    self.log_it("COMMAND:")
+    self.log_it(cmd)
     r=self._exeCreate(cmd)
     return r
 
