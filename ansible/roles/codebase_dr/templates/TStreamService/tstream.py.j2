@@ -5,11 +5,22 @@ from tweepy import Stream
 from DRDB import DRDB
 import time
 from threading import Thread
+from elasticsearch import Elasticsearch
+from elasticsearch import helpers
+from elasticsearch_dsl import Search, Q
+from elasticsearch_dsl.connections import connections
 
 terms=[]
 terms_dict={}
+collections={}
+
+bufferSize=15
+
+es = Elasticsearch([{'host': '{{ photonip }}', 'port': {{ photonport }} }])
 
 class MyStreamListener(StreamListener):
+
+
 
   def on_status(self, status):
     if "…" in status.text and status.text[0] == 'R' and status.text[1] == 'T':
@@ -28,12 +39,33 @@ class MyStreamListener(StreamListener):
     for campaign in terms_dict:
       for term in terms_dict[campaign]:
         if term in fullText:
+          millis = int(round(time.time() * 1000))
+          #print millis
           #print("TO:", campaign, " - ", fullText)
           with open("output.out", "a") as fp:
-            fp.write(campaign)
-            fp.write("\n")
-            fp.write(fullText)
-            fp.write("\n")
+            newDoc={
+              "text": fullText,
+              "time": status.date,
+              "imageurl": images,
+              "id": status.id,
+              "record-id": millis
+            }
+            action={
+              "_index":campaign+'-osm',
+              "_type":'doc',
+              "_source":newDoc
+            }
+
+            collections[campaign].append(action)
+
+    for campaign in collections:
+      if len(collections[campaign] >= bufferSize):
+        helpers.bulk(es, collections[campaign]) # may need to be threaded
+        collections[campaign]=[]
+            #fp.write(campaign)
+            #fp.write("\n")
+            #fp.write(fullText)
+            #fp.write("\n")
 
 """
 CUS_KEY="{{ Consumer_Key }}"
@@ -52,7 +84,8 @@ db=DRDB("/var/local/LNEx.db")
 campaigns=db.get_active_campaigns()
 for campaign in campaigns:
   c_terms=db.grab_twitterstream_terms(campaign[1])[0][2].split(",")
-  terms_dict[campaign[1]]=c_terms
+  terms_dict[campaign[4]]=c_terms
+  collections[campaign[4]]=[]
   for term in c_terms:
     if term not in terms:
       terms.append(term)

@@ -45,8 +45,23 @@ def updateLastTerms():
   db.destroy_connection()
   lastTerms=currentTerms
 
+def checkIfEmpty():
+  db=DRDB("/var/local/LNEx.db")
+  currentTerms=db.get_twitterstream_allterms()
+  db.destroy_connection()
+  if len(currentTerms) == 0:
+    return True
+  else:
+    return False
+
 while True:
-  if not checkifrunning("tstream.py"):
+  if checkIfEmpty():
+    try:
+      if checkifrunning("tstream.py"):
+        killstream()
+    except:
+      pass
+  elif not checkifrunning("tstream.py"):
     startstream()
     updateLastTerms()
   elif termsChanged():
