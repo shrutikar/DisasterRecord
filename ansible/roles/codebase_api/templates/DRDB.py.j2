@@ -777,7 +777,7 @@ class DRDB:
       return False
 
   def exists_twitterstream(self, campaignid):
-    cmd="SELECT * FROM twitterstreams WHERE campaignid='{}'".format(campaignid)
+    cmd="SELECT * FROM twitterstreams WHERE campaignid='{}';".format(campaignid)
     r=self._exeQuery(cmd)
     if len(r) > 0:
       return True
@@ -799,7 +799,7 @@ class DRDB:
       return False
 
   def update_twitterstream_terms(self, campaignid, terms):
-    cmd="UPDATE twitterstreams SET terms = '{}' WHERE campaignid='{}'".format(terms,campaignid)
+    cmd="UPDATE twitterstreams SET terms = '{}' WHERE campaignid='{}';".format(terms,campaignid)
     try:
       self._exeCreate(cmd)
       return True
@@ -807,7 +807,7 @@ class DRDB:
       return False
 
   def deactivate_twitterstream(self, campaignid):
-    cmd="UPDATE twitterstreams SET active = '{}' WHERE campaignid='{}'".format(0,campaignid)
+    cmd="UPDATE twitterstreams SET active = '{}' WHERE campaignid='{}';".format(0,campaignid)
     try:
       self._exeCreate(cmd)
       return True
@@ -815,7 +815,7 @@ class DRDB:
       return False
 
   def activate_twitterstream(self, campaignid):
-    cmd="UPDATE twitterstreams SET active = '{}' WHERE campaignid='{}'".format(1,campaignid)
+    cmd="UPDATE twitterstreams SET active = '{}' WHERE campaignid='{}';".format(1,campaignid)
     try:
       self._exeCreate(cmd)
       return True

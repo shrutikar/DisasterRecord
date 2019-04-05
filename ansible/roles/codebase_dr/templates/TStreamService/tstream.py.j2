@@ -36,6 +36,11 @@ class MyStreamListener(StreamListener):
     else:
       fullText = status.text
 
+    images=[]
+    if 'media' in status.entities:
+      for image in status.entities['media']:
+        images.append(image['media_url'])
+
     for campaign in terms_dict:
       for term in terms_dict[campaign]:
         if term in fullText:
@@ -45,7 +50,7 @@ class MyStreamListener(StreamListener):
           with open("output.out", "a") as fp:
             newDoc={
               "text": fullText,
-              "time": status.date,
+              "time": status.created_at,
               "imageurl": images,
               "id": status.id,
               "record-id": millis
