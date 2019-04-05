@@ -38,10 +38,10 @@ def launchCore(campaign,campaign_datasource):
       if db.exists_twitterstream(campaign[1]):
         db.update_twitterstream_terms(campaign[1],",".join(pendingterms))
         db.activate_twitterstream(campaign[1])
-        db.update_media_object_status(campaign_datasource[2],2)
+        db.update_media_object_status(campaign_datasource[2],1)
       else:
         db.init_twitterstream_terms(campaign[1],",".join(pendingterms))
-        db.update_media_object_status(campaign_datasource[2],2)
+        db.update_media_object_status(campaign_datasource[2],1)
     else:
       print("Can not add terms, limit reached!")
       db.update_media_object_status(campaign_datasource[2],-1)
@@ -97,6 +97,8 @@ while True:
     db.destroy_connection()
     for campaign_datasource in campaign_datasources:
       if campaign_datasource[9] == 0:
+        launchCore(campaign,campaign_datasource)
+      elif campaign_datasource[9] == 1 and campaign_datasource[4] == 'twitterstream':
         launchCore(campaign,campaign_datasource)
       elif campaign_datasource[9] == 1:
         if campaign_datasource[4] != 'twitterstream':
