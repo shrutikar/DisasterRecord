@@ -10,9 +10,9 @@ from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.connections import connections
 import LNEx as lnex
 from collections import defaultdict
-import object_detection
-from object_detection.ObjectDetector import ObjectDetector
-OD = ObjectDetector()
+#import object_detection
+#from object_detection.ObjectDetector import ObjectDetector
+#OD = ObjectDetector()
 
 import nltk
 nltk.download('words')
@@ -166,7 +166,12 @@ class DataProcess(object):
                     url = img
                     water = True
                     img = {}
-                    obj = OD.extract(url)
+                    f = {'url': img}
+                    r = urllib.request.urlopen("http://127.0.0.1:30503/detect?{}".format(urllib.parse.urlencode(f)))
+                    r = r.readline().decode("utf-8")
+                    log_it("object detection made...")
+                    log_it(str(r))
+                    obj = r
                     img = {"water": water, "objects": obj, "imageURL": url}
                     lst.append(img)
 

@@ -26,8 +26,8 @@ url_cache={}
 from ObjectDetector import ObjectDetector
 od=ObjectDetector()
 
-@application.route('/classify')
-def classify():
+@application.route('/detect')
+def detect():
   urlText = request.args.get('url')
   return od.extract(urlText)
 
