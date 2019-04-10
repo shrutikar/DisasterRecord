@@ -20,7 +20,7 @@
   when: DisasterRecordOD_init.stat.exists == False
 
 - name: Copy fixed ObjectDetector.py file to ~/workspace/DisasterRecord/object_detection
-  copy: src=ObjectDetector.py dest=~/workspace/DisasterRecord/object_detection/ObjectDetector.py owner=root group=root mode=0644
+  copy: src=ObjectDetector.py dest=~/workspace/DisasterRecord/ObjectDetector.py owner=root group=root mode=0644
 
 - name: Copy obj_service.py file to ~/workspace/DisasterRecord/object_detection
-  copy: src=obj_service.py dest=~/workspace/DisasterRecord/object_detection/obj_service.py owner=root group=root mode=0644
+  copy: src=obj_service.py dest=~/workspace/DisasterRecord/obj_service.py owner=root group=root mode=0644
