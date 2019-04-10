@@ -10,9 +10,9 @@ import json
 
 TERMSLIMIT=400
 
-failedCount=[-1,-1,-1,-1]
-services=['tc_service.py','inf_service.py','server.py','tstream_man.py']
-serviceStarters=['/root/startTC','/root/startINF','/root/startDR-Frontend','/root/startTStreamMan']
+failedCount=[-1,-1,-1,-1,-1]
+services=['tc_service.py','inf_service.py','server.py','tstream_man.py','obj_service.py']
+serviceStarters=['/root/startTC','/root/startINF','/root/startDR-Frontend','/root/startTStreamMan','/root/startOBJ']
 
 def checkifrunning(name):
   for proc in psutil.process_iter():
