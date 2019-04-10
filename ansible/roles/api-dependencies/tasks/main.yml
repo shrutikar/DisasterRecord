@@ -25,3 +25,4 @@
       - zlib1g-dev
       - python-pip
       - unzip
+      - liblzma-dev
