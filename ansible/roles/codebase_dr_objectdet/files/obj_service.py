@@ -29,7 +29,7 @@ od=ObjectDetector()
 @application.route('/detect')
 def detect():
   urlText = request.args.get('url')
-  return od.extract(urlText)
+  return json.dumps(od.extract(urlText))
 
 if __name__ == "__main__":
     application.run(port=30503)
