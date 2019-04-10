@@ -166,7 +166,7 @@ class DataProcess(object):
                     url = img
                     water = True
                     img = {}
-                    f = {'url': img}
+                    f = {'url': url}
                     r = urllib.request.urlopen("http://127.0.0.1:30503/detect?{}".format(urllib.parse.urlencode(f)))
                     r = json.loads(r.readline().decode("utf-8"))
                     log_it("object detection made...")
