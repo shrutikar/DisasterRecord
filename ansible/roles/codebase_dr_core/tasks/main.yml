@@ -1,0 +1,71 @@
+---
+
+- name: Copy fixed requirements.txt file to ~/workspace/DisasterRecord
+  copy: src=requirements.txt dest=~/workspace/DisasterRecord/requirements.txt owner=root group=root mode=0644
+
+- name: Copy fixed chennai.geojson file to ~/workspace/DisasterRecord
+  copy: src=chennai.geojson dest=~/workspace/DisasterRecord/chennai.geojson owner=root group=root mode=0644
+
+- name: Copy fixed chennai_geohashes_8prec.json file to ~/workspace/DisasterRecord
+  copy: src=chennai_geohashes_8prec.json dest=~/workspace/DisasterRecord/chennai_geohashes_8prec.json owner=root group=root mode=0644
+
+- name: Generate make.sh
+  template: src=make.sh.j2 dest=~/workspace/DisasterRecord/make.sh owner=root group=root mode=0755
+
+- name: Generate process_dataset.sh
+  template: src=process_dataset.sh.j2 dest=~/workspace/DisasterRecord/process_dataset.sh owner=root group=root mode=0755
+
+- name: Generate core.py
+  template: src=core.py.j2 dest=~/workspace/DisasterRecord/core.py owner=root group=root mode=0644
+
+- name: Generate file-mapping.sh
+  template: src=file-mapping.sh.j2 dest=~/workspace/DisasterRecord/file-mapping.sh owner=root group=root mode=0755
+
+- name: Generate osm-mapping.sh
+  template: src=osm-mapping.sh.j2 dest=~/workspace/DisasterRecord/osm-mapping.sh owner=root group=root mode=0755
+
+- name: Generate tweet-mapping.sh
+  template: src=tweet-mapping.sh.j2 dest=~/workspace/DisasterRecord/tweet-mapping.sh owner=root group=root mode=0755
+
+- name: Generate server.py
+  template: src=server.py.j2 dest=~/workspace/DisasterRecord/server.py owner=root group=root mode=0644
+
+- name: Install dependencies for DRecord
+  pip: 
+    name: "{{ packages }}"
+    virtualenv: ~/workspace/DisasterRecord
+  vars:
+    packages:
+      - xlrd
+      - tweepy
+      - python-geohash
+      - elasticsearch_dsl
+      - tensorflow
+
+- name: Install Other DisasterRecord dependencies
+  pip: 
+    requirements: ~/workspace/DisasterRecord/requirements.txt
+    virtualenv: ~/workspace/DisasterRecord
+
+- name: Install LNEx dependencies for DisasterRecord
+  pip: 
+    requirements: ~/workspace/LNEx/requirements.txt
+    virtualenv: ~/workspace/DisasterRecord
+
+- name: Create symbolic link for LNEx
+  file:
+    src: "/root/workspace/LNEx/LNEx"
+    dest: "/root/workspace/DisasterRecord/LNEx"
+    state: link
+
+- name: Copy drEnv file to ~/workspace/DisasterRecord
+  copy: src=drEnv dest=~/workspace/DisasterRecord/drEnv owner=root group=root mode=0755
+
+- name: Copy DR Worker Service
+  copy: src=dr_worker_service.py dest=~/workspace/DisasterRecord/dr_worker_service.py
+
+- name: Generate tstream.py
+  template: src=tstream.py.j2 dest=~/workspace/DisasterRecord/tstream.py owner=root group=root mode=0644
+
+- name: Copy TStreamMan Service
+  copy: src=tstream_man.py dest=~/workspace/DisasterRecord/tstream_man.py

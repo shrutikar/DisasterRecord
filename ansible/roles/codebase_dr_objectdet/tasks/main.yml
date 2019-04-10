@@ -1,0 +1,23 @@
+---
+
+- name: Check if DisasterRecord ObjectDetection Exists
+  stat:
+    path: ~/workspace/DisasterRecord/object_detection
+  register: DisasterRecordOD_init
+
+- name: Clone Tensorflow-ImageObjects-Summarizer
+  git:
+    repo: https://github.com/halolimat/Tensorflow-ImageObjects-Summarizer
+    dest: ~/workspace/DisasterRecord/OBJTMP
+  when: DisasterRecordOD_init.stat.exists == False
+
+- name: Move object_detection/ back a folder
+  command: mv /root/workspace/DisasterRecord/OBJTMP/object_detection /root/workspace/DisasterRecord/object_detection
+  when: DisasterRecordOD_init.stat.exists == False
+
+- name: Remove OBJTMP
+  command: rm -r /root/workspace/DisasterRecord/OBJTMP
+  when: DisasterRecordOD_init.stat.exists == False
+
+- name: Copy fixed ObjectDetector.py file to ~/workspace/DisasterRecord/object_detection
+  copy: src=ObjectDetector.py dest=~/workspace/DisasterRecord/object_detection/ObjectDetector.py owner=root group=root mode=0644

@@ -1,0 +1,28 @@
+---
+
+- name: Create inference directory
+  file:
+    path: ~/workspace/DisasterRecord/inference
+    state: directory
+
+- name: Create inference/models directory
+  file:
+    path: ~/workspace/DisasterRecord/inference/models
+    state: directory
+
+- name: Create inference/models/flood directory
+  file:
+    path: ~/workspace/DisasterRecord/inference/models/flood
+    state: directory
+
+- name: Copy fixed load_pb.py file to ~/workspace/DisasterRecord/inference
+  copy: src=load_pb.py dest=~/workspace/DisasterRecord/inference/load_pb.py owner=root group=root mode=0644
+
+- name: Copy fixed inf_service.py file to ~/workspace/DisasterRecord/inference
+  copy: src=inf_service.py dest=~/workspace/DisasterRecord/inference/inf_service.py owner=root group=root mode=0644
+
+- name: Copy flood.pb file to ~/workspace/DisasterRecord/inference
+  copy: src=flood.pb dest=~/workspace/DisasterRecord/inference/models/flood/flood.pb owner=root group=root mode=0644
+
+- name: Copy classes.txt file to ~/workspace/DisasterRecord/inference
+  copy: src=classes.txt dest=~/workspace/DisasterRecord/inference/models/flood/classes.txt owner=root group=root mode=0644

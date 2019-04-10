@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /root/workspace/DisasterRecord/mike_img
+cd /root/workspace/DisasterRecord/inference
 /root/workspace/DisasterRecord/drEnv python inf_service.py >> /var/log/DR.log 2>&1 &
 FOO_PID=$!
 echo $FOO_PID > /root/inf.pid

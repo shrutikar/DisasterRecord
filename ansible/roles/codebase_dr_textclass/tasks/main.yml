@@ -1,0 +1,42 @@
+---
+
+- name: Create TC_Service directory
+  file:
+    path: ~/workspace/TC_Service
+    state: directory
+
+- name: Create TC_Service code directory
+  file:
+    path: ~/workspace/TC_Service/code
+    state: directory
+
+- name: Copy tc_service.py file to ~/workspace/TC_Service/code
+  copy: src=tc_service.py dest=~/workspace/TC_Service/code owner=root group=root mode=0644
+
+- name: Copy finalized_model.sav file to ~/workspace/TC_Service/code
+  copy: src=finalized_model.sav dest=~/workspace/TC_Service/code owner=root group=root mode=0644
+
+- name: Check if TC_Service VE Exists
+  stat:
+    path: ~/workspace/TC_Service/bin/activate
+  register: TC_ServiceVE_init
+
+- name: Install LNEx dependencies for DisasterRecord
+  pip: 
+    name: "{{ packages }}"
+    virtualenv: ~/workspace/TC_Service
+  vars:
+    packages:
+      - flask
+      - gensim
+      - xlrd
+      - nltk
+      - sklearn
+      - imblearn
+
+- name: Create TC_Service virtualenv
+  command: virtualenv -p python2 ~/workspace/TC_Service
+  when: TC_ServiceVE_init.stat.exists == False
+
+- name: Copy tcEnv file to ~/workspace/TC_Service
+  copy: src=tcEnv dest=~/workspace/TC_Service/tcEnv owner=root group=root mode=0755

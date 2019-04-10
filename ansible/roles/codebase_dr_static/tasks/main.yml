@@ -1,0 +1,35 @@
+---
+
+- name: Copy js/map.js file to ~/workspace/DisasterRecord/static/js
+  copy: src=js/map.js dest=~/workspace/DisasterRecord/static/js/map.js owner=root group=root mode=0644
+
+- name: Copy js/heatmap.js file to ~/workspace/DisasterRecord/static/js
+  copy: src=js/heatmap.js dest=~/workspace/DisasterRecord/static/js/heatmap.js owner=root group=root mode=0644
+
+- name: Copy js/main.js file to ~/workspace/DisasterRecord/static/js
+  copy: src=js/main.js dest=~/workspace/DisasterRecord/static/js/main.js owner=root group=root mode=0644
+
+- name: Copy html templates
+  copy: src=templates/{{ item }} dest=~/workspace/DisasterRecord/templates/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - error.html
+    - list.html
+    - create.html
+    - manage.html
+    - index.html
+
+- name: Copy icons
+  copy: src=icons/{{ item }} dest=~/workspace/DisasterRecord/static/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - camera.png
+    - videoclip.png
+    - detection.png
+    - car.png
+    - drone.png
+    - alert.png
+    - error.png
+    - finished.png
+    - pending.png
+    - processing.png
+    - remove.png
+    - settings.png
