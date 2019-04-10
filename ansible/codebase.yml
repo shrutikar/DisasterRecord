@@ -19,13 +19,53 @@
   tags:
     - codebase_lnex
 
-- name: Setup DisasterRecord
+- name: DisasterRecord Provision
   hosts: api
   become: yes
   roles:
     - codebase_dr
   tags:
     - codebase_dr
+
+- name: Setup DisasterRecord Core
+  hosts: api
+  become: yes
+  roles:
+    - codebase_dr_core
+  tags:
+    - codebase_dr_core
+
+- name: Setup DisasterRecord Static Files
+  hosts: api
+  become: yes
+  roles:
+    - codebase_dr_static
+  tags:
+    - codebase_dr_static
+
+- name: Setup DisasterRecord Image Inference Service
+  hosts: api
+  become: yes
+  roles:
+    - codebase_dr_inference
+  tags:
+    - codebase_dr_inference
+
+- name: Setup DisasterRecord Object Detector Service
+  hosts: api
+  become: yes
+  roles:
+    - codebase_dr_objectdet
+  tags:
+    - codebase_dr_objectdet
+
+- name: Setup DisasterRecord Text Classifier Service
+  hosts: api
+  become: yes
+  roles:
+    - codebase_dr_textclass
+  tags:
+    - codebase_dr_textclass
 
 - name: Setup API
   hosts: api
