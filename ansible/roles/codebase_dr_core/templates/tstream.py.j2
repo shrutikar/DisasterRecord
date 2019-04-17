@@ -9,18 +9,25 @@ from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.connections import connections
+import traceback as tb
+import datetime
 
 terms=[]
 terms_dict={}
 collections={}
 
-bufferSize=15
+bufferSize=5
 
 es = Elasticsearch([{'host': '{{ photonip }}', 'port': {{ photonport }} }])
 
+def log_it(content,level):
+  with open("/var/log/DR.log", "a") as fp:
+    fp.write("[{}] [{}] - TSTREAM".format(str(datetime.datetime.now()),str(level)))
+    fp.write(str(content))
+    fp.write("\n")
+
+
 class MyStreamListener(StreamListener):
-
-
 
   def on_status(self, status):
     if "…" in status.text and status.text[0] == 'R' and status.text[1] == 'T':
@@ -41,36 +48,35 @@ class MyStreamListener(StreamListener):
       for image in status.entities['media']:
         images.append(image['media_url'])
 
-    for campaign in terms_dict:
-      for term in terms_dict[campaign]:
-        if term in fullText:
-          millis = int(round(time.time() * 1000))
-          #print millis
-          #print("TO:", campaign, " - ", fullText)
-          with open("output.out", "a") as fp:
+    try:
+      for campaign in terms_dict:
+        for term in terms_dict[campaign]:
+          if term in fullText:
+            millis = int(round(time.time()*1000))
             newDoc={
               "text": fullText,
-              "time": status.created_at,
+              "time": int(status.created_at.timestamp()*1000),
               "imageurl": images,
               "id": status.id,
               "record-id": millis
             }
             action={
-              "_index":campaign+'-osm',
+              "_index":campaign+'-file',
               "_type":'doc',
               "_source":newDoc
             }
-
             collections[campaign].append(action)
 
-    for campaign in collections:
-      if len(collections[campaign]) >= bufferSize:
-        helpers.bulk(es, collections[campaign]) # may need to be threaded
-        collections[campaign]=[]
-            #fp.write(campaign)
-            #fp.write("\n")
-            #fp.write(fullText)
-            #fp.write("\n")
+      for campaign in collections:
+        if len(collections[campaign]) >= bufferSize:
+          helpers.bulk(es, collections[campaign]) # may need to be threaded
+          collections[campaign]=[]
+    except:
+      var=tb.format_exc()
+      log_it(var,'ERROR')
+
+  def on_error(self, status_code):
+    log_it("STREAM ERROR: "+str(status_code),'ERROR')
 
 """
 CUS_KEY="{{ Consumer_Key }}"
@@ -88,12 +94,14 @@ ACC_SEC="4ioojyp6Cx2eS4sgjmnRrBOHI7F9iDX5Lt9qE1s8VmH9n"
 db=DRDB("/var/local/LNEx.db")
 campaigns=db.get_active_campaigns()
 for campaign in campaigns:
-  c_terms=db.grab_twitterstream_terms(campaign[1])[0][2].split(",")
-  terms_dict[campaign[4]]=c_terms
-  collections[campaign[4]]=[]
-  for term in c_terms:
-    if term not in terms:
-      terms.append(term)
+  dbTerms=db.grab_twitterstream_terms(campaign[1])
+  if len(dbTerms) > 0:
+    c_terms=dbTerms[0][2].split(",")
+    terms_dict[campaign[4]]=c_terms
+    collections[campaign[4]]=[]
+    for term in c_terms:
+      if term not in terms:
+        terms.append(term)
 db.destroy_connection()
 
 
@@ -102,6 +110,8 @@ auth.set_access_token(ACC_TOK, ACC_SEC)
 
 myStreamListener = MyStreamListener()
 myStream = tweepy.Stream(auth=auth, listener=myStreamListener)
+
+log_it("STREAM UPDATED",'INFO')
 
 if len(terms) > 0:
   myStream.filter(track=terms)
