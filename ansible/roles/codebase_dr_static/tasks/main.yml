@@ -9,6 +9,11 @@
 - name: Copy js/main.js file to ~/workspace/DisasterRecord/static/js
   copy: src=js/main.js dest=~/workspace/DisasterRecord/static/js/main.js owner=root group=root mode=0644
 
+- name: Copy css files
+  copy: src=css/{{ item }} dest=~/workspace/DisasterRecord/static/css/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - main.css
+
 - name: Copy html templates
   copy: src=templates/{{ item }} dest=~/workspace/DisasterRecord/templates/{{ item }} owner=root group=root mode=0644
   with_items:
