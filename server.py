@@ -212,7 +212,7 @@ def generateISO(d):
     return datetime.fromtimestamp(d / 1e3).isoformat()
 
 def get_volume(lat, lon, radius, start_date, end_date):
-    es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
+    es = Elasticsearch([{'host': '130.108.86.153', 'port': 9201}])
 
     q = {
         "size": 0,
@@ -500,7 +500,7 @@ def check_selected():
     return json.dumps(data)
 
 def read_data(lat, lon, radius, start_date, end_date):
-    es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
+    es = Elasticsearch([{'host': '130.108.86.153', 'port': 9201}])
 
     q = {
         "size": 1000,
@@ -574,7 +574,7 @@ def bb_query_count():
     end_t = request.args.get('end_date')
     # start_t = start_t
     # end_t = end_t
-    es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
+    es = Elasticsearch([{'host': '130.108.86.153', 'port': 9201}])
 
     raw_shelter_count = es.search(index=dataset + '-tweetneeds',body={"size": ES_SIZE, "query": {
         "bool" : {
@@ -804,7 +804,7 @@ def bb_query():
 
 def form_query(min_lat, min_lng, max_lat, max_lng, start_t, end_t, q_str):
     dataset = 'chennai'
-    es = Elasticsearch([{'host': '173.193.79.31', 'port': 31169}])
+    es = Elasticsearch([{'host': '130.108.86.153', 'port': 9201}])
 
     if (q_str == "rescue_need" or q_str == "shelter_need"):
         print ("entered")

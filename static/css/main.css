@@ -34,7 +34,7 @@ body {
   margin-top: 30%;
   font-size: 130%;
 }
-table {
+.text_agg_list,.img_agg_list,.osm_agg_list {
   width: 10%;
   border-spacing: 10px 0px;
   border-collapse: separate;
@@ -119,12 +119,27 @@ border-radius: 15px;
 #drec {
   color: #004787;
   display: inline-block;
-  font-size: 128%;
+  font-size: 1.5vw;
   margin-left: 4%;
   font-weight: bold;
   border-left: solid #000;
   padding-left: 4%;
-  line-height: 29px;
+  line-height: 3vh;
+}
+#nav_id{
+  font-size: 0.8vw;
+}
+.top_img {
+  height: 3vw;
+}
+#admin_gear{
+  margin-left: 2vw;
+  vertical-align: top;
+  font-size: 1.7vw;
+  color: #004787;
+}
+#admin_gear:hover{
+ color:#393838; 
 }
 #zero_topic_text {
   /*color: #474747;*/
@@ -212,6 +227,7 @@ mark{
   position: absolute;
   right: 3px;
   font-size: 12px;
+  left: 35%;
 }
 .two {
   /* margin-left: 10%; */

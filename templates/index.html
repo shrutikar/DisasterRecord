@@ -16,7 +16,11 @@
     <link rel="stylesheet" type="text/css" href="/static/css/animate.min.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
         crossorigin="anonymous">
-
+<style>
+.mapboxgl-popup-content {
+          display: inline-block;
+        }
+</style>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7YOOWjDL1lO3n96oXc4_KPPrJL79ZCpY&libraries=drawing"></script>
 </head>
@@ -27,9 +31,10 @@
         <div class="one">
 
             <div id='rib'>
-                <img height="55px" src="/static/drecord-logo.png" style="margin-top: -10%;">
+                <img src="/static/drecord-logo.png" style="margin-top: -10%;" class="top_img">
                 <div id="drec">Disaster
                     <br> Record</div>
+                    <a href="http://130.108.86.152/DR/manageCampaign/Harvey"><i class="fas fa-cog" id="admin_gear"></i></a>
             </div>
             <div id="date-picker">
                 <h4 style="text-align: center;">Pick a Date/Time Range</h4>
@@ -72,10 +77,10 @@
             </div>
             <div id="picture"></div>
 
-            <div id='logo'>
+            <!-- <div id='logo'>
             <div id='hazard'>
                 <img height="55px" src="/static/hazard.png">
-                <!-- <span id="kno">Kno.e.sis</span> -->
+                <span id="kno">Kno.e.sis</span>
             </div>
             <div id='nsf'>
                 <img height="60px" src="/static/NSF.png">
@@ -88,7 +93,8 @@
 
             </div>
             <a href="https://icons8.com" id="icon_p">Icon pack by Icons8</a>
-        </div>
+        </div> -->
+        <a href="https://icons8.com" id="icon_p">Icon pack by Icons8</a>
         </div>
 
         <div class="zero">
