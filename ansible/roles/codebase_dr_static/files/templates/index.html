@@ -22,7 +22,7 @@
 
     <style>
         .mapboxgl-popup-content {
-            width: 520px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -33,10 +33,10 @@
         <div class="one">
 
             <div id='rib'>
-                <img height="55px" src="/static/drecord-logo.png" style="margin-top: -10%;">
+                <img src="/static/drecord-logo.png" style="margin-top: -10%;" class="top_img">
                 <div id="drec">Disaster
                     <br> Record</div>
-                <a href="/DR/manageCampaign/{{ campaignName }}"><img height="55px" src="/static/settings.png" style="margin-top: -10%;margin-left:15px;"></a>
+                <a href="/DR/manageCampaign/{{ campaignName }}"><i class="fas fa-cog" id="admin_gear"></i></a>
             </div>
             <div id="date-picker">
                 <h4 style="text-align: center;">Pick a Date/Time Range</h4>
@@ -78,16 +78,17 @@
 
             </div>
             <div id="picture"></div>
-
+            <!--
             <div id='logo'>
             <div id='hazard'>
                 <img height="55px" src="/static/hazard.png">
-                <!-- <span id="kno">Kno.e.sis</span> -->
+                <span id="kno">Kno.e.sis</span>
             </div>
             <div id='nsf'>
                 <img height="60px" src="/static/NSF.png">
 
             </div>
+            -->
             <a href="https://icons8.com" id="icon_p">Icon pack by Icons8</a>
         </div>
         </div>
