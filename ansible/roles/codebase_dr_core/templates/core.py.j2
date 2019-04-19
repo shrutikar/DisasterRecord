@@ -54,32 +54,37 @@ class DataProcess(object):
         geo_info = self.init_using_elasticindex(cache = False, augmentType = "HP", gaz_name = dataset, bb = bb, capital_word_shape = False)
         
         while 1:
-          temp = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"match_all" : {}}})['hits']['hits']
-          temp_rec = [s['_source'] for s in temp]
-          temp_id = list()
+          try:
+            temp = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"match_all" : {}}})['hits']['hits']
+            temp_rec = [s['_source'] for s in temp]
+            temp_id = list()
 
-          for e in temp_rec:
-            temp_id.append(e['record']['record-id'])
+            for e in temp_rec:
+              temp_id.append(e['record']['record-id'])
 
-          end = max(temp_id)  #set maximum id number as the end of range.
-          result = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"bool" : {"must" : {"range" : {
-                "record.record-id" : {
-                    "gt" : start,
-                    "lte" : end
-                }
-            }}}}})['hits']['hits']
-          rec = [s['_source'] for s in result]
+            end = max(temp_id)  #set maximum id number as the end of range.
+            result = es.search(index = dataset + '-file', body = {"size" : ES_SIZE, "query" : {"bool" : {"must" : {"range" : {
+                  "record.record-id" : {
+                      "gt" : start,
+                      "lte" : end
+                  }
+              }}}}})['hits']['hits']
+            rec = [s['_source'] for s in result]
 
-          if not loopForever and len(rec) == 0:
-            log_it("FINISHED PROCESSING DATASET!")
-            break
+            if not loopForever and len(rec) == 0:
+              log_it("FINISHED PROCESSING DATASET!")
+              break
 
-          for e in rec:
-            text = e['record']['text']
-            time = e['record']['time']
-            imageurl = e['record']['imageurl']
-            id = e['record']['id']
-            all_geo_points = self.prepare_geo_points(dataset, text, time, id, imageurl, flood_flag, objects_flag, satellite_image, geo_info)
+            for e in rec:
+              text = e['record']['text']
+              time = e['record']['time']
+              imageurl = e['record']['imageurl']
+              id = e['record']['id']
+              all_geo_points = self.prepare_geo_points(dataset, text, time, id, imageurl, flood_flag, objects_flag, satellite_image, geo_info)
+          except:
+            var=tb.format_exc()
+            log_it("THERE WAS A PROBLEM PROCESSING THE DATA:")
+            log_it(str(var))
 
           if shouldSleep:
             tm.sleep(30)  #wait to read next batch
@@ -623,7 +628,7 @@ if __name__ == "__main__":
         log_it("  -->BEGIN PREPARE")
         d.prepare_data_events(bb)
         log_it("  -->DONE PREPARE")
-        d.read(dataset,flood_flag,objects_flag,satellite_image,bb,loopForever=True)
+        d.read(dataset,flood_flag,objects_flag,satellite_image,bb,shouldSleep=True,loopForever=True)
         log_it("  -->DONE READ")
         log_it("PROCESSING OF TWITTER STREAM HAS ENDED!!!")
 
