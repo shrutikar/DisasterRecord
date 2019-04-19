@@ -23,28 +23,41 @@ def checkifrunning(name):
 
 def launchCore(campaign,campaign_datasource):
   if campaign_datasource[4] == 'dataset':
+    db=DRDB("/var/local/LNEx.db")
+    c_status=db.grab_media_object(campaign_datasource[2])
     _cmd = ['./process_dataset.sh',campaign[1],campaign[4],campaign_datasource[3],campaign_datasource[2]]
     pid = Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
-    db=DRDB("/var/local/LNEx.db")
     db.add_drworker(campaign[1],campaign_datasource[2],pid.pid)
     db.update_media_object_status(campaign_datasource[2],1)
     db.destroy_connection()
 
   elif campaign_datasource[4] == 'twitterstream':
     db=DRDB("/var/local/LNEx.db")
-    pendingterms=json.loads(campaign_datasource[7])['terms']
-    termscnt=len(db.get_twitterstream_allterms())
-    if termscnt + len(pendingterms) <= TERMSLIMIT:
-      if db.exists_twitterstream(campaign[1]):
-        db.update_twitterstream_terms(campaign[1],",".join(pendingterms))
-        db.activate_twitterstream(campaign[1])
-        db.update_media_object_status(campaign_datasource[2],1)
+    c_status=db.grab_media_object(campaign_datasource[2])
+    # processed 0: update terms (this will be picked up by tstream_service) 
+    if len(c_status) > 0 and c_status[0][9] == 0:
+      pendingterms=json.loads(campaign_datasource[7])['terms']
+      termscnt=len(db.get_twitterstream_allterms())
+      if termscnt + len(pendingterms) <= TERMSLIMIT:
+        if db.exists_twitterstream(campaign[1]):
+          db.update_twitterstream_terms(campaign[1],",".join(pendingterms))
+          db.activate_twitterstream(campaign[1])
+          db.update_media_object_status(campaign_datasource[2],1)
+        else:
+          db.init_twitterstream_terms(campaign[1],",".join(pendingterms))
+          db.update_media_object_status(campaign_datasource[2],1)
       else:
-        db.init_twitterstream_terms(campaign[1],",".join(pendingterms))
-        db.update_media_object_status(campaign_datasource[2],1)
+        print("Can not add terms, limit reached!")
+        db.update_media_object_status(campaign_datasource[2],-1)
+    # processed 1: launch the core to process the data
+    elif len(c_status) > 0 and c_status[0][9] == 1:
+      _cmd = ['./process_twitterstream.sh',campaign[1],campaign[4]]
+      pid = Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
+      db.add_drworker(campaign[1],campaign_datasource[2],pid.pid)
+      db.update_media_object_status(campaign_datasource[2],2)
     else:
-      print("Can not add terms, limit reached!")
-      db.update_media_object_status(campaign_datasource[2],-1)
+      #TODO: check if still running and react
+      pass
     db.destroy_connection()
 
   elif campaign_datasource[4] == 'video':

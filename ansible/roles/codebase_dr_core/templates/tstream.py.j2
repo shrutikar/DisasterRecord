@@ -22,7 +22,7 @@ es = Elasticsearch([{'host': '{{ photonip }}', 'port': {{ photonport }} }])
 
 def log_it(content,level):
   with open("/var/log/DR.log", "a") as fp:
-    fp.write("[{}] [{}] - TSTREAM".format(str(datetime.datetime.now()),str(level)))
+    fp.write("[{}] [{}] - TSTREAM\n".format(str(datetime.datetime.now()),str(level)))
     fp.write(str(content))
     fp.write("\n")
 

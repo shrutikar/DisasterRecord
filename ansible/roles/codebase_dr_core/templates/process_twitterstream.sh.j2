@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ "$#" -ne 4 ]; then
+    echo "usage: process_twitterstream.sh <campaignid> <esindexbase>"
+    exit 1
+fi
+
+API_PORT=""
+FC="ON"
+OBJC="ON"
+SAT="OFF"
+
+DSN=$1     #name of campaign
+DSesN=$2   #es index base
+DSURL="X"   #url to dataset
+MDID="X"   #mediaid
+TYPE="TWITTERSTREAM"
+
+./file-mapping.sh $DSesN
+./tweet-mapping.sh $DSesN
+./osm-mapping.sh $DSesN
+
+BB=("0" "0" "0" "0")
+
+A="X"
+B="X"
+C="X"
+D="X"
+
+python core.py "${Keywords[*]}" $A $B $C $D $DSesN $FC $OBJC $SAT "${BB[*]}" $DSURL $TYPE $DSN $MDID

@@ -604,15 +604,15 @@ if __name__ == "__main__":
 
     elif ptype == "TWITTERSTREAM":
         needed=False
-        #log_it("LOADING DATASET...")
+        log_it("PROCESSING TWITTERSTREAM...")
         #log_it("DATASET LOCATION: {}".format(file_url))
         #f = ReadFromFile()
         #f.readDataset(file_url)
         #log_it("DONE LOADING DATASET")
-        thread = threading.Thread(target=getTweets, args=(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset))
-        thread.start()
-        log_it("WAITING 5 SECONDS")
-        tm.sleep(5)
+        #thread = threading.Thread(target=getTweets, args=(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset))
+        #thread.start()
+        log_it("WAITING 15 SECONDS FOR STREAM TO START AND COLLECT DATA")
+        tm.sleep(15)
         db=DRDB("/var/local/LNEx.db")
         c_info=db.get_campaign(campaignName)
         db.destroy_connection()
@@ -625,7 +625,7 @@ if __name__ == "__main__":
         log_it("  -->DONE PREPARE")
         d.read(dataset,flood_flag,objects_flag,satellite_image,bb,loopForever=True)
         log_it("  -->DONE READ")
-        log_it("REACHED END OF PROCESSING")
+        log_it("PROCESSING OF TWITTER STREAM HAS ENDED!!!")
 
     elif file_url == "None":
       log_it("STARTING TWEET STREAM")

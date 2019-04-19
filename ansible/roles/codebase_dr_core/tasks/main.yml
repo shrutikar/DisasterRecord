@@ -15,6 +15,9 @@
 - name: Generate process_dataset.sh
   template: src=process_dataset.sh.j2 dest=~/workspace/DisasterRecord/process_dataset.sh owner=root group=root mode=0755
 
+- name: Generate process_tweetstream.sh
+  template: src=process_tweetstream.sh.j2 dest=~/workspace/DisasterRecord/process_tweetstream.sh owner=root group=root mode=0755
+
 - name: Generate core.py
   template: src=core.py.j2 dest=~/workspace/DisasterRecord/core.py owner=root group=root mode=0644
 
