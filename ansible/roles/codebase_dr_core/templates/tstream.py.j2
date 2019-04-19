@@ -60,10 +60,13 @@ class MyStreamListener(StreamListener):
               "id": status.id,
               "record-id": millis
             }
+            rootDoc={
+              "record": newDoc
+            }
             action={
               "_index":campaign+'-file',
               "_type":'doc',
-              "_source":newDoc
+              "_source":rootDoc
             }
             collections[campaign].append(action)
 
