@@ -1,0 +1,14 @@
+#!/bin/bash
+pid=$(cat /root/tstream_man.pid)
+while true; do
+  cpid=$(pgrep -P $pid)
+  if [[ $cpid ]]; then
+    pid=$cpid
+    echo $cpid
+    kill $cpid
+  else
+    break
+  fi
+done
+echo $pid
+kill $pid

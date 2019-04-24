@@ -14,8 +14,9 @@ echo $pid
 kill $pid
 
 /root/killDR-Frontend >> /var/log/DR.log 2>&1 &
-/root/killNF >> /var/log/DR.log 2>&1 &
+/root/killINF >> /var/log/DR.log 2>&1 &
 /root/killOBJ >> /var/log/DR.log 2>&1 &
 /root/killTC >> /var/log/DR.log 2>&1 &
 /root/killAPI >> /var/log/DR.log 2>&1 &
 /root/killSafetyCheck >> /var/log/DR.log 2>&1 &
+/root/killTStreamMan >> /var/log/DR.log 2>&1 &
