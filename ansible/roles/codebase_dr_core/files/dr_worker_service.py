@@ -129,6 +129,7 @@ def checkStatus(campaign_datasource):
       log_it(str(var),"ERROR")
       db=DRDB("/var/local/LNEx.db")
       db.update_media_object_status(campaign_datasource[2], -1)
+      db.remove_drworker(campaign_datasource[1],campaign_datasource[2])
       db.destroy_connection()
 
 while True:
@@ -158,6 +159,6 @@ while True:
           db=DRDB("/var/local/LNEx.db")
           db.update_media_object_status(campaign_datasource[2], 1)
           db.destroy_connection()
-          launchCore(campaign,campaign_datasource)
+          #launchCore(campaign,campaign_datasource)
   #print("sleeping...")
   time.sleep(30)
