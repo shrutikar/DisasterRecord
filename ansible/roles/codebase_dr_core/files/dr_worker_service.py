@@ -143,5 +143,8 @@ while True:
       elif campaign_datasource[9] == 1:
         if campaign_datasource[4] != 'twitterstream':
           checkStatus(campaign_datasource)
+      elif campaign_datasource[9] == 2:
+        if campaign_datasource[4] == 'twitterstream':
+          checkStatus(campaign_datasource)
   print("sleeping...")
   time.sleep(30)
