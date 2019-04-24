@@ -4,4 +4,4 @@ echo -e "[$TS] -->STARTING DRECORD TWITTER STREAM MANAGER SERVICE\n" >> /var/log
 cd /root/workspace/DisasterRecord
 /root/workspace/DisasterRecord/drEnv python tstream_man.py >> /var/log/DR.log 2>&1 &
 FOO_PID=$!
-echo $FOO_PID > /root/tstreamman.pid
+echo $FOO_PID > /root/tstream_man.pid
