@@ -411,7 +411,7 @@ class DataProcess(object):
         actions=[]
         log_it("DONE PREPARE DATA EVENTS...")
 
-
+"""
 def getTweets(hashtag, consumerkey, consumersecret, accesskey, accesssecret, dataset):
 
     # Twitter streams a Max of 57 tweets per second [Fact]
@@ -476,6 +476,7 @@ def getTweets(hashtag, consumerkey, consumersecret, accesskey, accesssecret, dat
     except:
         print ("tweepy error") #Don't do anythin
         raise
+"""
 
 
 class ReadFromFile():
@@ -628,6 +629,7 @@ if __name__ == "__main__":
         log_it("DONE READ")
         log_it("PROCESSING OF TWITTER STREAM HAS ENDED!!!")
 
+    """
     elif file_url == "None":
       log_it("STARTING TWEET STREAM")
       thread = threading.Thread(target=getTweets, args=(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset))
@@ -637,9 +639,11 @@ if __name__ == "__main__":
       f = ReadFromFile()
       f.readIRMAData()
       log_it("DONE LOADING IRMA DATASET")
+    """
     else:
-      f = ReadFromFile()
-      f.read_from_file(file_url)
+      log_it("DATA / MEDIA TYPE {} UNKNOWN".format(ptype),"ERROR")
+      #f = ReadFromFile()
+      #f.read_from_file(file_url)
 
     if needed:
         log_it("WAITING 5 SECONDS")

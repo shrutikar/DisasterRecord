@@ -85,7 +85,7 @@ class ObjectDetector(object):
         categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
         self.category_index = label_map_util.create_category_index(categories)
         
-        print("Init Successfully!!!")
+        #print("Init Successfully!!!")
 
     def load_image_into_numpy_array(self, image):
       (im_width, im_height) = image.size

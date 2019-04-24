@@ -81,7 +81,7 @@ def inf(url):
       index = sorted_inds[i]
       p_prob.append(pred_y[index])
       p_class.append(classes[index])
-      print('Probability %0.2f%% => [%s]' % (pred_y[index] * 100, classes[index]))
+      #print('Probability %0.2f%% => [%s]' % (pred_y[index] * 100, classes[index]))
   except:
     var = tb.format_exc()
     print(var)

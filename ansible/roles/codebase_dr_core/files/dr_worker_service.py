@@ -153,5 +153,11 @@ while True:
       elif campaign_datasource[9] == 2:
         if campaign_datasource[4] == 'twitterstream':
           checkStatus(campaign_datasource)
+      elif campaign_datasource[9] == -1:
+        if campaign_datasource[4] == 'twitterstream':
+          db=DRDB("/var/local/LNEx.db")
+          db.update_media_object_status(campaign_datasource[2], 1)
+          db.destroy_connection()
+          launchCore(campaign,campaign_datasource)
   #print("sleeping...")
   time.sleep(30)

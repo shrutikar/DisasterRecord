@@ -65,7 +65,7 @@ def load(url,model):
             index = sorted_inds[i]
             p_prob.append(pred_y[index])
             p_class.append(classes[index])
-            print('Probability %0.2f%% => [%s]' % (pred_y[index] * 100, classes[index]))
+            #print('Probability %0.2f%% => [%s]' % (pred_y[index] * 100, classes[index]))
         except:
           p_class=["nonflood"]
   return p_class[0]

@@ -190,18 +190,18 @@ def classify():
     #new_text = "images of the ruins"
     # print new_text
     # new_text = strip_non_ascii(new_text)
-    print(new_text)
+    #print(new_text)
     new_text = preprocess_tweet(new_text)
-    print(new_text)
+    #print(new_text)
     new_text_split = list(new_text.split())
-    print(new_text_split)
+    #print(new_text_split)
     n_list = list()
     n_list.append(new_text)
-    print(np.shape(n_list))
+    #print(np.shape(n_list))
     #filename = 'ts_model.sav'
     #ts = pickle.load(open(filename, 'rb'))
     new_tf = ts.transform(n_list).toarray()
-    print(np.shape(new_tf), type(new_tf), np.shape(new_tf[0]))
+    #print(np.shape(new_tf), type(new_tf), np.shape(new_tf[0]))
     one = 0
     two = 0
     three = 0
@@ -241,8 +241,8 @@ def classify():
     f=list()
     f.append(tws)
     p = gbc.predict(f)
-    print ("predicted!")
-    print (type(p[0]),p[0])
+    #print ("predicted!")
+    #print (type(p[0]),p[0])
     if p[0]==0:
         cls="rescue_match"
     elif p[0]==1:
