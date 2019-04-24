@@ -12,7 +12,7 @@ TERMSLIMIT=400
 cutoffLimit=25
 masterRetry=300
 
-failedCount=[-1,-1,-1,-1,-1]
+failedCount=[-1,-1,-1,-1,-1,-1,-1]
 
 services=[
   'tc_service.py',
