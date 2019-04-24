@@ -7,6 +7,13 @@ from subprocess import PIPE
 from subprocess import STDOUT
 import traceback as tb
 import json
+import datetime
+
+def log_it(content,level="INFO"):
+  with open("/var/log/DR.log", "a") as fp:
+    fp.write("[{}] [{}] - DRECORD WORKER MANAGER SERVICE\n".format(str(datetime.datetime.now()),str(level)))
+    fp.write(str(content))
+    fp.write("\n")
 
 TERMSLIMIT=400
 cutoffLimit=25
@@ -65,7 +72,7 @@ def launchCore(campaign,campaign_datasource):
           db.init_twitterstream_terms(campaign[1],",".join(pendingterms))
           db.update_media_object_status(campaign_datasource[2],1)
       else:
-        print("Can not add terms, limit reached!")
+        log_it("Can not add terms, limit reached!","ERROR")
         db.update_media_object_status(campaign_datasource[2],-1)
     # processed 1: launch the core to process the data
     elif len(c_status) > 0 and c_status[0][9] == 1:
@@ -94,15 +101,15 @@ def ensureServices():
     if not checkifrunning(services[j]):
       failedCount[j]+=1
       if failedCount[j] == 0:
-        print(services[j],"has been started")
+        log_it("{} has been started".format(services[j]))
       else:
-        print(services[j],"has failed",failedCount[j],"times.")
+        log_it("{} has failed {} times".format(services[j],failedCount[j]),"WARN")
       if failedCount[j] <= cutoffLimit:
         try:
           _cmd = [serviceStarters[j]]
           Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
         except:
-          print("failed to start {}".format(_cmd))
+          log_it("failed to start {}".format(_cmd))
           failedCount[j]+=1
       else:
         failedCount[j]+=1
@@ -111,7 +118,7 @@ def ensureServices():
 
 def checkStatus(campaign_datasource):
   db=DRDB("/var/local/LNEx.db")
-  print(campaign_datasource[1], campaign_datasource[2])
+  #print(campaign_datasource[1], campaign_datasource[2])
   drworkerEntry=db.grab_drworker(campaign_datasource[1], campaign_datasource[2])
   db.destroy_connection()
   if len(drworkerEntry) > 0:
@@ -119,15 +126,15 @@ def checkStatus(campaign_datasource):
       os.kill(int(drworkerEntry[0][3]), 0)
     except OSError:
       var = tb.format_exc()
-      print(var)
+      log_it(str(var),"ERROR")
       db=DRDB("/var/local/LNEx.db")
       db.update_media_object_status(campaign_datasource[2], -1)
       db.destroy_connection()
 
 while True:
-  print("checking services...")
+  #print("checking services...")
   ensureServices()
-  print("checking for new data sources...")
+  #print("checking for new data sources...")
   db=DRDB("/var/local/LNEx.db")
   campaigns=db.get_active_campaigns()
   db.destroy_connection()
@@ -146,5 +153,5 @@ while True:
       elif campaign_datasource[9] == 2:
         if campaign_datasource[4] == 'twitterstream':
           checkStatus(campaign_datasource)
-  print("sleeping...")
+  #print("sleeping...")
   time.sleep(30)
