@@ -20,7 +20,7 @@ bufferSize=5
 
 es = Elasticsearch([{'host': '{{ photonip }}', 'port': {{ photonport }} }])
 
-def log_it(content,level):
+def log_it(content,level="INFO"):
   with open("/var/log/DR.log", "a") as fp:
     fp.write("[{}] [{}] - TSTREAM\n".format(str(datetime.datetime.now()),str(level)))
     fp.write(str(content))

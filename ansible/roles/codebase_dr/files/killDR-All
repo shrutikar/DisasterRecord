@@ -3,6 +3,8 @@ pid=$(cat /root/drService_All.pid)
 while true; do
   cpid=$(pgrep -P $pid)
   if [[ $cpid ]]; then
+    echo $cpid
+    kill $cpid
     pid=$cpid
   else
     break

@@ -39,10 +39,11 @@ ES_SIZE = 1000
 
 import threading
 
-def log_it(data):
-    with open('/var/log/DR.log', 'a') as fp:
-        fp.write(str(data))
-        fp.write('\n')
+def log_it(content,level="INFO"):
+  with open("/var/log/DR.log", "a") as fp:
+    fp.write("[{}] [{}] - CORE\n".format(str(datetime.datetime.now()),str(level)))
+    fp.write(str(content))
+    fp.write("\n")
 
 class DataProcess(object):
 
@@ -163,8 +164,8 @@ class DataProcess(object):
                 f = {'url': img}
                 r = urllib.request.urlopen("http://127.0.0.1:30502/classify?{}".format(urllib.parse.urlencode(f)))
                 r = r.readline().decode("utf-8")
-                log_it("image inference made...")
-                log_it(str(r))
+                #log_it("image inference made...")
+                #log_it(str(r))
 
                 if str(r) == 'flood' and objects_flag == "ON":
                     obj = {}
@@ -174,8 +175,8 @@ class DataProcess(object):
                     f = {'url': url}
                     r = urllib.request.urlopen("http://127.0.0.1:30503/detect?{}".format(urllib.parse.urlencode(f)))
                     r = json.loads(r.readline().decode("utf-8"))
-                    log_it("object detection made...")
-                    log_it(str(r))
+                    #log_it("object detection made...")
+                    #log_it(str(r))
                     obj = r
                     img = {"water": water, "objects": obj, "imageURL": url}
                     lst.append(img)
@@ -233,8 +234,8 @@ class DataProcess(object):
                 f = {'text': tweet[0].decode("utf-8")}
                 r = urllib.request.urlopen("http://127.0.0.1:30501/classify?{}".format(urllib.parse.urlencode(f)))
                 r = r.readline().decode("utf-8")
-                log_it("RESULT:")
-                log_it(str(r))
+                #log_it("RESULT:")
+                #log_it(str(r))
 
             except Exception as excp:
                 var = tb.format_exc()
@@ -404,7 +405,7 @@ class DataProcess(object):
                         "_source":doc_body}
                     actions.append(action)
             except:
-                log_it("something went wrong with that event...")
+                log_it("something went wrong with that event...","ERROR")
         helpers.bulk(es, actions)
         actions=[]
         log_it("DONE PREPARE DATA EVENTS...")
@@ -497,7 +498,7 @@ class ReadFromFile():
         data = urllib.request.urlopen("http://130.108.86.152/eventData/IRMASTest.txt")
         actions=[]
         es = Elasticsearch([{'host' : '{{ photonip }}', 'port' : {{ photonport }}}])
-        log_it("  -->INSERTING IRMA DATA SET INTO ES")
+        log_it("INSERTING IRMA DATA SET INTO ES")
         for line in data:
           try:
             line=line.decode()
@@ -527,13 +528,13 @@ class ReadFromFile():
 
         helpers.bulk(es, actions)
         actions=[]
-        log_it("  -->DONE INSERTING IRMA DATA SET INTO ES [{} RECORDS]".format(i))
+        log_it("DONE INSERTING IRMA DATA SET INTO ES [{} RECORDS]".format(i))
     def readDataset(self,file_url):
         i=0
         data = urllib.request.urlopen("{}".format(file_url))
         actions=[]
         es = Elasticsearch([{'host' : '{{ photonip }}', 'port' : {{ photonport }}}])
-        log_it("  -->INSERTING DATA INTO ES")
+        log_it("INSERTING DATA INTO ES")
         for line in data:
           try:
             line_decoded=line.decode("utf-8")
@@ -546,12 +547,12 @@ class ReadFromFile():
             actions.append(a_doc)
           except:
             var = tb.format_exc()
-            log_it("  -->ERROR ADDING DATA")
+            log_it("ERROR ADDING DATA","ERROR")
             log_it(str(var))
           i+=1
 
         helpers.bulk(es, actions)
-        log_it("  -->DONE INSERTING DATA SET INTO ES [{} RECORDS]".format(i))
+        log_it("DONE INSERTING DATA SET INTO ES [{} RECORDS]".format(i))
           
 
 
@@ -597,11 +598,11 @@ if __name__ == "__main__":
         bb = [float(bb_s[i]) for i in range(len(bb_s))]
         log_it("STARTING DATA PROCESSING...")
         d = DataProcess()
-        log_it("  -->BEGIN PREPARE")
+        log_it("BEGIN PREPARE")
         d.prepare_data_events(bb)
-        log_it("  -->DONE PREPARE")
+        log_it("DONE PREPARE")
         d.read(dataset,flood_flag,objects_flag,satellite_image,bb,loopForever=False)
-        log_it("  -->DONE READ")
+        log_it("DONE READ")
         log_it("REACHED END OF PROCESSING")
         db=DRDB("/var/local/LNEx.db")
         db.update_media_object_status(mediaid,2)
@@ -610,12 +611,6 @@ if __name__ == "__main__":
     elif ptype == "TWITTERSTREAM":
         needed=False
         log_it("PROCESSING TWITTERSTREAM...")
-        #log_it("DATASET LOCATION: {}".format(file_url))
-        #f = ReadFromFile()
-        #f.readDataset(file_url)
-        #log_it("DONE LOADING DATASET")
-        #thread = threading.Thread(target=getTweets, args=(keywords,consumerkey,consumersecret,accesskey,accesssecret,dataset))
-        #thread.start()
         log_it("WAITING 15 SECONDS FOR STREAM TO START AND COLLECT DATA")
         tm.sleep(15)
         db=DRDB("/var/local/LNEx.db")
@@ -625,11 +620,11 @@ if __name__ == "__main__":
         bb = [float(bb_s[i]) for i in range(len(bb_s))]
         log_it("STARTING DATA PROCESSING...")
         d = DataProcess()
-        log_it("  -->BEGIN PREPARE")
+        log_it("BEGIN PREPARE")
         d.prepare_data_events(bb)
-        log_it("  -->DONE PREPARE")
+        log_it("DONE PREPARE")
         d.read(dataset,flood_flag,objects_flag,satellite_image,bb,shouldSleep=True,loopForever=True)
-        log_it("  -->DONE READ")
+        log_it("DONE READ")
         log_it("PROCESSING OF TWITTER STREAM HAS ENDED!!!")
 
     elif file_url == "None":

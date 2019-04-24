@@ -4,6 +4,8 @@ while true; do
   cpid=$(pgrep -P $pid)
   if [[ $cpid ]]; then
     pid=$cpid
+    echo $cpid
+    kill $cpid
   else
     break
   fi

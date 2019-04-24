@@ -10,15 +10,24 @@ lastTerms=[]
 pid=None
 failedCount=0
 
+import datetime
+def log_it(content,level="INFO"):
+  with open("/var/log/DR.log", "a") as fp:
+    fp.write("[{}] [{}] - TSTREAM MANAGER\n".format(str(datetime.datetime.now()),str(level)))
+    fp.write(str(content))
+    fp.write("\n")
+
 def startstream():
   global pid
   _cmd = ['python', 'tstream.py']
   pid=Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
 
 def killstream():
-  global pid
-  pid.kill()
-
+  try:
+    global pid
+    pid.kill()
+  except:
+    log_it("Error Trying To Kill PID","WARN")
 def checkifrunning(name):
   for proc in psutil.process_iter():
     cmdline=" ".join(proc.cmdline())
