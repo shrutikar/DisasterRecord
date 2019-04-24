@@ -2,4 +2,4 @@
 cd /root/workspace/DisasterRecord
 /root/workspace/DisasterRecord/drEnv python dr_worker_service.py >> /var/log/DR.log 2>&1 &
 FOO_PID=$!
-echo $FOO_PID > /root/drService_Backend.pid
+echo $FOO_PID > /root/drService_All.pid

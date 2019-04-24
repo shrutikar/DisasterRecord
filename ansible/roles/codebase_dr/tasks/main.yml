@@ -24,8 +24,8 @@
 - name: Copy control scripts to ~
   copy: src={{ item }} dest=~ owner=root group=root mode=0755
   with_items:
-    - startDR-Backend
-    - killDR-Backend
+    - startDR-All
+    - killDR-All
     - startDR-Frontend
     - killDR-Frontend
     - startTStreamMan

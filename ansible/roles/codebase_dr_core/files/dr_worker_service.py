@@ -9,10 +9,28 @@ import traceback as tb
 import json
 
 TERMSLIMIT=400
+cutoffLimit=25
+masterRetry=300
 
 failedCount=[-1,-1,-1,-1,-1]
-services=['tc_service.py','inf_service.py','server.py','tstream_man.py','obj_service.py']
-serviceStarters=['/root/startTC','/root/startINF','/root/startDR-Frontend','/root/startTStreamMan','/root/startOBJ']
+
+services=[
+  'tc_service.py',
+  'inf_service.py',
+  'server.py',
+  'tstream_man.py',
+  'obj_service.py',
+  'manage.py',
+  'safetyChecker.py']
+
+serviceStarters=[
+  '/root/startTC',
+  '/root/startINF',
+  '/root/startDR-Frontend',
+  '/root/startTStreamMan',
+  '/root/startOBJ',
+  'root/startAPI',
+  'root/startSafetyCheck']
 
 def checkifrunning(name):
   for proc in psutil.process_iter():
@@ -71,7 +89,7 @@ def launchCore(campaign,campaign_datasource):
 
 
 def ensureServices():
-  global failedCount
+  global failedCount, cutoffLimit, masterRetry
   for j in range(len(failedCount)):
     if not checkifrunning(services[j]):
       failedCount[j]+=1
@@ -79,8 +97,17 @@ def ensureServices():
         print(services[j],"has been started")
       else:
         print(services[j],"has failed",failedCount[j],"times.")
-      _cmd = [serviceStarters[j]]
-      Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
+      if failedCount[j] <= cutoffLimit:
+        try:
+          _cmd = [serviceStarters[j]]
+          Popen(_cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
+        except:
+          print("failed to start {}".format(_cmd))
+          failedCount[j]+=1
+      else:
+        failedCount[j]+=1
+      if failedCount[j] >= masterRetry:
+        failedCount[j] = 0
 
 def checkStatus(campaign_datasource):
   db=DRDB("/var/local/LNEx.db")

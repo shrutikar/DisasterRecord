@@ -393,7 +393,7 @@ class DataProcess(object):
                 if str(fl) == 'True':
                     fl = True
                 else:
-                    log_it("prepare_data_events ES index action taken for {}\n".format(dataset))
+                    #log_it("prepare_data_events ES index action taken for {}\n".format(dataset))
 
                     fl = False
                     p_points.append({"type" : "Feature", "geometry" : {"type" : "Point", "coordinates" : [lon, lat]}, "properties" : {"name" : c, "key" : k, "value" : v, "needClass" : cls, "Flood" : fl}})
