@@ -1,4 +1,6 @@
 #!/bin/bash
+TS=$(date -u)
+echo -e "[$TS] -->STARTING LNEX SAFETY CHECKER SERVICE\n" >> /var/log/DR.log 2>&1 &
 cd /root/workspace/LNEx
 /root/workspace/api/apiEnv python safetyChecker.py >> /var/log/LNEx.log 2>&1 &
 FOO_PID=$!

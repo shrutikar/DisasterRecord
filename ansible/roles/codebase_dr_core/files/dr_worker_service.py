@@ -29,8 +29,8 @@ serviceStarters=[
   '/root/startDR-Frontend',
   '/root/startTStreamMan',
   '/root/startOBJ',
-  'root/startAPI',
-  'root/startSafetyCheck']
+  '/root/startAPI',
+  '/root/startSafetyCheck']
 
 def checkifrunning(name):
   for proc in psutil.process_iter():

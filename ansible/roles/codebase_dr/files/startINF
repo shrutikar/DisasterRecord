@@ -1,4 +1,6 @@
 #!/bin/bash
+TS=$(date -u)
+echo -e "[$TS] -->STARTING DRECORD INFERENCE SERVICE\n" >> /var/log/DR.log 2>&1 &
 cd /root/workspace/DisasterRecord/inference
 /root/workspace/DisasterRecord/drEnv python inf_service.py >> /var/log/DR.log 2>&1 &
 FOO_PID=$!

@@ -29,6 +29,7 @@
     - startDR-Frontend
     - killDR-Frontend
     - startTStreamMan
+    - killTStreamMan
     - startTC
     - killTC
     - startINF

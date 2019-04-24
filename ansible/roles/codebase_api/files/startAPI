@@ -1,4 +1,7 @@
 #!/bin/bash
+TS=$(date -u)
+echo -e "[$TS] -->STARTING LNEX SERVICE\n" >> /var/log/DR.log 2>&1 &
+echo -e "[$TS] -->STARTING LNEX SERVICE\n" >> /var/log/LNEx.log 2>&1 &
 cd /root/workspace/api/api
 /root/workspace/api/apiEnv python -u manage.py runserver 0:80 >> /var/log/LNEx.log 2>&1 &
 FOO_PID=$!

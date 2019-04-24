@@ -1,4 +1,6 @@
 #!/bin/bash
+TS=$(date -u)
+echo -e "[$TS] -->STARTING DRECORD TEXT CLASSIFIER SERVICE\n" >> /var/log/DR.log 2>&1 &
 cd /root/workspace/TC_Service/code
 /root/workspace/TC_Service/tcEnv python tc_service.py >> /var/log/DR.log 2>&1 &
 FOO_PID=$!
