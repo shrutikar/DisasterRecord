@@ -19,6 +19,14 @@ TERMSLIMIT=400
 cutoffLimit=25
 masterRetry=300
 
+"""
+Services to monitor:
+parallel lists
+-> failedCount:     -1 => not started
+-> services:        name of service running
+-> serviceStarters: full path of script that starts service
+"""
+
 failedCount=[-1,-1,-1,-1,-1,-1,-1]
 
 services=[
@@ -46,7 +54,12 @@ def checkifrunning(name):
       return True
   return False
 
+
+"""
+Launch a core to process specific types of data
+"""
 def launchCore(campaign,campaign_datasource):
+  # launch a core to process a dataset core
   if campaign_datasource[4] == 'dataset':
     db=DRDB("/var/local/LNEx.db")
     c_status=db.grab_media_object(campaign_datasource[2])
