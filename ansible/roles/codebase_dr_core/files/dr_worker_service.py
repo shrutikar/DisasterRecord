@@ -123,7 +123,18 @@ def checkStatus(campaign_datasource):
   db.destroy_connection()
   if len(drworkerEntry) > 0:
     try:
-      os.kill(int(drworkerEntry[0][3]), 0)
+      pid=int(drworkerEntry[0][3])
+      os.kill(pid, 0)
+      proc = psutil.Process(pid)
+      if proc.status() == psutil.STATUS_ZOMBIE:
+        #kill the zombie
+        log_it("DRWorker with PID of {} has died!".format(pid),"ERROR")
+        db=DRDB("/var/local/LNEx.db")
+        db.update_media_object_status(campaign_datasource[2], -1)
+        db.remove_drworker(campaign_datasource[1],campaign_datasource[2])
+        db.destroy_connection()
+      else:
+        log_it("DRWorker with PID of {} is active and alive!".format(pid))
     except OSError:
       var = tb.format_exc()
       log_it(str(var),"ERROR")
