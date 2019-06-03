@@ -4,9 +4,9 @@
 <head>
 </head>
 <body>
-	<h1><a href="/DR/campaign/{{ campaignid }}">{{ campaignid }}</a></h1>
+	<h1><a href="/campaign/{{ campaignid }}">{{ campaignid }}</a></h1>
 	<h3>Campaign Meta:</h3>
-	<form action="/DR/updateCampaign/{{ campaignid }}" method="post">
+	<form action="/updateCampaign/{{ campaignid }}" method="post">
 		Campaign Name:<br>
 		<input type="text" name="html_campaignid" value="{{ campaignid }}" readonly="readonly"><br>
 		Centroid:<br>
@@ -27,7 +27,7 @@
 		<input type="submit" value="Change Meta">
 	</form>
 	<h3>Data Sources:</h3>	
-	<form action="/DR/updateCampaignMedia/{{ campaignid }}" method="post">
+	<form action="/updateCampaignMedia/{{ campaignid }}" method="post">
 	<table>
 		<tr>
 			<td>MediaID</td>
@@ -62,7 +62,7 @@
 			{% else %}
 			<td><img height="32px" src="/static/error.png"></td>
 			{% endif %}
-			<td><a href="/DR/deleteMedia?campaign={{ mediaEntry[1] }}&mediaid={{ mediaEntry[2] }}"><img height="32px" src="/static/remove.png"></a></td>
+			<td><a href="/deleteMedia?campaign={{ mediaEntry[1] }}&mediaid={{ mediaEntry[2] }}"><img height="32px" src="/static/remove.png"></a></td>
 		</tr>
 	{% endfor %}
 	<!--
@@ -79,7 +79,7 @@
 	</table>
 	</form>
 	<h3>Register Data Source:</h3>
-	<form action="/DR/addMedia" method="post">
+	<form action="/addMedia" method="post">
 		<input type="hidden" name="html_campaignid" value="{{ campaignid }}">
 		Data Source Name:<br>
 		<input type="text" name="html_mediaid"><br>
@@ -103,6 +103,6 @@
 		<input type="submit" value="Register Data Source">
 	</form>
 	<br>
-	<a href="/DR/listCampaigns">Campaign List</a>
+	<a href="/listCampaigns">Campaign List</a>
 </body>
 </html>

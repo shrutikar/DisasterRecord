@@ -8,13 +8,13 @@
 	<table>
 	{% for campaign in campaignInfo %}
 		<tr>
-			<td><a href="/DR/campaign/{{ campaign[1] }}">{{ campaign[1] }}</a></td>
-			<td><a href="/DR/manageCampaign/{{ campaign[1] }}">Manage</a></td>
+			<td><a href="/campaign/{{ campaign[1] }}">{{ campaign[1] }}</a></td>
+			<td><a href="/manageCampaign/{{ campaign[1] }}">Manage</a></td>
 			<td>{{ campaign[9] }}</td>
 		</tr>
 	{% endfor %}
 	</table>
 	<br/>
-	<a href="/DR/createCampaign">New Campaign</a>
+	<a href="/createCampaign">New Campaign</a>
 </body>
 </html>
