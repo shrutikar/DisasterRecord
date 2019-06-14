@@ -40,28 +40,28 @@
 		</tr>
 	{% raw %}{% for mediaEntry in campaignMedia %}{% endraw %}
 		<tr>
-			<td>{{ mediaEntry[2] }}</td>
+			<td>{% raw %}{{ mediaEntry[2] }}{% endraw %}</td>
 			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_mediaURL" value="{% raw %}{{ mediaEntry[3] }}{% endraw %}"></td>
 			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_mediaType" value="{% raw %}{{ mediaEntry[4] }}{% endraw %}"></td>
 			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_geopoint" value="{% raw %}{{ mediaEntry[5] }}{% endraw %}"></td>
 			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_geoshape" value="{% raw %}{{ mediaEntry[6] }}{% endraw %}"></td>
 			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_params" value="{% raw %}{{ mediaEntry[7] }}{% endraw %}"></td>
-			{% if mediaEntry[8] == 1 %}
+			{% raw %}{% if mediaEntry[8] == 1 %}{% endraw %}
 			<td><input type="checkbox" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_active" value="1" checked="checked">Enabled</td>
-			{% else %}
+			{% raw %}{% else %}{% endraw %}
 			<td><input type="checkbox" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_active" value="1">Enabled</td>
-			{% endif %}
-			{% if mediaEntry[9] == 0 %}
+			{% raw %}{% endif %}{% endraw %}
+			{% raw %}{% if mediaEntry[9] == 0 %}{% endraw %}
 			<td><img height="32px" src="/static/pending.png"></td>
-			{% elif mediaEntry[9] == -1 %}
+			{% raw %}{% elif mediaEntry[9] == -1 %}{% endraw %}
 			<td><img height="32px" src="/static/error.png"></td>
-			{% elif mediaEntry[9] == 1 %}
+			{% raw %}{% elif mediaEntry[9] == 1 %}{% endraw %}
 			<td><img height="32px" src="/static/processing.png"></td>
-			{% elif mediaEntry[9] == 2 %}
+			{% raw %}{% elif mediaEntry[9] == 2 %}{% endraw %}
 			<td><img height="32px" src="/static/finished.png"></td>
-			{% else %}
+			{% raw %}{% else %}{% endraw %}
 			<td><img height="32px" src="/static/error.png"></td>
-			{% endif %}
+			{% raw %}{% endif %}{% endraw %}
 			<td><a href="/{{ endpointroot }}deleteMedia?campaign={% raw %}{{ mediaEntry[1] }}{% endraw %}&mediaid={% raw %}{{ mediaEntry[2] }}{% endraw %}"><img height="32px" src="/static/remove.png"></a></td>
 		</tr>
 	{% raw %}{% endfor %}{% endraw %}
