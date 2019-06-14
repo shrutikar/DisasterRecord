@@ -18,10 +18,14 @@
   copy: src=templates/{{ item }} dest=~/workspace/DisasterRecord/templates/{{ item }} owner=root group=root mode=0644
   with_items:
     - error.html
-    - list.html
-    - create.html
+
+- name: Generate html templates
+  template: src={{ item }} dest=~/workspace/DisasterRecord/templates/{{ item }} owner=root group=root mode=0644
+  with_items:
     - manage.html
+    - create.html
     - index.html
+    - list.html
 
 - name: Copy icons
   copy: src=icons/{{ item }} dest=~/workspace/DisasterRecord/static/{{ item }} owner=root group=root mode=0644

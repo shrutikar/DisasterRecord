@@ -1,0 +1,62 @@
+Campaign Creation Helper
+
+Campaign Name:  Harvey
+Centroid     :  -95.551586,30.012856                (reverse from google pinpoint)
+Bounding Box :  28.82,-98.15,31.33,-93.61           (reverse each point from boundingbox tool csv)
+Start Date   :  08/01/2017
+End Date     :  12/29/2017
+Default Zoom :  8
+
+Then add Data Source:
+Give it a name
+http://130.108.86.152/eventData/HarveyData.json     (gotcha! this must be uploaded here manually!)
+
+
+
+Campaign Name:  Michael
+Centroid     :  -85.381514,30.001497                (reverse from google pinpoint)
+Bounding Box :  29.5521,-87.3273,31.0231,-84.5319   (reverse each point from boundingbox tool csv)
+Start Date   :  10/01/2018
+End Date     :  11/30/2018
+Default Zoom :  8
+
+Then add Data Source:
+Give it a name
+http://130.108.86.152/eventData/MichaelData.json     (gotcha! this must be uploaded here manually!)
+
+
+
+Campaign Name:  Florence
+Centroid     :  -77.990091,34.202461                (reverse from google pinpoint)
+Bounding Box :  33.6971,-80.5936,34.9256,-77.3588   (reverse each point from boundingbox tool csv)
+Start Date   :  09/14/2018
+End Date     :  10/31/2018
+Default Zoom :  8
+
+Then add Data Source:
+Give it a name
+http://130.108.86.152/eventData/MichaelData.json     (gotcha! this must be uploaded here manually!)
+
+
+
+Campaign Name: MissouriFloods
+Centroid     : -90.323954,38.725557
+Bounding Box : 37.8399,-91.5154,39.5631,-89.3621
+Start Date   :  03/01/2019
+End Date     :  04/01/2019
+Default Zoom :  8
+
+Then add Data Source:
+Give it a name
+http://130.108.86.152/eventData/MissouriFloods201903.json     (gotcha! this must be uploaded here manually!)
+
+Other info:
+
+es--> 130.108.86.153:9201
+
+Pinpoint from Google: 30.012856, -95.551586
+http://130.108.86.153/static/drecord-logo.png
+
+
+DEEP User
+(1, 'test', 'test', '169a1a33f8c46ca301', '1553611299533', 5, 1, 1, 4, 0)

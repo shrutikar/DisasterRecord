@@ -907,7 +907,7 @@ def createcampaign():
 
         #params['passeddata'] = "Campaign was created!"
         #params['getdata'] = getdata
-        return redirect("/listCampaigns")
+        return redirect("/{{ endpointroot }}listCampaigns")
     else:
         params['passeddata'] = "New Campaign"
         return render_template('create.html', **params)
@@ -969,7 +969,7 @@ def addmedia():
             getdata['html_geoshape'],
             getdata['html_params'])
         db.destroy_connection()
-        return redirect("/manageCampaign/{}".format(getdata['html_campaignid']))
+        return redirect("/{{ endpointroot }}manageCampaign/{}".format(getdata['html_campaignid']))
     else:
         params['errormessage']="Error adding media to {}".format(getdata['html_campaignid'])
         return render_template('error.html', **params)
@@ -980,7 +980,7 @@ def deleteMedia():
     mediaid = request.args.get('mediaid')
     db=DRDB("/var/local/LNEx.db")
     db.delete_media_object(campaign,mediaid)
-    return redirect("/manageCampaign/{}".format(campaign))
+    return redirect("/{{ endpointroot }}manageCampaign/{}".format(campaign))
 
 @application.route('/updateCampaignMedia/<campaignid>')
 def updatecampaignmedia(campaignid):
@@ -1016,7 +1016,7 @@ def updatecampaign(campaignid):
             formateddata['defaultzoom'],
             formateddata['active'])
         db.destroy_connection()
-        return redirect("/manageCampaign/{}".format(formateddata['campaignid']))
+        return redirect("/{{ endpointroot }}manageCampaign/{}".format(formateddata['campaignid']))
     else:
         params['errormessage']="Could not update campaign {}".format(campaignid)
         return render_template('error.html', **params)
@@ -1057,7 +1057,7 @@ def campaign(campaignid):
         db.destroy_connection()
         
     else:
-        return redirect("/listCampaigns")
+        return redirect("/{{ endpointroot }}listCampaigns")
 
     params = {
         "centroid": centroid,
@@ -1080,7 +1080,7 @@ def campaign(campaignid):
 
 @application.route("/")
 def index():
-    return redirect("/listCampaigns")
+    return redirect("/{{ endpointroot }}listCampaigns")
 
 
 @application.route("/heat")
