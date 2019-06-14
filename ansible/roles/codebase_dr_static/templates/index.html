@@ -36,7 +36,7 @@
                 <img src="/static/drecord-logo.png" style="margin-top: -10%;" class="top_img">
                 <div id="drec">Disaster
                     <br> Record</div>
-                <a href="/{{ endpointroot }}manageCampaign/{{ campaignName }}"><i class="fas fa-cog" id="admin_gear"></i></a>
+                <a href="/{{ endpointroot }}manageCampaign/{% raw %}{{ campaignName }}{% endraw %}"><i class="fas fa-cog" id="admin_gear"></i></a>
             </div>
             <div id="date-picker">
                 <h4 style="text-align: center;">Pick a Date/Time Range</h4>
@@ -115,20 +115,20 @@
     </section>
 
     <script type="text/javascript">
-        var centroid = {{ centroid | tojson | safe }},
-        campaign_esname = {{ campaign_esname | tojson | safe }},
-        campaign_date_start = {{ campaign_date_start | tojson | safe }},
-        campaign_date_end = {{ campaign_date_end | tojson | safe }},
-        campaign_default_zoom = {{ campaign_default_zoom | tojson | safe }},
-        media_data = {{ media_data | tojson | safe }},
-        campaign_BB = {{ campaign_BB | tojson | safe }},
-        OSM_features_icons_dict = {{ OSM_features_icons_dict| tojson | safe }},
-        sd = {{ shelter_data | tojson | safe }},
-        rd = {{ rescue_data | tojson | safe }},
-        ps = {{ photon_shelter | tojson | safe }},
-        pr = {{ photon_rescue | tojson | safe }},
-        os = {{ other_sh | tojson | safe }},
-        or = {{ other_res | tojson | safe }};
+        var centroid = {% raw %}{{ centroid | tojson | safe }}{% endraw %},
+        campaign_esname = {% raw %}{{ campaign_esname | tojson | safe }}{% endraw %},
+        campaign_date_start = {% raw %}{{ campaign_date_start | tojson | safe }}{% endraw %},
+        campaign_date_end = {% raw %}{{ campaign_date_end | tojson | safe }}{% endraw %},
+        campaign_default_zoom = {% raw %}{{ campaign_default_zoom | tojson | safe }}{% endraw %},
+        media_data = {% raw %}{{ media_data | tojson | safe }}{% endraw %},
+        campaign_BB = {% raw %}{{ campaign_BB | tojson | safe }}{% endraw %},
+        OSM_features_icons_dict = {% raw %}{{ OSM_features_icons_dict| tojson | safe }}{% endraw %},
+        sd = {% raw %}{{ shelter_data | tojson | safe }}{% endraw %},
+        rd = {% raw %}{{ rescue_data | tojson | safe }}{% endraw %},
+        ps = {% raw %}{{ photon_shelter | tojson | safe }}{% endraw %},
+        pr = {% raw %}{{ photon_rescue | tojson | safe }}{% endraw %},
+        os = {% raw %}{{ other_sh | tojson | safe }}{% endraw %},
+        or = {% raw %}{{ other_res | tojson | safe }}{% endraw %};
 
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>

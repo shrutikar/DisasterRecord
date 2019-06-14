@@ -4,21 +4,21 @@
 <head>
 </head>
 <body>
-	<h1><a href="/{{ endpointroot }}campaign/{{ campaignid }}">{{ campaignid }}</a></h1>
+	<h1><a href="/{{ endpointroot }}campaign/{% raw %}{{ campaignid }}{% endraw %}">{{ campaignid }}</a></h1>
 	<h3>Campaign Meta:</h3>
-	<form action="/{{ endpointroot }}updateCampaign/{{ campaignid }}" method="post">
+	<form action="/{{ endpointroot }}updateCampaign/{% raw %}{{ campaignid }}{% endraw %}" method="post">
 		Campaign Name:<br>
-		<input type="text" name="html_campaignid" value="{{ campaignid }}" readonly="readonly"><br>
+		<input type="text" name="html_campaignid" value="{% raw %}{{ campaignid }}{% endraw %}" readonly="readonly"><br>
 		Centroid:<br>
-		<input type="text" name="html_centroid" value="{{ centroid }}"><br>
+		<input type="text" name="html_centroid" value="{% raw %}{{ centroid }}{% endraw %}"><br>
 		Bounding Box:<br>
-		<input type="text" name="html_bb" value="{{ bb }}"><br>
+		<input type="text" name="html_bb" value="{% raw %}{{ bb }}{% endraw %}"><br>
 		Start Date:<br>
-		<input type="text" name="html_startdate" value="{{ startdate }}"><br>
+		<input type="text" name="html_startdate" value="{% raw %}{{ startdate }}{% endraw %}"><br>
 		End Date:<br>
-		<input type="text" name="html_enddate" value="{{ enddate }}"><br>
+		<input type="text" name="html_enddate" value="{% raw %}{{ enddate }}{% endraw %}"><br>
 		Default Zoom:<br>
-		<input type="text" name="html_defaultzoom" value="{{ defaultzoom }}"><br>
+		<input type="text" name="html_defaultzoom" value="{% raw %}{{ defaultzoom }}{% endraw %}"><br>
 		{% if active == '1' %}
 		<input type="checkbox" name="html_active" value="1" checked="checked">Enabled<br>
 		{% else %}
@@ -27,7 +27,7 @@
 		<input type="submit" value="Change Meta">
 	</form>
 	<h3>Data Sources:</h3>	
-	<form action="/{{ endpointroot }}updateCampaignMedia/{{ campaignid }}" method="post">
+	<form action="/{{ endpointroot }}updateCampaignMedia/{% raw %}{{ campaignid }}{% endraw %}" method="post">
 	<table>
 		<tr>
 			<td>MediaID</td>
@@ -41,15 +41,15 @@
 	{% for mediaEntry in campaignMedia %}
 		<tr>
 			<td>{{ mediaEntry[2] }}</td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_mediaURL" value="{{ mediaEntry[3] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_mediaType" value="{{ mediaEntry[4] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_geopoint" value="{{ mediaEntry[5] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_geoshape" value="{{ mediaEntry[6] }}"></td>
-			<td><input type="text" name="{{ mediaEntry[1] }}_params" value="{{ mediaEntry[7] }}"></td>
+			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_mediaURL" value="{% raw %}{{ mediaEntry[3] }}{% endraw %}"></td>
+			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_mediaType" value="{% raw %}{{ mediaEntry[4] }}{% endraw %}"></td>
+			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_geopoint" value="{% raw %}{{ mediaEntry[5] }}{% endraw %}"></td>
+			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_geoshape" value="{% raw %}{{ mediaEntry[6] }}{% endraw %}"></td>
+			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_params" value="{% raw %}{{ mediaEntry[7] }}{% endraw %}"></td>
 			{% if mediaEntry[8] == 1 %}
-			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1" checked="checked">Enabled</td>
+			<td><input type="checkbox" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_active" value="1" checked="checked">Enabled</td>
 			{% else %}
-			<td><input type="checkbox" name="{{ mediaEntry[1] }}_active" value="1">Enabled</td>
+			<td><input type="checkbox" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_active" value="1">Enabled</td>
 			{% endif %}
 			{% if mediaEntry[9] == 0 %}
 			<td><img height="32px" src="/static/pending.png"></td>
@@ -62,7 +62,7 @@
 			{% else %}
 			<td><img height="32px" src="/static/error.png"></td>
 			{% endif %}
-			<td><a href="/{{ endpointroot }}deleteMedia?campaign={{ mediaEntry[1] }}&mediaid={{ mediaEntry[2] }}"><img height="32px" src="/static/remove.png"></a></td>
+			<td><a href="/{{ endpointroot }}deleteMedia?campaign={% raw %}{{ mediaEntry[1] }}{% endraw %}&mediaid={% raw %}{{ mediaEntry[2] }}{% endraw %}"><img height="32px" src="/static/remove.png"></a></td>
 		</tr>
 	{% endfor %}
 	<!--
@@ -80,7 +80,7 @@
 	</form>
 	<h3>Register Data Source:</h3>
 	<form action="/{{ endpointroot }}addMedia" method="post">
-		<input type="hidden" name="html_campaignid" value="{{ campaignid }}">
+		<input type="hidden" name="html_campaignid" value="{% raw %}{{ campaignid }}{% endraw %}">
 		Data Source Name:<br>
 		<input type="text" name="html_mediaid"><br>
 		Data Source URL:<br>

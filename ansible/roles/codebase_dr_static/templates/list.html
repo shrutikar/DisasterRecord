@@ -8,8 +8,8 @@
 	<table>
 	{% for campaign in campaignInfo %}
 		<tr>
-			<td><a href="/{{ endpointroot }}campaign/{{ campaign[1] }}">{{ campaign[1] }}</a></td>
-			<td><a href="/{{ endpointroot }}manageCampaign/{{ campaign[1] }}">Manage</a></td>
+			<td><a href="/{{ endpointroot }}campaign/{% raw %}{{ campaign[1] }}{% endraw %}">{{ campaign[1] }}</a></td>
+			<td><a href="/{{ endpointroot }}manageCampaign/{% raw %}{{ campaign[1] }}{% endraw %}">Manage</a></td>
 			<td>{{ campaign[9] }}</td>
 		</tr>
 	{% endfor %}
