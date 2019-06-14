@@ -19,11 +19,11 @@
 		<input type="text" name="html_enddate" value="{% raw %}{{ enddate }}{% endraw %}"><br>
 		Default Zoom:<br>
 		<input type="text" name="html_defaultzoom" value="{% raw %}{{ defaultzoom }}{% endraw %}"><br>
-		{% if active == '1' %}
+		{% raw %}{% if active == '1' %}{% endraw %}
 		<input type="checkbox" name="html_active" value="1" checked="checked">Enabled<br>
-		{% else %}
+		{% raw %}{% else %}{% endraw %}
 		<input type="checkbox" name="html_active" value="1">Enabled<br>
-		{% endif %}
+		{% raw %}{% endif %}{% endraw %}
 		<input type="submit" value="Change Meta">
 	</form>
 	<h3>Data Sources:</h3>	
