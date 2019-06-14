@@ -4,7 +4,7 @@
 <head>
 </head>
 <body>
-	<h1><a href="/{{ endpointroot }}campaign/{% raw %}{{ campaignid }}{% endraw %}">{{ campaignid }}</a></h1>
+	<h1><a href="/{{ endpointroot }}campaign/{% raw %}{{ campaignid }}{% endraw %}">{% raw %}{{ campaignid }}{% endraw %}</a></h1>
 	<h3>Campaign Meta:</h3>
 	<form action="/{{ endpointroot }}updateCampaign/{% raw %}{{ campaignid }}{% endraw %}" method="post">
 		Campaign Name:<br>
@@ -38,7 +38,7 @@
 			<td>Params</td>
 			<td>Enabled</td>
 		</tr>
-	{% for mediaEntry in campaignMedia %}
+	{% raw %}{% for mediaEntry in campaignMedia %}{% endraw %}
 		<tr>
 			<td>{{ mediaEntry[2] }}</td>
 			<td><input type="text" name="{% raw %}{{ mediaEntry[1] }}{% endraw %}_mediaURL" value="{% raw %}{{ mediaEntry[3] }}{% endraw %}"></td>
@@ -64,7 +64,7 @@
 			{% endif %}
 			<td><a href="/{{ endpointroot }}deleteMedia?campaign={% raw %}{{ mediaEntry[1] }}{% endraw %}&mediaid={% raw %}{{ mediaEntry[2] }}{% endraw %}"><img height="32px" src="/static/remove.png"></a></td>
 		</tr>
-	{% endfor %}
+	{% raw %}{% endfor %}{% endraw %}
 	<!--
 	<tr>
 		<td><input type="submit" value="Update Media"></td>

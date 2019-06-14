@@ -6,13 +6,13 @@
 <body>
 	<h1>Campaigns</h1>
 	<table>
-	{% for campaign in campaignInfo %}
+	{% raw %}{% for campaign in campaignInfo %}{% endraw %}
 		<tr>
-			<td><a href="/{{ endpointroot }}campaign/{% raw %}{{ campaign[1] }}{% endraw %}">{{ campaign[1] }}</a></td>
+			<td><a href="/{{ endpointroot }}campaign/{% raw %}{{ campaign[1] }}{% endraw %}">{% raw %}{{ campaign[1] }}{% endraw %}</a></td>
 			<td><a href="/{{ endpointroot }}manageCampaign/{% raw %}{{ campaign[1] }}{% endraw %}">Manage</a></td>
-			<td>{{ campaign[9] }}</td>
+			<td>{% raw %}{{ campaign[9] }}{% endraw %}</td>
 		</tr>
-	{% endfor %}
+	{% raw %}{% endfor %}{% endraw %}
 	</table>
 	<br/>
 	<a href="/createCampaign">New Campaign</a>
