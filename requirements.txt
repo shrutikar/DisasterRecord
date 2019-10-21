@@ -38,7 +38,7 @@ matplotlib==2.2.3
 mkl-fft==1.0.4
 mkl-random==1.0.1
 networkx==2.2
-nltk==3.3
+nltk==3.4.5
 numpy==1.15.1
 Pillow==5.2.0
 pyparsing==2.2.1
