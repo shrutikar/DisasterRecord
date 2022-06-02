@@ -24,7 +24,7 @@ futures==3.2.0
 geographiclib==1.49
 Geohash==1.0
 geopy==1.17.0
-html5lib==0.9999999
+html5lib==0.99999999
 ibm-cos-sdk==2.3.0
 ibm-cos-sdk-core==2.3.0
 ibm-cos-sdk-s3transfer==2.3.0
