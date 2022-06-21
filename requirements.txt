@@ -39,7 +39,7 @@ mkl-fft==1.0.4
 mkl-random==1.0.1
 networkx==2.2
 nltk==3.4.5
-numpy==1.15.1
+numpy==1.22.0
 Pillow==6.2.0
 pyparsing==2.2.1
 python-dateutil==2.7.3
